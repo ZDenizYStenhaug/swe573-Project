@@ -5,7 +5,67 @@ class Member {
   -memberSurname: String
   -displayName: String
   -emailAddress: String
+  -interests: Collection<Tag>
+  -strongSuits: Collection<Tag>
   -reputationPoints: int
   -profilePicture: byte[]
+
+  +follow(id, id)
+  +block(id, id)
+  +deleteMember(id)
 }
+class Account {
+    -id: Serial
+    -memberId: Serial
+    -timeCredits: int
+    -services: Collection<Service>
+    -events: Collection<Event>
+
+    +addCredits()
+    +subtractCredits()
+    +getActiveServices()
+    +getService()
+    +getActiveEvents()
+    +getEvent()
+}
+Member *-- "1" Account
+
+abstract class Meeting {
+    -id: Serial
+    -name: String
+    -description: String
+    -offererId: Serial
+    -tags: Collection<Tag>
+    -timestamp: Timestamp
+    -duration: int
+
+    +getTags()
+    +getParticipants()
+    +addParticipants()
+}
+
+class Event {
+    -timestamp: Timestamp
+}
+Event --|> Meeting
+
+class Service {
+    -maxNumberOfParticipants: int
+    -cancellationDeadline: int
+    +createService()
+    +deleteService()
+}
+Service --|> Meeting
+
+class RepeatedService {
+    -frequency: FrequencyType
+}
+
+RepeatedService --|> Service
+
+
+Account *-- "1..*" Meeting
+
+
+
 @enduml
