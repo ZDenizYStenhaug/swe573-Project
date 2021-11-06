@@ -1,0 +1,11 @@
+@startuml
+class Member {
+  -id: Serial
+  -memberName: String
+  -memberSurname: String
+  -displayName: String
+  -emailAddress: String
+  -reputationPoints: int
+  -profilePicture: byte[]
+}
+@enduml
