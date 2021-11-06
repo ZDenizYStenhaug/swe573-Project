@@ -1,5 +1,17 @@
+@startuml
 enum FrequencyType {
     DAILY
     WEEKLY
     MONTHLY
 }
+
+
+class Tag {
+    -id: Serial
+    -name: String
+    -color: String
+
+    +addTag()
+    +deleteTag()
+}
+@enduml
