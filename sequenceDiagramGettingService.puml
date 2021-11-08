@@ -1,0 +1,48 @@
+@startuml
+
+actor participant
+participant Service
+participant Feedback
+actor offerer
+database DB
+
+participant -> Service: signs-up for service
+activate Service
+Service -> offerer: notify
+activate offerer
+offerer --> Service: accept
+deactivate offerer
+Service --> participant: response\n(notification)
+deactivate Service
+
+note left: the service takes place
+
+participant -> Service: end service
+activate Service
+Service --> participant: response\n(feedback page)
+deactivate Service
+
+participant -> Feedback: give feedback
+activate Feedback
+Feedback -> DB: register feedback
+Feedback --> participant: response\n(confirmation page)
+deactivate Feedback
+
+offerer -> Service: end service
+activate Service
+Service --> offerer: response\n(feedback page)
+deactivate Service
+
+offerer -> Feedback: give feedback
+activate Feedback
+Feedback -> DB: register feedback
+Feedback --> offerer: response\n(confirmation page)
+deactivate Feedback
+
+
+
+
+
+
+
+@enduml

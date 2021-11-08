@@ -9,7 +9,8 @@ Offerer -> Service: createService
 activate Service
 
 Service -> DB: register to DB
-activate DB
+
+Service --> Offerer : confirmation
 
 
 
