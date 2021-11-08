@@ -4,8 +4,6 @@ enum FrequencyType {
     WEEKLY
     MONTHLY
 }
-
-
 class Tag {
     -id: Serial
     -name: String
@@ -14,4 +12,25 @@ class Tag {
     +addTag()
     +deleteTag()
 }
+
+abstract class Location {
+    - latitude: double
+    - longitude: double
+    }
+
+class MemberLocation {
+    -memberId: Serial
+}
+
+MemberLocation --|> Location
+
+class ServiceLocation {
+    -serviceId: Serial
+}
+ServiceLocation --|> Location
+
+class EventLocation {
+    -eventId: Serial
+}
+EventLocation --|> Location
 @enduml

@@ -28,10 +28,10 @@ class Account {
     +getActiveEvents()
     +getEvent()
 }
-Member *-- "1" Account
+Member -- "1" Account
 
 abstract class Meeting {
-    -id: Serial
+    -id
     -name: String
     -description: String
     -offererId: Serial
@@ -43,6 +43,7 @@ abstract class Meeting {
     +getParticipants()
     +addParticipants()
 }
+Account o-- "1..*" Meeting
 
 class Event {
     -timestamp: Timestamp
@@ -63,9 +64,15 @@ class RepeatedService {
 
 RepeatedService --|> Service
 
-
-Account *-- "1..*" Meeting
-
+class Feedback {
+    -serviceId: Serial
+    -giverMemberId: Serial
+    -receiverMemberId: Serial
+    -rating: int
+    -comment: String
+}
+Feedback "1..*" --o Service
+Feedback "1..*" --o RepeatedService
 
 
 @enduml
