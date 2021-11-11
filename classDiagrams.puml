@@ -1,19 +1,34 @@
 @startuml
-class Member {
+abstract class Member {
   -id: Serial
   -memberName: String
   -memberSurname: String
   -displayName: String
-  -emailAddress: String
-  -interests: Collection<Tag>
-  -strongSuits: Collection<Tag>
-  -reputationPoints: int
-  -profilePicture: byte[]
 
-  +follow(id, id)
-  +block(id, id)
-  +deleteMember(id)
+  +register()
+  +edit()
+  +delete()
 }
+class User {
+    -emailAddress: String
+    -interests: Collection<Tag>
+    -strongSuits: Collection<Tag>
+    -reputationPoints: int
+    -profilePicture: byte[]
+
+    +validate(email)
+    +follow(id, id)
+    +unfollow(id, id)
+    +block(id, id)
+}
+User --|> Member
+class Administrator {
+    +deleteMember(id)
+    +deleteService(id)
+    +deleteEvent(id)
+}
+Administrator --|> Member
+
 class Account {
     -id: Serial
     -memberId: Serial
@@ -21,14 +36,13 @@ class Account {
     -services: Collection<Service>
     -events: Collection<Event>
 
+    +validateCreditStatus(int duration)
+    +validateAccountStatus(Serial id)
     +addCredits()
     +subtractCredits()
     +getActiveServices()
-    +getService()
-    +getActiveEvents()
-    +getEvent()
 }
-Member -- "1" Account
+User"1" -- "1" Account
 
 abstract class Meeting {
     -id
@@ -38,6 +52,7 @@ abstract class Meeting {
     -tags: Collection<Tag>
     -timestamp: Timestamp
     -duration: int
+    -location: Geolocation
 
     +getTags()
     +getParticipants()
@@ -53,13 +68,25 @@ Event --|> Meeting
 class Service {
     -maxNumberOfParticipants: int
     -cancellationDeadline: int
+    -appliedParticipants: Collection<id>
+    -participants: Collection<id>
+    -status: ServiceStatus
+
     +createService()
+    +apply(id)
+    +setParticipant(id)
+    +notifyOfferer(id, message)
+    +notifyReceiver(id, message)
+    +requestService()
+    +editService()
+    +updateServiceStatus(ServiceStatus status)
     +deleteService()
 }
 Service --|> Meeting
 
 class RepeatedService {
     -frequency: FrequencyType
+    -repetition: int
 }
 
 RepeatedService --|> Service
@@ -70,9 +97,11 @@ class Feedback {
     -receiverMemberId: Serial
     -rating: int
     -comment: String
+
+    +giveFeedback(Serial id, Serial id, Feedback)
 }
-Feedback "1..*" --o Service
-Feedback "1..*" --o RepeatedService
+Feedback "1..*" --o "1"Service
+Feedback "1..*" --o "1"RepeatedService
 
 
 @enduml

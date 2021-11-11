@@ -4,6 +4,13 @@ enum FrequencyType {
     WEEKLY
     MONTHLY
 }
+
+enum ServiceStatus {
+    OPEN_FOR_APPLICATIONS
+    CLOSED_FOR_APPLICATIONS
+    CANCELLED
+    DONE
+}
 class Tag {
     -id: Serial
     -name: String
@@ -31,6 +38,12 @@ ServiceLocation --|> Location
 
 class EventLocation {
     -eventId: Serial
+}
+
+
+class Feedback {
+    -stars: int
+    -comment: String
 }
 EventLocation --|> Location
 @enduml

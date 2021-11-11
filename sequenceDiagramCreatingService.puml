@@ -2,11 +2,33 @@
 
 
 actor Offerer
+participant Account
 participant Service
 database DB
 
-Offerer -> Service: createService
+Offerer -> Service: createService (the params needed)
+
+
 activate Service
+
+Service -> Account: validateAccount (id)
+activate Account
+alt successful case
+    Account --> Service: validation successful
+else failure
+    Account --> Offerer: validationError
+deactivate Account
+end
+
+
+Service -> Account: validateCredits (id))
+activate Account
+alt successful case
+    Account --> Service: validation successful
+else failure
+    Account --> Offerer: too many credits error
+deactivate Account
+end
 
 Service -> DB: register to DB
 

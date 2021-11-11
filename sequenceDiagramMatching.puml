@@ -1,0 +1,13 @@
+@startuml
+
+actor offerer
+actor receiver
+participant Account
+participant Service
+database DB
+
+offerer -> Service: setParticipant(id)
+activate Service
+Service -> DB:
+
+@enduml

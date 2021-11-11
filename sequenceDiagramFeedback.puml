@@ -1,0 +1,36 @@
+@startuml
+
+actor user
+participant Account
+participant Service
+participant Feedback
+database DB
+
+group end service
+user -> Service: endService()
+activate Service
+Service -> DB: updateServiceStatus(ServiceStatus)
+activate DB
+DB --> Service: updated
+deactivate DB
+deactivate Service
+end
+
+group give feedback
+user -> Feedback: giveFeedback(id, id, Feedback)
+activate Feedback
+Feedback -> DB: registerFeedback(id, id, Feedback)
+activate DB
+DB --> Feedback: registered
+deactivate DB
+Feedback -> Account: addReputationPoints(points)
+deactivate Feedback
+activate Account
+Account -> DB: updateReputationPoints(points)
+activate DB
+DB --> Account: activated
+Account --> user: confirmation
+deactivate Account
+end
+
+@enduml
