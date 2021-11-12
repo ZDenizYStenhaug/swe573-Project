@@ -4,9 +4,10 @@ abstract class Member {
   -memberName: String
   -memberSurname: String
   -displayName: String
+  -secret: String
 
-  +register()
-  +edit()
+  +register(String name, String email, String secret, Collection<Tag> interests, Collection<Tag> strongSuits, )
+  +edit(Serial id)
   +delete()
 }
 class User {
@@ -16,16 +17,16 @@ class User {
     -reputationPoints: int
     -profilePicture: byte[]
 
-    +validate(email)
-    +follow(id, id)
-    +unfollow(id, id)
-    +block(id, id)
+    +validate(String email)
+    +follow(Serial id, Serial id)
+    +unfollow(Serial id, Serial id)
+    +block(Serial id, Serial id)
 }
 User --|> Member
 class Administrator {
-    +deleteMember(id)
-    +deleteService(id)
-    +deleteEvent(id)
+    +deleteMember(Serial id)
+    +deleteService(Serial id)
+    +deleteEvent(Serial id)
 }
 Administrator --|> Member
 
@@ -38,9 +39,9 @@ class Account {
 
     +validateCreditStatus(int duration)
     +validateAccountStatus(Serial id)
-    +addCredits()
-    +subtractCredits()
-    +getActiveServices()
+    +addCredits(int credits)
+    +addReputationPoints(int points)
+    +getActiveServices(Serial id)
 }
 User"1" -- "1" Account
 
@@ -53,15 +54,16 @@ abstract class Meeting {
     -timestamp: Timestamp
     -duration: int
     -location: Geolocation
+    -participants: Collection<id>
 
-    +getTags()
-    +getParticipants()
     +addParticipants()
 }
 Account o-- "1..*" Meeting
 
 class Event {
     -timestamp: Timestamp
+
+    +createEvent(String name, String description, Timestamp time, Collection<Tag> tags, int duration, Geolocation location)
 }
 Event --|> Meeting
 
@@ -69,16 +71,15 @@ class Service {
     -maxNumberOfParticipants: int
     -cancellationDeadline: int
     -appliedParticipants: Collection<id>
-    -participants: Collection<id>
     -status: ServiceStatus
 
-    +createService()
-    +apply(id)
-    +setParticipant(id)
-    +notifyOfferer(id, message)
-    +notifyReceiver(id, message)
-    +requestService()
-    +editService()
+    +createService(String name, String description, Timestamp time, int maxNumberOfParticipants, int cancellationDeadline, Collection<Tag> tags, int duration, Geolocation geolocation)
+    +apply(Serial id)
+    +setParticipant(Serial id)
+    +notifyOfferer(Serial id, String message)
+    +notifyReceiver(Serial id, String message)
+    +requestService(String name, String description, Timestamp time,Collection<Tag> tags, int duration, Geolocation geolocation)
+    +editService(Serial id)
     +updateServiceStatus(ServiceStatus status)
     +deleteService()
 }
@@ -88,7 +89,6 @@ class RepeatedService {
     -frequency: FrequencyType
     -repetition: int
 }
-
 RepeatedService --|> Service
 
 class Feedback {
@@ -98,7 +98,7 @@ class Feedback {
     -rating: int
     -comment: String
 
-    +giveFeedback(Serial id, Serial id, Feedback)
+    +giveFeedback(Serial id, Serial id, Feedback feedback)
 }
 Feedback "1..*" --o "1"Service
 Feedback "1..*" --o "1"RepeatedService
