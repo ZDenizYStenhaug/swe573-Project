@@ -43,9 +43,9 @@ class Account {
     +addReputationPoints(int points)
     +getActiveServices(Serial id)
 }
-User"1" -- "1" Account
+User"1" o-- "1" Account
 
-abstract class Meeting {
+class Event {
     -id
     -name: String
     -description: String
@@ -55,41 +55,39 @@ abstract class Meeting {
     -duration: int
     -location: Geolocation
     -participants: Collection<id>
-
-    +addParticipants()
-}
-Account o-- "1..*" Meeting
-
-class Event {
     -timestamp: Timestamp
 
     +createEvent(String name, String description, Timestamp time, Collection<Tag> tags, int duration, Geolocation location)
+    +addParticipant(Serial id)
 }
-Event --|> Meeting
+Account o-- "1..*" Event
 
 class Service {
+    -id
+    -name: String
+    -description: String
+    -offererId: Serial
+    -tags: Collection<Tag>
+    -timestamp: Timestamp
+    -duration: int
+    -location: Geolocation
+    -participants: Collection<id>
     -maxNumberOfParticipants: int
     -cancellationDeadline: int
     -appliedParticipants: Collection<id>
     -status: ServiceStatus
 
-    +createService(String name, String description, Timestamp time, int maxNumberOfParticipants, int cancellationDeadline, Collection<Tag> tags, int duration, Geolocation geolocation)
-    +apply(Serial id)
-    +setParticipant(Serial id)
-    +notifyOfferer(Serial id, String message)
-    +notifyReceiver(Serial id, String message)
-    +requestService(String name, String description, Timestamp time,Collection<Tag> tags, int duration, Geolocation geolocation)
-    +editService(Serial id)
-    +updateServiceStatus(ServiceStatus status)
+    +createService(Serial accountId, String name, String description, Timestamp time, int maxNumberOfParticipants, int cancellationDeadline, Collection<Tag> tags, int duration, Geolocation geolocation, FrequencyType frequencyType, repetition int)
+    +requestService(String name, String description, Timestamp time, Collection<Tag> tags, int duration, Geolocation geolocation, FrequencyType frequencyType, repetition int)
+    +apply(Serial accountId)
+    +addParticipant(Serial accountId)
+    +setParticipant(Serial accountId)
+    +notifyOfferer(Serial accountId, String message)
+    +notifyReceiver(Serial accountId, String message)
+    +requestService(Serial accountId, String name, String description, Timestamp time,Collection<Tag> tags, int duration, Geolocation geolocation)
     +deleteService()
 }
-Service --|> Meeting
-
-class RepeatedService {
-    -frequency: FrequencyType
-    -repetition: int
-}
-RepeatedService --|> Service
+Account o-- "1..*" Service
 
 class Feedback {
     -serviceId: Serial
