@@ -1,5 +1,5 @@
 @startuml
-
+mainframe sd Feedback
 actor user
 participant Account
 participant Service
@@ -29,8 +29,8 @@ activate Account
 Account -> DB: updateReputationPoints(points)
 activate DB
 DB --> Account: activated
+deactivate DB
 Account --> user: confirmation
 deactivate Account
 end
-
 @enduml
