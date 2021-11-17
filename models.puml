@@ -6,6 +6,7 @@ enum FrequencyType {
 }
 
 enum ServiceStatus {
+    REQUESTED
     OPEN_FOR_APPLICATIONS
     CLOSED_FOR_APPLICATIONS
     CANCELLED
