@@ -98,7 +98,7 @@ class Service {
 }
 Account o-- "1..*" Service
 
-class Feedback {
+class ServiceFeedback {
     -serviceId: Serial
     -giverMemberId: Serial
     -receiverMemberId: Serial
@@ -108,5 +108,16 @@ class Feedback {
     +giveFeedback(Serial id, Serial id, Feedback feedback)
 }
 Feedback "1..*" --o "1"Service
+
+class EventFeedback {
+    -eventId: Serial
+    -giverMemberId: Serial
+    -receiverMemberId: Serial
+    -rating: int
+    -comment: String
+
+    +giveFeedback(Serial id, Serial id, Feedback feedback)
+}
+Feedback "1..*" --o "1"Event
 
 @enduml
