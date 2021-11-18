@@ -106,9 +106,9 @@ members::id -- interests::member_id : member_id
 tags::id -- interests::tag_id : tag_id
 members::id -- strong_suits::member_id : member_id
 tags::id -- strong_suits::tag_id : tag_id
-services::id -- service_tags::service_id
+services::id -- service_tags::service_id : service_id
 tags::id -- service_tags::tag_id : tag_id
-event_id::service_id -- events::id : event_id
+event_tags::event_id -- events::id : event_id
 tags::id -- event_tags::tag_id : tag_id
 services::offerer_account_id -- accounts::id : account_id
 service_participants::service_id -- services::id : service_id
