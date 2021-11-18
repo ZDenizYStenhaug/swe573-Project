@@ -1,34 +1,43 @@
 @startuml
-abstract class Member {
-  -id: Serial
-  -memberName: String
-  -memberSurname: String
-  -displayName: String
-  -secret: String
 
-  +register(String name, String email, String secret, Collection<Tag> interests, Collection<Tag> strongSuits, )
-  +edit(Serial id)
-  +delete()
-}
 class User {
+    -id: Serial
+    -memberName: String
+    -memberSurname: String
+    -displayName: String
+    -secret: String
     -emailAddress: String
     -interests: Collection<Tag>
     -strongSuits: Collection<Tag>
     -reputationPoints: int
     -profilePicture: byte[]
 
+    +register(String name, String email, String secret, Collection<Tag> interests, Collection<Tag> strongSuits, )
+    +signIn(String email, String secret)
+    +edit(Serial id)
+    +delete()
     +validate(String email)
     +follow(Serial id, Serial id)
     +unfollow(Serial id, Serial id)
     +block(Serial id, Serial id)
 }
-User --|> Member
+
 class Administrator {
+    -id: Serial
+    -memberName: String
+    -memberSurname: String
+    -displayName: String
+    -secret: String
+
+
+    +register(String name, String email, String secret, Collection<Tag> interests, Collection<Tag> strongSuits, )
+    +signIn(String email, String secret)
+    +edit(Serial id)
+    +delete()
     +deleteMember(Serial id)
     +deleteService(Serial id)
     +deleteEvent(Serial id)
 }
-Administrator --|> Member
 
 class Account {
     -id: Serial
@@ -46,7 +55,7 @@ class Account {
 User"1" o-- "1" Account
 
 class Event {
-    -id
+    -id: Serial
     -name: String
     -description: String
     -offererId: Serial
@@ -99,7 +108,5 @@ class Feedback {
     +giveFeedback(Serial id, Serial id, Feedback feedback)
 }
 Feedback "1..*" --o "1"Service
-Feedback "1..*" --o "1"RepeatedService
-
 
 @enduml
