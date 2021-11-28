@@ -1,1 +1,29 @@
-<h1>yiss it works!</h1>
+
+<div>
+  <table border = "1">
+    <thead>
+    <tr>
+      <th>name</th>
+      <th>description</th>
+      <th>offererId</th>
+      <th>time</th>
+      <th>duration</th>
+      <th>maxNumOfParticipants</th>
+      <th>cancellationDeadline</th>
+      <th>status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr  *ngFor="let offer of offers">
+      <td>{{ offer.name }}</td>
+      <td>{{ offer.description }}</td>
+      <td>{{ offer.offererId }}</td>
+      <td>{{ offer.time }}</td>
+      <td>{{ offer.duration }}</td>
+      <td>{{ offer.maxNumOfParticipants }}</td>
+      <td>{{ offer.cancellationDeadline }}</td>
+      <td>{{ offer.status }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
