@@ -2,7 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Entity
 public class Offer implements Serializable {
@@ -17,8 +17,9 @@ public class Offer implements Serializable {
     private String description;
     @Column(nullable = false, updatable = false)
     private Long offererId;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private ZonedDateTime time;
+    private Date time;
     @Column(nullable = false, updatable = false)
     private int duration;
     private int maxNumOfParticipants;
@@ -27,7 +28,7 @@ public class Offer implements Serializable {
     @Column(nullable = false, updatable = false)
     private String status;
 
-    public Offer(String name, String description, Long offererId, ZonedDateTime time, int duration, int maxNumOfParticipants, int cancellationDeadline, String status) {
+    public Offer(String name, String description, Long offererId, Date time, int duration, int maxNumOfParticipants, int cancellationDeadline, String status) {
         this.name = name;
         this.description = description;
         this.offererId = offererId;
@@ -68,11 +69,11 @@ public class Offer implements Serializable {
         this.offererId = offererId;
     }
 
-    public ZonedDateTime getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(ZonedDateTime time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

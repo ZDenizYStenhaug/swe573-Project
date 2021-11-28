@@ -1,4 +1,4 @@
-# swe573-Project
-Project repository for SWE573 - Software Development Practice 
+This is the backend for Akita.
 
-Currently, it contains some research material in the wiki page about git and wikidata API.
+For the database, postgres' docker image is used. Running the ```docker-compose up -d``` command from the project's root folder 
+is enough to set it up.

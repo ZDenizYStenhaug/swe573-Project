@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface OfferRepo extends JpaRepository<Offer, Long> {
     void deleteOfferById(Long id);
+
     Optional<Offer> findOfferById(Long id);
+
 }
