@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  database:
+    image: postgres
+    container_name: akita-postgres
+    environment:
+      - POSTGRES_DB=akita
+      - POSTGRES_USER=akita
+      - POSTGRES_PASSWORD=4k1t4
+      - TZ=Europe/Istanbul
+      - PGTZ=Europe/Istanbul
+    ports:
+      - 5432:5432
