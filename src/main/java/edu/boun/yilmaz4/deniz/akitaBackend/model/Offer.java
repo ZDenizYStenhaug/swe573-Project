@@ -1,5 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
+import org.locationtech.jts.geom.Point;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,6 +22,7 @@ public class Offer implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
     private Date time;
+    private Point location;
     @Column(nullable = false, updatable = false)
     private int duration;
     private int maxNumOfParticipants;
@@ -28,11 +31,12 @@ public class Offer implements Serializable {
     @Column(nullable = false, updatable = false)
     private String status;
 
-    public Offer(String name, String description, Long offererId, Date time, int duration, int maxNumOfParticipants, int cancellationDeadline, String status) {
+    public Offer(String name, String description, Long offererId, Date time, Point location, int duration, int maxNumOfParticipants, int cancellationDeadline, String status) {
         this.name = name;
         this.description = description;
         this.offererId = offererId;
         this.time = time;
+        this.location = location;
         this.duration = duration;
         this.maxNumOfParticipants = maxNumOfParticipants;
         this.cancellationDeadline = cancellationDeadline;
@@ -45,6 +49,7 @@ public class Offer implements Serializable {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
@@ -107,5 +112,13 @@ public class Offer implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 }

@@ -13,9 +13,11 @@ import java.util.List;
 public class OfferService {
 
     private final OfferRepo offerRepo;
+    private final GeoLocationRepo geoLocationRepo;
     @Autowired
-    public OfferService(OfferRepo offerRepo) {
+    public OfferService(OfferRepo offerRepo, GeoLocationRepo geoLocationRepo) {
         this.offerRepo = offerRepo;
+        this.geoLocationRepo = geoLocationRepo;
     }
 
     @Transactional
@@ -42,4 +44,11 @@ public class OfferService {
     public Offer updateOffer(Offer offer) {
         return offerRepo.save(offer);
     }
+
+//    @Transactional
+//    public Optional<GeoLocation> getOfferLocation(Offer offer) {
+//        return geoLocationRepo.findGeoLocationById(offer.getLocationId());
+//    }
+//    Geolocation
+
 }
