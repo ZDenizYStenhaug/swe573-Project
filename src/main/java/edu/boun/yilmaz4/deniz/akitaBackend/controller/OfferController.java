@@ -1,51 +1,51 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Constants;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
-import java.util.List;
+import javax.validation.Valid;
 
-@RestController
-@RequestMapping(Constants.URI_OFFER)
-public class OfferController {
-    private final OfferService offerService;
+@Controller
+@RequestMapping()
+public class OfferController{
+
+    private static final Logger logger = LoggerFactory.getLogger(OfferController.class);
+
     @Autowired
-    public OfferController(OfferService offerService) {
-        this.offerService = offerService;
+    private OfferService offerService;
+
+    @GetMapping(Routing.URI_OFFER_FORM)
+    public String showOfferForm(Model model) {
+        model.addAttribute("offer", new Offer());
+        return "add-offer-form";
     }
 
-    @GetMapping(Constants.URI_ALL_OFFERS)
-    public ResponseEntity<List<Offer>> getAllOffers() {
-        List<Offer> offers = offerService.allOffers();
-        return new ResponseEntity<>(offers, HttpStatus.OK);
+    @PostMapping("/offer/save")
+    public String saveNewOffer(@Valid Offer offer, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            return "add-offer-form";
+        }
+        logger.info("saving offer " + offer.toString());
+        offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
+        offer = offerService.addOffer(offer);
+        model.addAttribute("offer", offer);
+        model.addAttribute("offers", offerService.allOffers());
+        return "add-offer-success";
     }
 
-    @GetMapping(Constants.URI_FIND_OFFER + Constants.URI_ID)
-    public ResponseEntity<Offer> findOffer(@PathVariable("id") Long id) {
-        Offer offer = offerService.findOfferById(id);
-        return new ResponseEntity<>(offer, HttpStatus.OK);
-    }
-
-    @PostMapping(Constants.URI_ADD_OFFER)
-    public ResponseEntity<Offer> addOffer(@RequestBody Offer offer) {
-        Offer newOffer = offerService.addOffer(offer);
-        return new ResponseEntity<>(newOffer, HttpStatus.CREATED);
-    }
-
-    @PutMapping(Constants.URI_UPDATE_OFFER)
-    public ResponseEntity<Offer> updateOffer(@RequestBody Offer offer) {
-        Offer updatedOffer = offerService.updateOffer(offer);
-        return new ResponseEntity<>(updatedOffer, HttpStatus.OK);
-    }
-
-    @DeleteMapping(Constants.URI_DELETE + Constants.URI_ID)
-    public ResponseEntity<?> deleteOffer(@PathVariable("id") Long id) {
-        offerService.deleteOffer(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping(Routing.URI_OFFER_ALL)
+    public String getAllOffers(Model model) {
+        logger.info("-> {}", "getAllOffers");
+        model.addAttribute("allOffers", offerService.allOffers());
+        return "offers";
     }
 }

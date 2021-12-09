@@ -3,6 +3,8 @@ package edu.boun.yilmaz4.deniz.akitaBackend.service;
 import edu.boun.yilmaz4.deniz.akitaBackend.exception.OfferNotFoundException;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.OfferRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,22 +13,21 @@ import java.util.List;
 
 @Service
 public class OfferService {
+    private static final Logger logger = LoggerFactory.getLogger(OfferService.class);
 
-    private final OfferRepo offerRepo;
-    private final GeoLocationRepo geoLocationRepo;
+
     @Autowired
-    public OfferService(OfferRepo offerRepo, GeoLocationRepo geoLocationRepo) {
-        this.offerRepo = offerRepo;
-        this.geoLocationRepo = geoLocationRepo;
-    }
+    private OfferRepo offerRepo;
 
     @Transactional
     public Offer addOffer(Offer offer) {
+
         return offerRepo.save(offer);
     }
 
     @Transactional
     public List<Offer> allOffers() {
+        logger.info("getting all offers");
         return offerRepo.findAll();
     }
 
@@ -44,11 +45,4 @@ public class OfferService {
     public Offer updateOffer(Offer offer) {
         return offerRepo.save(offer);
     }
-
-//    @Transactional
-//    public Optional<GeoLocation> getOfferLocation(Offer offer) {
-//        return geoLocationRepo.findGeoLocationById(offer.getLocationId());
-//    }
-//    Geolocation
-
 }

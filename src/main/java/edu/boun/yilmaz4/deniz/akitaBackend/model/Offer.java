@@ -1,6 +1,8 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
-import org.locationtech.jts.geom.Point;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,40 +13,39 @@ public class Offer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false,  updatable = false)
     private Long id;
+
     @Column(nullable = false, updatable = false)
     private String name;
+
     @Column(nullable = false, updatable = false)
     private String description;
+
+    //TODO: one to many relationship with member class
     @Column(nullable = false, updatable = false)
     private Long offererId;
-    @Temporal(TemporalType.TIMESTAMP)
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm")
     @Column(nullable = false, updatable = false)
     private Date time;
-    private Point location;
+
     @Column(nullable = false, updatable = false)
     private int duration;
+
     private int maxNumOfParticipants;
-    @Column(nullable = false, updatable = false)
+
+    @Column(nullable = false)
     private int cancellationDeadline;
-    @Column(nullable = false, updatable = false)
-    private String status;
 
-    public Offer(String name, String description, Long offererId, Date time, Point location, int duration, int maxNumOfParticipants, int cancellationDeadline, String status) {
-        this.name = name;
-        this.description = description;
-        this.offererId = offererId;
-        this.time = time;
-        this.location = location;
-        this.duration = duration;
-        this.maxNumOfParticipants = maxNumOfParticipants;
-        this.cancellationDeadline = cancellationDeadline;
-        this.status = status;
-    }
 
-    public Offer() {
-    }
+    @Enumerated(EnumType.STRING)
+    private RepeatingType repeatingType;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OfferStatus status;
+
 
     public Long getId() {
         return id;
@@ -106,19 +107,19 @@ public class Offer implements Serializable {
         this.cancellationDeadline = cancellationDeadline;
     }
 
-    public String getStatus() {
+    public OfferStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OfferStatus status) {
         this.status = status;
     }
 
-    public Point getLocation() {
-        return location;
+    public RepeatingType getRepeatingType() {
+        return repeatingType;
     }
 
-    public void setLocation(Point location) {
-        this.location = location;
+    public void setRepeatingType(RepeatingType repeatingType) {
+        this.repeatingType = repeatingType;
     }
 }
