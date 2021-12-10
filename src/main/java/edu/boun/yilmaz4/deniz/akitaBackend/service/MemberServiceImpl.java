@@ -4,6 +4,9 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,5 +41,17 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findByUsername(String username) throws UsernameNotFoundException {
         return memberRepo.findByUsername(username);
+    }
+
+    public String getCurrentUserLogin() {
+        org.springframework.security.core.context.SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+        String login = null;
+        if (authentication != null)
+            if (authentication.getPrincipal() instanceof UserDetails)
+                login = ((UserDetails) authentication.getPrincipal()).getUsername();
+            else if (authentication.getPrincipal() instanceof String)
+                login = (String) authentication.getPrincipal();
+        return login;
     }
 }

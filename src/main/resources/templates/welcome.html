@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,22 +28,15 @@
       </div>
 
       <div class="text-end" sec:authorize="isAuthenticated()">
+        <a href="/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
         <a href="/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
       </div>
 
     </div>
   </div>
 </header>
+
   <h1>Welcome to Akita!</h1>
-
-  <label for="email">email </label>
-  <input type="text" id="email" name="email"><br><br>
-
-  <label for="password">password</label>
-
-  <input type="text" id="password" name="password"><br><br>
-
-  <button type="button">Login</button>
 
   <p>Click <a href="/tag/form">here</a> to add a new tag.</p>
   <p>Click <a href="/offer/all">here</a> to see all offers.</p>

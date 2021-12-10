@@ -31,6 +31,8 @@ public class Member implements Serializable {
     @Column(nullable = false, columnDefinition = "varchar(8) default 'USER'")
     private Role role;
 
+    private String photo;
+
     @ManyToMany
     @JoinTable(name = "interests",
             joinColumns = @JoinColumn(name = "member_id"),
@@ -89,6 +91,18 @@ public class Member implements Serializable {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (photo == null || id == null) return null;
+
+        return "/user-photos/" + id + "/" + photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
 
     public Set<Tag> getInterests() {
         return interests;

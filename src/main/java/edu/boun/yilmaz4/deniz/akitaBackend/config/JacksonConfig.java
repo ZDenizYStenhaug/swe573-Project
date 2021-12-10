@@ -1,4 +1,4 @@
-package edu.boun.yilmaz4.deniz.akitaBackend.utils;
+package edu.boun.yilmaz4.deniz.akitaBackend.config;
 
 import org.n52.jackson.datatype.jts.JtsModule;
 import org.springframework.context.annotation.Bean;
