@@ -19,7 +19,7 @@ public enum Role {
         this.s = s;
     }
 
-    public Role getDefault() {
+    public static Role getDefault() {
         return Role.USER;
     }
 

@@ -1,5 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
@@ -26,8 +28,8 @@ public class Member implements Serializable {
     @Column(nullable = false, length = 20)
     private String username;
 
-    @ManyToMany
-    private Set<Role> roles;
+    @Column(nullable = false, columnDefinition = "varchar(8) default 'USER'")
+    private Role role;
 
     @ManyToMany
     @JoinTable(name = "interests",
@@ -80,12 +82,27 @@ public class Member implements Serializable {
         this.username = firstName;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
+    public Set<Tag> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<Tag> interests) {
+        this.interests = interests;
+    }
+
+    public Set<Tag> getTalents() {
+        return talents;
+    }
+
+    public void setTalents(Set<Tag> talents) {
+        this.talents = talents;
+    }
 }

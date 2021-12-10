@@ -7,5 +7,5 @@ public interface MemberService {
 
     Member findByUsername(String email) throws MemberNotFoundException;
 
-    Member save(Member member);
+    Member register(Member member);
 }
