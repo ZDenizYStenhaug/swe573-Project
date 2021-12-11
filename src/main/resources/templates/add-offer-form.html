@@ -32,7 +32,7 @@
             </header>
 
             <body>
-            <form action='#' th:action="@{/offer/form}" method="post" th:object="${offer}">
+            <form action='#' th:action="@{/offer/form}" method="post" th:object="${offer}" style="margin-top:20px; margin-left: 30px;">
                 <div class="form-row">
                     <div class="col-md-6 form-group">
                         <label> Offer name </label>
@@ -72,7 +72,7 @@
                 <option value="">Choose...</option>
                 <option value="NOT_REPEATING">Not repeating</option>
                 <option value="DAILY">Daily</option>
-                <option value="WEEKLY">Weekly</option>
+                <option value="WEEKLY">Weekly</o  ption>
                 <option value="MONTHLY">Monthly</option>
             </select>
         </div>

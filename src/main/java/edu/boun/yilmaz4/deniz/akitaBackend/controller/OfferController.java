@@ -3,6 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +23,25 @@ public class OfferController{
 
     @Autowired
     private OfferService offerService;
+    @Autowired
+    private MemberServiceImpl memberService;
 
     @GetMapping(Routing.URI_OFFER_FORM)
     public String showOfferForm(Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
         model.addAttribute("offer", new Offer());
         return "add-offer-form";
     }
 
     @PostMapping("/offer/save")
     public String saveNewOffer(@Valid Offer offer, BindingResult bindingResult, Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
         if(bindingResult.hasErrors()) {
             return "add-offer-form";
         }
