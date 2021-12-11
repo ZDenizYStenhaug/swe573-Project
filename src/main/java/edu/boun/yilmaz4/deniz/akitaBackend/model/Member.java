@@ -1,5 +1,6 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Badge;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 
 import javax.persistence.*;
@@ -28,8 +29,20 @@ public class Member implements Serializable {
     @Column(nullable = false, length = 20)
     private String username;
 
+    @Column(nullable = false, length = 512)
+    private String description;
+
     @Column(nullable = false, columnDefinition = "varchar(8) default 'USER'")
     private Role role;
+
+    @Column(nullable = false)
+    private int credit;
+
+    @Column(nullable = false)
+    private int reputationPoints;
+
+    @Column(nullable = false)
+    private Badge badge;
 
     private String photo;
 
@@ -118,5 +131,37 @@ public class Member implements Serializable {
 
     public void setTalents(Set<Tag> talents) {
         this.talents = talents;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getCredit() {
+        return credit;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
+
+    public int getReputationPoints() {
+        return reputationPoints;
+    }
+
+    public void setReputationPoints(int reputationPoints) {
+        this.reputationPoints = reputationPoints;
+    }
+
+    public Badge getBadge() {
+        return badge;
+    }
+
+    public void setBadge(Badge badge) {
+        this.badge = badge;
     }
 }

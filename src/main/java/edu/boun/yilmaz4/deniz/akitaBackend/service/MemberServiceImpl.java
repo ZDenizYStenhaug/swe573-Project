@@ -1,6 +1,8 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Badge;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +39,9 @@ public class MemberServiceImpl implements MemberService {
     public Member register(Member member) {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(Role.getDefault());
+        member.setCredit(5);
+        member.setReputationPoints(5);
+        member.setBadge(Badge.NEWCOMER);
         return memberRepo.save(member);
     }
 
@@ -53,5 +60,21 @@ public class MemberServiceImpl implements MemberService {
             else if (authentication.getPrincipal() instanceof String)
                 login = (String) authentication.getPrincipal();
         return login;
+    }
+
+    public List<String> getInterestNames(Member member) {
+        List<String> interests = new ArrayList<>();
+        for (Tag tag : member.getInterests()) {
+            interests.add(tag.getName());
+        }
+        return interests;
+    }
+
+    public List<String> getTalentsNames(Member member) {
+        List<String> talents = new ArrayList<>();
+        for (Tag tag : member.getTalents()) {
+            talents.add(tag.getName());
+        }
+        return talents;
     }
 }

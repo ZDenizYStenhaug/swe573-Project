@@ -5,6 +5,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberDetailsServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.SecurityService;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,8 @@ public class MemberController {
     private MemberValidator memberValidator;
     @Autowired
     private MemberDetailsServiceImpl memberDetailsService;
+    @Autowired
+    private TagService tagService;
 
     @GetMapping("")
     public String welcome() {
@@ -52,6 +55,7 @@ public class MemberController {
             return "redirect:/";
         }
         model.addAttribute("member", new Member());
+        model.addAttribute("tags", tagService.getAllTags());
         return "registration";
     }
 
@@ -100,6 +104,19 @@ public class MemberController {
         }
         Member member = memberService.findByUsername(username);
         model.addAttribute("member", member);
+        model.addAttribute("interests", memberService.getInterestNames(member));
+        model.addAttribute("talents", memberService.getTalentsNames(member));
         return "profile-page";
+    }
+
+    @GetMapping("/member/edit")
+    public String editProfilePage(Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(username);
+        model.addAttribute("member", member);
+        return "edit-profile";
     }
 }

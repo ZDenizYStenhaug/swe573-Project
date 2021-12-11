@@ -36,9 +36,21 @@
  <div class = "container-fluid">
     <div class = "row" style="margin-bottom: 20px">
         <div class = "col-sm-3" style = "background-color:lightgrey; margin-bottom: 25px">
-            <img class="img-thumbnail" th:src="@{${member.photosImagePath}}" style="margin-bottom: 10px"/>
+
+            <img class="img-thumbnail" th:src="@{${member.photosImagePath}}" style="margin-bottom: 10px; margin-top: 30px"/>
             <h3 th:text="${member.username}" style="margin-bottom: 10px"></h3>
-            <p th:text="${member.email}"style="margin-bottom: 10px"></p>
+            <p  style="margin-bottom: 20px"><span th:text="${member.badge}" class="badge badge-pill badge-primary"></span></p>
+
+            <p th:text="${member.description}" style="margin-bottom: 20px"></p>
+
+            <p th:text="${member.email}" style="margin-bottom: 20px"></p>
+
+            <p style="margin-bottom: 10px"><span th:text="${member.reputationPoints}" ></span> reputation points</p>
+            <p style="margin-bottom: 20px"><span th:text="${member.reputationPoints}"></span> credits</p>
+
+            <p style="margin-bottom: 10px">Talents: <span th:text="${#strings.listJoin(talents, ', ')}"></span></p>
+            <p style="margin-bottom: 20px">Interests: <span th:text="${#strings.listJoin(interests, ', ')}"></span></p>
+
             <a href="#" class="btn btn-primary btn-sm" role="button" aria-disabled="true" style="margin-bottom: 10px">Edit profile</a>
         </div>
 
