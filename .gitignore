@@ -17,5 +17,7 @@ target/
 .idea
 *.iws
 *.iml
-*.ipr
+*.ir
+
+/user-photos
 
