@@ -15,10 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +63,7 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = "image-" + member.getId();
         member.setPhoto(fileName);
         Member savedMember = memberService.register(member);
         securityService.autoLogin(member.getUsername(), member.getPasswordConfirm());
@@ -118,5 +115,14 @@ public class MemberController {
         Member member = memberService.findByUsername(username);
         model.addAttribute("member", member);
         return "edit-profile";
+    }
+
+    @PutMapping("member/edit")
+    public String updateProfile(@ModelAttribute("member") Member member,
+                                @RequestParam("image") MultipartFile multipartFile,
+                                BindingResult bindingResult) {
+
+
+        return "redirect:/welcome";
     }
 }

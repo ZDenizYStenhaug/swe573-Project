@@ -24,3 +24,7 @@ target/
 /out
 
 /target
+
+dependency-reduced-pom.xml
+
+src/main/resources/application.properties
