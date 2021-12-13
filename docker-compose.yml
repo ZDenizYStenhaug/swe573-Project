@@ -11,3 +11,12 @@ services:
       - PGTZ=Europe/Istanbul
     ports:
       - 5432:5432
+  akita:
+    build: .
+    container_name: akita
+    ports:
+      - 8080-8080
+    links:
+      - "database:database"
+    depends_on:
+      - database
