@@ -65,9 +65,4 @@ public class OfferController{
         model.addAttribute("tags", tagService.getAllTags());
         return "offers";
     }
-
-    @GetMapping("/deneme")
-    public String deneme() {
-        return "deneme";
-    }
 }
