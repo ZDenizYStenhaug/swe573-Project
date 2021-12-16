@@ -4,7 +4,7 @@ public class Routing {
 
     public static final String URI_ID = "/{id}";
 
-    public static final String URI_OFFER_FORM = "/offer/form";
+    public static final String URI_OFFER_ADD = "/offer/add";
     public static final String URI_OFFER_ALL = "/offer/all";
 
 

@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Offer implements Serializable {
@@ -26,18 +26,17 @@ public class Offer implements Serializable {
     @Column(nullable = false, updatable = false)
     private Long offererId;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy hh:mm")
-    @Column(nullable = false, updatable = false)
-    private Date time;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @Column(nullable = false)
+    private LocalDateTime date;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private int duration;
 
     private int maxNumOfParticipants;
 
     @Column(nullable = false)
     private int cancellationDeadline;
-
 
     @Enumerated(EnumType.STRING)
     private RepeatingType repeatingType;
@@ -75,12 +74,12 @@ public class Offer implements Serializable {
         this.offererId = offererId;
     }
 
-    public Date getTime() {
-        return time;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setDate(LocalDateTime time) {
+        this.date = time;
     }
 
     public int getDuration() {
