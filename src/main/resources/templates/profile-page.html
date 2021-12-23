@@ -37,7 +37,7 @@
     <div class = "row" style="margin-bottom: 20px">
         <div class = "col-sm-3" style = "background-color:lightgrey; margin-bottom: 25px">
 
-            <img class="img-thumbnail" th:src="@{${offer.photosImagePath}}" style="margin-bottom: 10px; margin-top: 30px"/>
+            <img class="img-thumbnail" th:src="@{${member.photosImagePath}}" style="margin-bottom: 10px; margin-top: 30px"/>
             <h3 th:text="${member.username}" style="margin-bottom: 10px"></h3>
             <p  style="margin-bottom: 20px"><span th:text="${member.badge}" class="badge badge-success"></span></p>
 
@@ -69,6 +69,27 @@
             </nav>
             <div id="offers" >
                 Offers yea
+                <div class="container">
+                    <div class="row">
+                        <div class="flex-column">
+                            <div class="card mb-4 shadow-sm"  th:each="offer: ${member.offers}">
+                                <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="@{${offer.photosImagePath}}"/>
+                                <div class="card-body">
+                                    <h4 class="card-title" th:text="${offer.name}"></h4>
+                                    <p class="card-text" th:text="${offer.description}"></p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">Manage</button>
+                                        </div>
+                                        <small class="text-muted">duration: <span th:text="${offer.duration}"> hours</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             </div>
 
             <div id="events"  style="display:none">

@@ -170,7 +170,11 @@ public class Member implements Serializable {
         this.badge = badge;
     }
 
-//    public Set<Offer> getOffers() {
-//        return offers;
-//    }
+    public Set<Offer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(Set<Offer> offers) {
+        this.offers = offers;
+    }
 }

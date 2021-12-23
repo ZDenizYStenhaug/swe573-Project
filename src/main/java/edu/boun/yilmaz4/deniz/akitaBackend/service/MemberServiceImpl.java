@@ -1,6 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Badge;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -27,7 +29,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
     @Transactional(readOnly = true)
     public Optional<Member> findMemberById(Long id) {
