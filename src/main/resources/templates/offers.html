@@ -53,7 +53,7 @@
             <p class="lead text-muted">Here, you can view all the offers, or search among the existing offers.</p>
             <div class="row">
                 <a href="/offer/add" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Add new offer!</a>
-                <a href="/request/offer" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Request offer!</a>
+                <a href="#" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Request offer!</a>
             </div>
 
             <div class="input-group mb-3">
@@ -63,7 +63,6 @@
                 </select>
                 <!-- list offers -->
                 <a href="#" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Search!</a>
-
             </div>
         </div>
     </section>
@@ -73,7 +72,10 @@
             <div class="row">
                 <div class="flex-column">
                     <div class="card mb-4 shadow-sm"  th:each="offer: ${allOffers}">
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="@{${offer.photosImagePath}}"/>
+<!--
                         <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                        -->
                         <div class="card-body">
                             <h4 class="card-title" th:text="${offer.name}"></h4>
                             <p class="card-text" th:text="${offer.description}"></p>
@@ -90,7 +92,6 @@
             </div>
         </div>
     </div>
-
 </main>
 
 <footer class="text-muted">
@@ -98,6 +99,4 @@
         <p>Akita 2021</p>
     </div>
 </footer>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script></body>
 </html>

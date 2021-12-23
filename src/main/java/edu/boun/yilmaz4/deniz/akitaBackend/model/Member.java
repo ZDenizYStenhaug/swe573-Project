@@ -6,6 +6,8 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -57,6 +59,9 @@ public class Member implements Serializable {
             joinColumns = @JoinColumn(name = "member_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> talents;
+
+    @OneToMany(mappedBy = "offerer")
+    private Set<Offer> offers = new HashSet<>();
 
     public Member() {
     }
@@ -164,4 +169,8 @@ public class Member implements Serializable {
     public void setBadge(Badge badge) {
         this.badge = badge;
     }
+
+//    public Set<Offer> getOffers() {
+//        return offers;
+//    }
 }

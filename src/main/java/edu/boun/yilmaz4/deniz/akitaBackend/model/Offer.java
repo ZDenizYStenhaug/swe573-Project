@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Offer implements Serializable {
@@ -22,9 +23,9 @@ public class Offer implements Serializable {
     @Column(nullable = false, updatable = false)
     private String description;
 
-    //TODO: one to many relationship with member class
-    @Column(nullable = false, updatable = false)
-    private Long offererId;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member offerer;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     @Column(nullable = false)
@@ -45,6 +46,13 @@ public class Offer implements Serializable {
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
 
+    private String photo;
+
+    @ManyToMany
+    @JoinTable(name = "offer_tags",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private Set<Tag> offerTags;
 
     public Long getId() {
         return id;
@@ -66,12 +74,12 @@ public class Offer implements Serializable {
         this.description = description;
     }
 
-    public Long getOffererId() {
-        return offererId;
+    public Member getOfferer() {
+        return offerer;
     }
 
-    public void setOffererId(Long offererId) {
-        this.offererId = offererId;
+    public void setOfferer(Member offererId) {
+        this.offerer = offererId;
     }
 
     public LocalDateTime getDate() {
@@ -121,4 +129,24 @@ public class Offer implements Serializable {
     public void setRepeatingType(RepeatingType repeatingType) {
         this.repeatingType = repeatingType;
     }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (photo == null || id == null) return null;
+
+        return "/offer-photos/" + id + "/" + photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Set<Tag> getOfferTags() {
+        return offerTags;
+    }
+
+    public void setOfferTags(Set<Tag> offerTags) {
+        this.offerTags = offerTags;
+    }
+
 }

@@ -2,7 +2,6 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberDetailsServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.SecurityService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
@@ -13,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +29,6 @@ public class MemberController {
     private SecurityService securityService;
     @Autowired
     private MemberValidator memberValidator;
-    @Autowired
-    private MemberDetailsServiceImpl memberDetailsService;
     @Autowired
     private TagService tagService;
 
@@ -58,7 +54,8 @@ public class MemberController {
 
     @PostMapping("/registration")
     public String registration(@ModelAttribute("member") Member member,
-                               @RequestParam("image") MultipartFile multipartFile, BindingResult bindingResult) throws IOException {
+                               @RequestParam("image") MultipartFile multipartFile,
+                               BindingResult bindingResult) throws IOException {
         memberValidator.validate(member, bindingResult);
         if (bindingResult.hasErrors()) {
             return "registration";

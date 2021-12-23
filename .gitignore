@@ -20,6 +20,7 @@ target/
 *.ir
 
 /user-photos
+/offer-photos
 
 /out
 

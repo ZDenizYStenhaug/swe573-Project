@@ -16,7 +16,6 @@ import java.util.List;
 public class OfferService {
     private static final Logger logger = LoggerFactory.getLogger(OfferService.class);
 
-
     @Autowired
     private OfferRepo offerRepo;
 
