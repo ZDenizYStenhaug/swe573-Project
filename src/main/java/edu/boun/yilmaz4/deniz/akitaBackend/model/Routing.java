@@ -2,6 +2,8 @@ package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
 public class Routing {
 
+    // TODO: organize!
+
     public static final String URI_ID = "/{id}";
 
     public static final String URI_OFFER_ADD = "/offer/add";
