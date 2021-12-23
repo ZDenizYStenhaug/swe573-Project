@@ -50,10 +50,9 @@
             <div>
 
             </div>
-            <p class="lead text-muted">Here, you can view all the offers, or search among the existing offers.</p>
+            <p class="lead text-muted">Here, you can view all the events, or search among the existing events.</p>
             <div class="row">
-                <a href="/offer/add" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Add new offer!</a>
-                <a href="#" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Request offer!</a>
+                <a href="/event/add" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Add new Event!</a>
             </div>
 
             <div class="input-group mb-3">
@@ -66,32 +65,6 @@
             </div>
         </div>
     </section>
-
-    <div class="album py-5 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="flex-column">
-                    <div class="card mb-4 shadow-sm"  th:each="offer: ${allOffers}">
-                        <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="@{${offer.photosImagePath}}"/>
-                        <!--
-                                                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
-                                                -->
-                        <div class="card-body">
-                            <h4 class="card-title" th:text="${offer.name}"></h4>
-                            <p class="card-text" th:text="${offer.description}"></p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Go to offerer's profile</button>
-                                </div>
-                                <small class="text-muted">duration: <span th:text="${offer.duration}"> hour</span></small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </main>
 
 <footer class="text-muted">

@@ -26,16 +26,15 @@ public class OfferValidator implements Validator {
     public void validate(Object o, Errors errors) {
         Offer offer = (Offer) o;
         Member member = memberService.findByUsername(memberService.getCurrentUserLogin());
-        // username must be filled
+        // name must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty");
         // description must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "NotEmpty");
         // date must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "date", "NotEmpty");
         // check if the member has any other offer for that date and time
-        // TODO: check for events too
         if (offerService.checkForUniqueTimestamp(member, offer)){
-            errors.rejectValue("date", "Duplicate.offerForm.date");
+            errors.rejectValue("date", "Duplicate.date");
         }
         // the offer must have at least 2 tags
         if (offer.getOfferTags().size() < 2) {

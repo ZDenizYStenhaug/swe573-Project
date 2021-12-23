@@ -1,6 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.exception.OfferNotFoundException;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
@@ -36,11 +37,18 @@ public class OfferService {
 
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Offer offer) {
-        logger.info("checking if there's another offer that has the same date and time as the new offer.");
+        logger.info("checking if there's another event or offer that has the same date and time as the new offer.");
         Set<Offer> allOffers = member.getOffers();
         for (Offer o : allOffers) {
             if (o.getDate().equals(offer.getDate())) {
                 logger.debug("Found another offer that has the same date and time.");
+                return true;
+            }
+        }
+        Set<Event> allEvents = member.getEvents();
+        for (Event e : allEvents) {
+            if (e.getDate().equals(offer.getDate())) {
+                logger.debug("Found another event that has the same date and time.");
                 return true;
             }
         }

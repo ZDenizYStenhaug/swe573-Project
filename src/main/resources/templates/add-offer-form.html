@@ -29,7 +29,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/welcome" class="nav-link navbar-brand">AKITA</a></li>
                 <li><a href="/offer/all" class="nav-link px-2 text-white">Offers</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Events</a></li>
+                <li><a href="/event/all" class="nav-link px-2 text-white">Events</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
             </ul>
 
@@ -64,7 +64,7 @@
 
          <div class="form-group" style="margin-bottom: 20px">
             <h4>Tags:</h4>
-            <p>Please select the tags that you think is related to your offer.</p>
+            <p>Please select at least two tags that you think is related to your offer.</p>
             <select class="selectpicker" multiple data-live-search="true"  th:field="*{offerTags}">
                 <option value="" disabled>Choose your interests</option>
                 <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
@@ -118,6 +118,7 @@
             <h4>Photo:</h4>
             <input type="file" name="image" class="custom-file-input" id="customFile" accept="image/png, image/jpeg" >
         </div>
+
          <tr>
              <td><button class="btn btn-primary" type="submit">Submit</button></td>
          </tr>

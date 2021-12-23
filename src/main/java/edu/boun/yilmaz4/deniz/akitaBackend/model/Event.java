@@ -113,6 +113,9 @@ public class Event implements Serializable {
         this.status = status;
     }
 
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
     public Set<Tag> getEventTags() {
         return eventTags;
     }
