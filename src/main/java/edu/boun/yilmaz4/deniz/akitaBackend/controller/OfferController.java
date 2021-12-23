@@ -7,6 +7,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class OfferController{
     private MemberServiceImpl memberService;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private OfferValidator offerValidator;
 
     @GetMapping(Routing.URI_OFFER_ADD)
     public String addOffer(Model model) {
@@ -51,7 +54,8 @@ public class OfferController{
         if (username.equals("anonymousUser")) {
             return "login";
         }
-        if(bindingResult.hasErrors()) {
+        offerValidator.validate(offer, bindingResult);
+        if (bindingResult.hasErrors()) {
             return "add-offer-form";
         }
         Member member = memberService.findByUsername(username);

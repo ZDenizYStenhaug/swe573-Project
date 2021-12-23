@@ -39,5 +39,7 @@ public class MemberValidator implements Validator {
         if (!member.getPasswordConfirm().equals(member.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
         }
+
+        //TODO: the user must chose at least 2 tags
     }
 }

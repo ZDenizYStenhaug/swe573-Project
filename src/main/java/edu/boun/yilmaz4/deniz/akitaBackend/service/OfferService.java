@@ -1,6 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.exception.OfferNotFoundException;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.OfferRepo;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class OfferService {
@@ -45,5 +47,16 @@ public class OfferService {
     @Transactional
     public Offer updateOffer(Offer offer) {
         return offerRepo.save(offer);
+    }
+
+    @Transactional
+    public boolean checkForUniqueTimestamp(Member member, Offer offer) {
+        Set<Offer> allOffers = member.getOffers();
+        for (Offer o : allOffers) {
+            if (o.getDate().equals(offer.getDate())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
