@@ -28,32 +28,19 @@ public class OfferService {
         return offerRepo.save(offer);
     }
 
-    @Transactional
+    @Transactional (readOnly = true)
     public List<Offer> allOffers() {
         logger.info("getting all offers");
         return offerRepo.findAll();
     }
 
-    @Transactional
-    public void deleteOffer(Long id) {
-        offerRepo.deleteOfferById(id);
-    }
-
-    @Transactional
-    public Offer findOfferById(Long id) {
-        return offerRepo.findOfferById(id).orElseThrow(() -> new OfferNotFoundException("offer by id " + id + "was not found."));
-    }
-
-    @Transactional
-    public Offer updateOffer(Offer offer) {
-        return offerRepo.save(offer);
-    }
-
-    @Transactional
+    @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Offer offer) {
+        logger.info("checking if there's another offer that has the same date and time as the new offer.");
         Set<Offer> allOffers = member.getOffers();
         for (Offer o : allOffers) {
             if (o.getDate().equals(offer.getDate())) {
+                logger.debug("Found another offer that has the same date and time.");
                 return true;
             }
         }

@@ -11,7 +11,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 @Component
-public class OfferValidator implements Validator{
+public class OfferValidator implements Validator {
 
     @Autowired
     private OfferService offerService;
@@ -33,6 +33,7 @@ public class OfferValidator implements Validator{
         // date must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "date", "NotEmpty");
         // check if the member has any other offer for that date and time
+        // TODO: check for events too
         if (offerService.checkForUniqueTimestamp(member, offer)){
             errors.rejectValue("date", "Duplicate.offerForm.date");
         }

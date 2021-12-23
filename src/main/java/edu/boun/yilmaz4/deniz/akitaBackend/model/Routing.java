@@ -12,5 +12,7 @@ public class Routing {
 
     public static final String URI_MEMBER = "/member";
     public static final String URI_HOME = "";
+
+    public static final String URI_EVENT_ADD = "/add";
 }
 
