@@ -12,25 +12,25 @@ import java.util.List;
 
 public interface MessageRepo extends JpaRepository<Message,Long> {
     // get the read messages for a member
-    @Query("SELECT m FROM Message m WHERE m.receiver = :member AND m.status = 'READ'")
-    public List<Message> getAllRead(@Param("member") Member member);
+    @Query("SELECT m FROM Message m WHERE m.receiver = :member AND m.status = 'READ' ORDER BY m.date DESC")
+    List<Message> getAllRead(@Param("member") Member member);
 
     // get the unread messages for a member
-    @Query("SELECT m FROM Message m WHERE m.receiver = :member AND m.status = 'UNREAD'")
-    public List<Message> getAllUnread(@Param("member") Member member);
+    @Query("SELECT m FROM Message m WHERE m.receiver = :member AND m.status = 'UNREAD' ORDER BY m.date DESC ")
+    List<Message> getAllUnread(@Param("member") Member member);
 
     // mark selected message as read
     @Modifying
     @Query("UPDATE Message m SET m.status = :targetStatus WHERE m.id = :messageId")
-    public void markAsRead(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
+    void markAsRead(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
 
     // mark selected message as unread
     @Modifying
     @Query("UPDATE Message m SET m.status = :targetStatus WHERE m.id = :messageId")
-    public void markAsUnread(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
+    void markAsUnread(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
 
     // delete selected message
     @Modifying
     @Query("UPDATE Message m SET m.status = :targetStatus WHERE m.id = :messageId")
-    public void delete(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
+    void delete(@Param("messageId") Long id, @Param("targetStatus") MessageStatus targetStatus);
 }
