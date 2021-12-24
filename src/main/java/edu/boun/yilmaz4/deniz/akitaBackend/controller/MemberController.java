@@ -3,6 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.SecurityService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.MemberValidator;
@@ -26,6 +27,8 @@ public class MemberController {
     @Autowired
     private MemberServiceImpl memberService;
     @Autowired
+    private MessageService messageService;
+    @Autowired
     private SecurityService securityService;
     @Autowired
     private MemberValidator memberValidator;
@@ -33,12 +36,21 @@ public class MemberController {
     private TagService tagService;
 
     @GetMapping("")
-    public String welcome() {
-        return "welcome";
-    }
+    public String welcome(Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
+        return "welcome";    }
 
     @GetMapping("/welcome")
-    public String welcome2() {
+    public String welcome2(Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
         return "welcome";
     }
 

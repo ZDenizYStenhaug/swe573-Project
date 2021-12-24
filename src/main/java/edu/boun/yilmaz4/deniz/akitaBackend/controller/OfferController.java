@@ -5,6 +5,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
@@ -33,6 +34,8 @@ public class OfferController{
     private TagService tagService;
     @Autowired
     private OfferValidator offerValidator;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping(Routing.URI_OFFER_ADD)
     public String addOffer(Model model) {
@@ -42,6 +45,8 @@ public class OfferController{
         }
         model.addAttribute("offer", new Offer());
         model.addAttribute("tags", tagService.getAllTags());
+        Member member = memberService.findByUsername(username);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "add-offer-form";
     }
 
@@ -66,14 +71,20 @@ public class OfferController{
         String uploadDir = "offer-photos/" + savedOffer.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         model.addAttribute("offer", savedOffer);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "add-offer-success";
     }
 
     @GetMapping(Routing.URI_OFFER_ALL)
     public String getAllOffers(Model model) {
         logger.info("-> {}", "getAllOffers");
+        String username = memberService.getCurrentUserLogin();
         model.addAttribute("allOffers", offerService.allOffers());
         model.addAttribute("tags", tagService.getAllTags());
+        if(!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
         return "offers";
     }
 }

@@ -11,6 +11,11 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MessageRepo extends JpaRepository<Message,Long> {
+
+    // check if any unread message exists
+    @Query("SELECT COUNT(m) FROM Message m WHERE m.receiver = :member AND m.status = 'UNREAD'")
+    int checkIfUnreadExists(@Param("member") Member member);
+
     // get the read messages for a member
     @Query("SELECT m FROM Message m WHERE m.receiver = :member AND m.status = 'READ' ORDER BY m.date DESC")
     List<Message> getAllRead(@Param("member") Member member);

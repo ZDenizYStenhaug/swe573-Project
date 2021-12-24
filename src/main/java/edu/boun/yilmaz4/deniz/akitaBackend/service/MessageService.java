@@ -17,6 +17,11 @@ public class MessageService {
     private MessageRepo messageRepo;
 
     @Transactional (readOnly = true)
+    public int checkForUnreadMessage(Member member) {
+        return messageRepo.checkIfUnreadExists(member);
+    }
+
+    @Transactional (readOnly = true)
     public List<Message> getAllReadMessages(Member member) {
         return messageRepo.getAllRead(member);
     }

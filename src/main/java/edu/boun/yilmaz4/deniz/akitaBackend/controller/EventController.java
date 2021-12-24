@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventValidator;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public class EventController {
     private TagService tagService;
     @Autowired
     private EventValidator eventValidator;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping(Routing.URI_ADD)
     public String addEvent(Model model) {
@@ -41,6 +44,8 @@ public class EventController {
         }
         model.addAttribute("event", new Event());
         model.addAttribute("tags", tagService.getAllTags());
+        Member member = memberService.findByUsername(username);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "add-event-form";
     }
 
@@ -65,6 +70,7 @@ public class EventController {
         String uploadDir = "event-photos/" + savedEvent.getId();
         FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
         model.addAttribute("event", savedEvent);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "add-event-success";
     }
 
@@ -73,6 +79,11 @@ public class EventController {
         logger.info("-> {}", "getAllEvents");
         model.addAttribute("allEvents", eventService.allEvents());
         model.addAttribute("tags", tagService.getAllTags());
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
         return "events";
     }
 
