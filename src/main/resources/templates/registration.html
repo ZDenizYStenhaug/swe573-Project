@@ -61,16 +61,21 @@
         </div>
         <div class="form-group" style="margin-bottom: 10px">
             <h4>Interests:</h4>
+            <p>Please chose at least 2 tags that describe your interests.</p>
             <select class="selectpicker" multiple data-live-search="true"  th:field="*{interests}">
                 <option value="" disabled>Choose your interests</option>
                 <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
+                <p class="has-error" th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"}></p>
+
             </select>
         </div>
         <div class="form-group" style="margin-bottom: 30px">
             <h4>Talents:</h4>
+            <p>Please chose at least 2 tags that describe your talents.</p>
             <select class="selectpicker scrollable-menu" multiple data-live-search="true" th:field="*{talents}">
                 <option value="" disabled>Choose your talents</option>
                 <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
+                <p class="has-error" th:if="${#fields.hasErrors('talents')}" th:errors="*{talents}"}></p>
             </select>
         </div>
         <div class="custom-file" style="margin-bottom: 10px">

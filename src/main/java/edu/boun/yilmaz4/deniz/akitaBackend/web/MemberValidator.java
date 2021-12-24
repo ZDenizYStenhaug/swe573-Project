@@ -40,6 +40,11 @@ public class MemberValidator implements Validator {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
         }
 
-        //TODO: the user must chose at least 2 tags
+        if (member.getInterests().size() < 2) {
+            errors.rejectValue("interests", "Number.tags.interests");
+        }
+        if (member.getTalents().size() < 2) {
+            errors.rejectValue("talents", "Number.tags.talents");
+        }
     }
 }
