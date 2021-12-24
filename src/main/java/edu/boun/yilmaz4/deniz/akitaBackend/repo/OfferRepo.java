@@ -10,4 +10,6 @@ public interface OfferRepo extends JpaRepository<Offer, Long> {
 
     Optional<Offer> findOfferById(Long id);
 
+    // TODO: find offers of members ordered by the date
+
 }

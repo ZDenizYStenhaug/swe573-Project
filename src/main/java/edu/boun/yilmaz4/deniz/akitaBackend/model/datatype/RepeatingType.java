@@ -21,8 +21,8 @@ public enum RepeatingType {
         this.s = s;
     }
 
-    public Role getDefault() {
-        return Role.USER;
+    public RepeatingType getDefault() {
+        return RepeatingType.NOT_REPEATING;
     }
 
     public String toString() {

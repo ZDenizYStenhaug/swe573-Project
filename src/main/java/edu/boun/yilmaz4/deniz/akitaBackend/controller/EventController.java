@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/event")
+@RequestMapping(Routing.ROOT_EVENT)
 public class EventController {
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
@@ -33,7 +33,7 @@ public class EventController {
     @Autowired
     private EventValidator eventValidator;
 
-    @GetMapping(Routing.URI_EVENT_ADD)
+    @GetMapping(Routing.URI_ADD)
     public String addEvent(Model model) {
         String username = memberService.getCurrentUserLogin();
         if(username.equals("anonymousUser")) {
@@ -44,7 +44,7 @@ public class EventController {
         return "add-event-form";
     }
 
-    @PostMapping(Routing.URI_EVENT_ADD)
+    @PostMapping(Routing.URI_ADD)
     public String addEvent(@ModelAttribute("event") Event event,
                            @RequestParam("image")MultipartFile multipartFile,
                            BindingResult bindingResult,
@@ -68,7 +68,7 @@ public class EventController {
         return "add-event-success";
     }
 
-    @GetMapping(Routing.URI_EVENT_ALL)
+    @GetMapping(Routing.URI_ALL)
     public String getAllEvents(Model model) {
         logger.info("-> {}", "getAllEvents");
         model.addAttribute("allEvents", eventService.allEvents());
