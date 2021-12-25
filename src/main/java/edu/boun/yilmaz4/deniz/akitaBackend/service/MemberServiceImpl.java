@@ -31,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional(readOnly = true)
-    public Optional<Member> findMemberById(Long id) {
+    public Member findMemberById(Long id) {
         return memberRepo.findMemberById(id);
     }
 

@@ -1,6 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
@@ -35,7 +36,7 @@ public class MemberController {
     @Autowired
     private TagService tagService;
 
-    @GetMapping("")
+    @GetMapping()
     public String welcome(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
@@ -103,12 +104,22 @@ public class MemberController {
     }
 
     @GetMapping("/profile")
-    public String showProfilePage(Model model) {
+    public String profilePage(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
             return "login";
         }
         Member member = memberService.findByUsername(username);
+        model.addAttribute("member", member);
+        model.addAttribute("interests", memberService.getInterestNames(member));
+        model.addAttribute("talents", memberService.getTalentsNames(member));
+        return "profile-page";
+    }
+
+    @PostMapping("/view/profile")
+    public String viewProfilePage(Model model,
+                                  @RequestParam(value = "memberId") Long memberId) {
+        Member member = memberService.findMemberById(memberId);
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));

@@ -12,6 +12,7 @@
 
 <body>
 
+
 <header class="p-3 bg-dark text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -26,11 +27,17 @@
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
             </ul>
 
+            <div class="text-end" sec:authorize="isAnonymous()">
+                <a href="/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
+                <a href="/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
+            </div>
+
             <div class="text-end" sec:authorize="isAuthenticated()">
                 <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
-
+                <a href="/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
                 <a href="/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
+
         </div>
     </div>
 </header>
@@ -53,8 +60,11 @@
             <p style="margin-bottom: 10px">Talents: <span th:text="${#strings.listJoin(talents, ', ')}"></span></p>
             <p style="margin-bottom: 20px">Interests: <span th:text="${#strings.listJoin(interests, ', ')}"></span></p>
 
-            <a href="#" class="btn btn-primary btn-sm" role="button" aria-disabled="true" style="margin-bottom: 10px">Edit profile</a>
-        </div>
+            <div th:if="${#authentication.name} eq ${member.username}">
+                <form > <!-- TODO edit profile link-->
+                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-primary">Edit profile</button>
+                </form>
+            </div>        </div>
 
         <div class = "col-sm-8">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -81,8 +91,14 @@
                                     <p class="card-text" th:text="${offer.description}"></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">Manage</button>
+                                            <form> <!-- TODO view offer page link -->
+                                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">View</button>
+                                            </form>
+                                            <div th:if="${#authentication.name} eq ${member.username}">
+                                                <form > <!-- TODO manage offer page link-->
+                                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Manage</button>
+                                                </form>
+                                            </div>
                                         </div>
                                         <small class="text-muted">duration: <span th:text="${offer.duration}"> hours</span></small>
                                     </div>
@@ -95,6 +111,9 @@
 
             <div id="events"  style="display:none">
                 Events yea
+                <div th:text="${#authentication.name}" ></div>
+
+
                 <div class="container">
                     <div class="row">
                         <div class="flex-column">
@@ -105,8 +124,14 @@
                                     <p class="card-text" th:text="${event.description}"></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">Manage</button>
+                                            <form> <!-- TODO view event page link -->
+                                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">View</button>
+                                            </form>
+                                            <div th:if="${#authentication.name} eq ${member.username}">
+                                                <form > <!-- TODO manage event page link-->
+                                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Manage</button>
+                                                </form>
+                                            </div>
                                         </div>
                                         <small class="text-muted">duration: <span th:text="${event.duration}"> hours</span></small>
                                     </div>
