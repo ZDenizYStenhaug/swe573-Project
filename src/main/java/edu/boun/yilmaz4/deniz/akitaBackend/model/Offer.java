@@ -55,6 +55,18 @@ public class Offer implements Serializable {
     private Set<Tag> offerTags;
 
 
+    @ManyToMany
+    @JoinTable(name = "offer_applicants",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns =  @JoinColumn(name = "member_id"))
+    private Set<Member> applicants;
+
+    @ManyToMany
+    @JoinTable(name = "offer_partipants",
+            joinColumns = @JoinColumn(name = "offer_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id"))
+    private Set<Member> participants;
+
     public Long getId() {
         return id;
     }
@@ -150,4 +162,19 @@ public class Offer implements Serializable {
         this.offerTags = offerTags;
     }
 
+    public Set<Member> getApplicants() {
+        return applicants;
+    }
+
+    public void setApplicants(Set<Member> applicants) {
+        this.applicants = applicants;
+    }
+
+    public Set<Member> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Member> participants) {
+        this.participants = participants;
+    }
 }

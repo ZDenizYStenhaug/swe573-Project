@@ -48,6 +48,11 @@ public class Event implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> eventTags;
 
+    @ManyToMany
+    @JoinTable(name = "event_partipants",
+            joinColumns = @JoinColumn(name ="event_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id") )
+    private Set<Member> participants;
 
     public void setId(Long id) {
         this.id = id;
@@ -122,6 +127,14 @@ public class Event implements Serializable {
 
     public void setEventTags(Set<Tag> eventTags) {
         this.eventTags = eventTags;
+    }
+
+    public Set<Member> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Member> participants) {
+        this.participants = participants;
     }
 
     @Transient
