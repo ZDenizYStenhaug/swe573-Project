@@ -4,6 +4,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import jdk.jfr.Registered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +13,27 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping(Routing.ROOT_TAG)
 public class TagController implements WebMvcConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(OfferController.class);
 
     @Autowired
     private TagService tagService;
 
-    @GetMapping(Routing.URI_TAG_FORM)
+    @GetMapping(Routing.URI_ADD)
     public String showTagForm(Model model) {
         Tag tag = new Tag();
         model.addAttribute("tag", tag);
         return "add-tag-form";
     }
 
-    @PostMapping(Routing.URI_TAG_FORM)
+    @PostMapping(Routing.URI_ADD)
     public String saveNewTag(@Valid Tag tag, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "add-tag-form";

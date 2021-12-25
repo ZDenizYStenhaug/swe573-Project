@@ -1,8 +1,8 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.SecurityService;
@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
+@RequestMapping(Routing.ROOT_MEMBER)
 public class MemberController {
 
     @Autowired
@@ -43,9 +44,10 @@ public class MemberController {
             Member member = memberService.findByUsername(username);
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
-        return "welcome";    }
+        return "welcome";
+    }
 
-    @GetMapping("/welcome")
+    @GetMapping(Routing.URI_MEMBER_WELCOME)
     public String welcome2(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
@@ -55,7 +57,7 @@ public class MemberController {
         return "welcome";
     }
 
-    @GetMapping("/registration")
+    @GetMapping(Routing.URI_MEMBER_REGISTRATION)
     public String registration(Model model) {
         if (securityService.isAuthenticated()) {
             return "redirect:/";
@@ -65,7 +67,7 @@ public class MemberController {
         return "registration";
     }
 
-    @PostMapping("/registration")
+    @PostMapping(Routing.URI_MEMBER_REGISTRATION)
     public String registration(@ModelAttribute("member") Member member,
                                @RequestParam("image") MultipartFile multipartFile,
                                BindingResult bindingResult) throws IOException {
@@ -82,7 +84,7 @@ public class MemberController {
         return "redirect:/welcome";
     }
 
-    @GetMapping("/login")
+    @GetMapping(Routing.URI_MEMBER_LOGIN)
     public String login(Model model, String error, String logout) {
         if (securityService.isAuthenticated()) {
             return "redirect:/welcome";
@@ -94,7 +96,7 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("/logout")
+    @GetMapping(Routing.URI_MEMBER_LOGOUT)
     public String logout (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null){
@@ -103,7 +105,7 @@ public class MemberController {
         return "redirect:/welcome";
     }
 
-    @GetMapping("/profile")
+    @GetMapping(Routing.URI_MEMBER_PROFILE)
     public String profilePage(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
@@ -117,7 +119,7 @@ public class MemberController {
         return "profile-page";
     }
 
-    @PostMapping("/view/profile")
+    @PostMapping(Routing.URI_MEMBER_VIEW_PROFILE)
     public String viewProfilePage(Model model,
                                   @RequestParam(value = "memberId") Long memberId) {
         Member member = memberService.findMemberById(memberId);
@@ -125,11 +127,10 @@ public class MemberController {
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-
         return "profile-page";
     }
 
-    @GetMapping("/member/edit")
+    @GetMapping(Routing.URI_EDIT)
     public String editProfilePage(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
@@ -140,7 +141,7 @@ public class MemberController {
         return "edit-profile";
     }
 
-    @PutMapping("member/edit")
+    @PutMapping(Routing.URI_EDIT)
     public String updateProfile(@ModelAttribute("member") Member member,
                                 @RequestParam("image") MultipartFile multipartFile,
                                 BindingResult bindingResult) {

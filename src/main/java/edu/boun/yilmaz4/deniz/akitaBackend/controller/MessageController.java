@@ -30,7 +30,7 @@ public class MessageController {
         return "messages";
     }
 
-    @PostMapping(Routing.URI_READ)
+    @PostMapping(Routing.URI_MESSAGE_READ)
     public String markMessageAsRead(Model model,
                                     @RequestParam(value = "messageId") Long messageId) {
         String username = memberService.getCurrentUserLogin();
@@ -44,7 +44,7 @@ public class MessageController {
         return "messages";
     }
 
-    @PostMapping(Routing.URI_UNREAD)
+    @PostMapping(Routing.URI_MESSAGE_UNREAD)
     public String markMessageAsUnread(Model model,
                                     @RequestParam(value = "messageId") Long messageId) {
         String username = memberService.getCurrentUserLogin();

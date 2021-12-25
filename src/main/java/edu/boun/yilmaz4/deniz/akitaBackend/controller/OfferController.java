@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
-@RequestMapping()
+@RequestMapping(Routing.ROOT_OFFER)
 public class OfferController{
 
     private static final Logger logger = LoggerFactory.getLogger(OfferController.class);
@@ -37,7 +37,7 @@ public class OfferController{
     @Autowired
     private MessageService messageService;
 
-    @GetMapping(Routing.URI_OFFER_ADD)
+    @GetMapping(Routing.URI_ADD)
     public String addOffer(Model model) {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
@@ -50,7 +50,7 @@ public class OfferController{
         return "add-offer-form";
     }
 
-    @PostMapping(Routing.URI_OFFER_ADD)
+    @PostMapping(Routing.URI_ADD)
     public String addOffer(@ModelAttribute("offer") Offer offer,
                            @RequestParam("image") MultipartFile multipartFile,
                            BindingResult bindingResult,
@@ -75,7 +75,7 @@ public class OfferController{
         return "add-offer-success";
     }
 
-    @GetMapping(Routing.URI_OFFER_ALL)
+    @GetMapping(Routing.URI_ALL)
     public String getAllOffers(Model model) {
         logger.info("-> {}", "getAllOffers");
         String username = memberService.getCurrentUserLogin();

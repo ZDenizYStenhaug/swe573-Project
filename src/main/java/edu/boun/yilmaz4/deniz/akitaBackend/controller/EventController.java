@@ -87,4 +87,7 @@ public class EventController {
         return "events";
     }
 
+    @PostMapping(Routing.URI_VIEW_EVENT)
+
+
 }
