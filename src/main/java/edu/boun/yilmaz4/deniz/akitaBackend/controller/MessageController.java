@@ -27,6 +27,7 @@ public class MessageController {
         Member member = memberService.findByUsername(username);
         model.addAttribute("unreadMessages", messageService.getAllUnreadMessages(member));
         model.addAttribute("readMessages", messageService.getAllReadMessages(member));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "messages";
     }
 
