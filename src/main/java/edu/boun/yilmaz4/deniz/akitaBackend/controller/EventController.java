@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Set;
 
 @Controller
 @RequestMapping(Routing.ROOT_EVENT)
@@ -101,5 +102,22 @@ public class EventController {
         return "view-event";
     }
 
+    @PostMapping(Routing.URI_EVENT_REGISTER)
+    public String register(Model model,
+                           @RequestParam("eventId") Long eventId,
+                           @RequestParam("username") String username){
+        logger.info("-> {}", "register");
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(username);
+        Event event = eventService.findEventById(eventId);
+        Set<Member> participants = event.getParticipants();
+        participants.add(member);
+        event.setParticipants(participants);
+        eventService.saveEvent(event);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "event-registration-successful";
+    }
 
 }

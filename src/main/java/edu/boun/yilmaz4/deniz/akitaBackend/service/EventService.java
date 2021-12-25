@@ -59,4 +59,10 @@ public class EventService {
         }
         return false;
     }
+
+    @Transactional
+    public Event saveEvent(Event event) {
+        logger.info("saving event " + event);
+        return eventRepo.save(event);
+    }
 }
