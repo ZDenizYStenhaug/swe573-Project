@@ -29,7 +29,7 @@
             <div class="text-end" sec:authorize="isAuthenticated()">
                 <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
                 <a href="/member/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
-                <a href="/member/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
+                <a href="/member/logout" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
         </div>
     </div>
