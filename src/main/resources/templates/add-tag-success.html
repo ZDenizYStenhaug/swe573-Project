@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Tag Created</title>
 </head>
 <body>
+
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="/welcome" class="nav-link navbar-brand">AKITA</a></li>
+                <li><a href="/offer/all" class="nav-link px-2 text-white">Offers</a></li>
+                <li><a href="/event/all" class="nav-link px-2 text-white">Events</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+            </ul>
+
+            <div class="text-end" sec:authorize="isAnonymous()">
+                <a href="/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
+                <a href="/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
+            </div>
+
+            <div class="text-end" sec:authorize="isAuthenticated()">
+                <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
+                <a href="/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
+                <a href="/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
+            </div>
+        </div>
+    </div>
+</header>
+
     <h2>Tag created!</h2>
     <p th:text="${tag.name}"></p>
     <hr>

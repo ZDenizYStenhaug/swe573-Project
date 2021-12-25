@@ -87,4 +87,18 @@ public class OfferController{
         }
         return "offers";
     }
+
+    @PostMapping(Routing.URI_VIEW)
+    public String viewOffer(Model model,
+                            @RequestParam("offerId") Long offerId) {
+        logger.info("-> {}", "viewOffer");
+        Offer offer = offerService.findOfferById(offerId);
+        model.addAttribute("offer", offer);
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
+        return "view-offer";
+    }
 }

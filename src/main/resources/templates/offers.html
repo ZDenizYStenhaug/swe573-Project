@@ -82,10 +82,10 @@
                             <p class="card-text" th:text="${offer.description}"></p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <form method="POST">
+                                    <form method="POST" th:action="@{/offer/view(offerId=${offer.id})}">
                                         <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">View</button>
                                     </form>
-                                    <form method="POST" th:action="@{/view/profile(memberId=${offer.offerer.id})}">
+                                    <form method="POST" th:action="@{/member/view/profile(memberId=${offer.offerer.id})}">
                                         <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to offerer's profile</button>
                                     </form>
                                 </div>

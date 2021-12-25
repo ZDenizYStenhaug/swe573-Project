@@ -35,6 +35,11 @@ public class OfferService {
         return offerRepo.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Offer findOfferById(Long id) {
+        logger.info("getting the offer by id " + id);
+        return offerRepo.findOfferById(id);
+    }
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Offer offer) {
         logger.info("checking if there's another event or offer that has the same date and time as the new offer.");

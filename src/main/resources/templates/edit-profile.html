@@ -17,12 +17,19 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/welcome" class="nav-link navbar-brand">AKITA</a></li>
                 <li><a href="/offer/all" class="nav-link px-2 text-white">Offers</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Events</a></li>
+                <li><a href="/event/all" class="nav-link px-2 text-white">Events</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
             </ul>
 
+            <div class="text-end" sec:authorize="isAnonymous()">
+                <a href="/member/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
+                <a href="/member/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
+            </div>
+
             <div class="text-end" sec:authorize="isAuthenticated()">
-                <a href="/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
+                <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
+                <a href="/member/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
+                <a href="/member/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
         </div>
     </div>

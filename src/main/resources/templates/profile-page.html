@@ -12,7 +12,6 @@
 
 <body>
 
-
 <header class="p-3 bg-dark text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -28,16 +27,15 @@
             </ul>
 
             <div class="text-end" sec:authorize="isAnonymous()">
-                <a href="/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
-                <a href="/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
+                <a href="/member/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
+                <a href="/member/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
             </div>
 
             <div class="text-end" sec:authorize="isAuthenticated()">
                 <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
-                <a href="/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
-                <a href="/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
+                <a href="/member/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
+                <a href="/member/logout" th:href="@{/logout}" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
-
         </div>
     </div>
 </header>
@@ -80,7 +78,6 @@
                 </div>
             </nav>
             <div id="offers" >
-                Offers yea
                 <div class="container">
                     <div class="row">
                         <div class="flex-column">
@@ -110,9 +107,6 @@
             </div>
 
             <div id="events"  style="display:none">
-                Events yea
-                <div th:text="${#authentication.name}" ></div>
-
 
                 <div class="container">
                     <div class="row">
