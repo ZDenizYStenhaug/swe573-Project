@@ -37,26 +37,6 @@ public class MemberController {
     @Autowired
     private TagService tagService;
 
-    @GetMapping()
-    public String welcome(Model model) {
-        String username = memberService.getCurrentUserLogin();
-        if (!username.equals("anonymousUser")) {
-            Member member = memberService.findByUsername(username);
-            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        }
-        return "welcome";
-    }
-
-    @GetMapping(Routing.URI_MEMBER_WELCOME)
-    public String welcome2(Model model) {
-        String username = memberService.getCurrentUserLogin();
-        if (!username.equals("anonymousUser")) {
-            Member member = memberService.findByUsername(username);
-            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        }
-        return "welcome";
-    }
-
     @GetMapping(Routing.URI_MEMBER_REGISTRATION)
     public String registration(Model model) {
         if (securityService.isAuthenticated()) {

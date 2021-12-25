@@ -34,6 +34,12 @@ public class EventService {
         return eventRepo.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Event findEventById(Long id) {
+        logger.info("Getting the event by id " + id);
+        return eventRepo.findEventById(id);
+    }
+
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Event event) {
         logger.info("checking if there's another event or offer that has the same date and time as the new event.");

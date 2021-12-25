@@ -4,7 +4,6 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
-import jdk.jfr.Registered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

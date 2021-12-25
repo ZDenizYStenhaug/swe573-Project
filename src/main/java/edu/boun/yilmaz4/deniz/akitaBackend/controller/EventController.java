@@ -87,7 +87,19 @@ public class EventController {
         return "events";
     }
 
-    @PostMapping(Routing.URI_VIEW_EVENT)
+    @PostMapping(Routing.URI_VIEW)
+    public String viewEvent(Model model,
+                            @RequestParam("eventId") Long eventId) {
+        logger.info("-> {}", "viewEvent");
+        Event event = eventService.findEventById(eventId);
+        model.addAttribute("event", event);
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
+        return "view-event";
+    }
 
 
 }
