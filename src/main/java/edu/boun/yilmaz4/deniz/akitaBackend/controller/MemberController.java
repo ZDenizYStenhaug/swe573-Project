@@ -113,6 +113,7 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
     }
 
@@ -123,6 +124,8 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+
         return "profile-page";
     }
 
@@ -141,7 +144,6 @@ public class MemberController {
     public String updateProfile(@ModelAttribute("member") Member member,
                                 @RequestParam("image") MultipartFile multipartFile,
                                 BindingResult bindingResult) {
-
 
         return "redirect:/welcome";
     }
