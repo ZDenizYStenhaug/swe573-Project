@@ -6,7 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
-import edu.boun.yilmaz4.deniz.akitaBackend.web.DateValidator;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.EventDateValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class EventController {
     @Autowired
     private EventValidator eventValidator;
     @Autowired
-    private DateValidator dateValidator;
+    private EventDateValidator dateValidator;
     @Autowired
     private MessageService messageService;
 

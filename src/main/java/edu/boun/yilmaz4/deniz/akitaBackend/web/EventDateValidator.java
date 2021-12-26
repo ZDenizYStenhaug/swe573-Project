@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class DateValidator implements Validator {
+public class EventDateValidator implements Validator {
 
 
     @Autowired
