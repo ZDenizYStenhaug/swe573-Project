@@ -119,21 +119,15 @@ public class EventController {
         }
         Member member = memberService.findByUsername(response.getUsername());
         Event event = eventService.findEventById(response.getEventId());
-        Event registeredEvent = new Event();
-        if (event.getDate().equals(response.getDate())) {
-            dateValidator.validate(event, bindingResult);
-            if(bindingResult.hasErrors()) {
-                return "event-registration-unsuccessful";
-            }
-            registeredEvent = eventService.register(event, member);
-        } else {
+        Event registeredEvent;
+        if (!event.getDate().equals(response.getDate())) {
             event = eventService.getRecurringEventByDate(response.getDate(), event);
-            dateValidator.validate(event, bindingResult);
-            if (bindingResult.hasErrors()) {
-                return "event-registration-unsuccessful";
-            }
-            registeredEvent = eventService.register(event, member);
         }
+        dateValidator.validate(event, bindingResult);
+        if(bindingResult.hasErrors()) {
+            return "event-registration-unsuccessful";
+        }
+        registeredEvent = eventService.register(event, member);
         model.addAttribute("registered_event", registeredEvent);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "event-registration-successful";
