@@ -54,7 +54,7 @@ public class Event implements Serializable {
     private Set<Tag> eventTags;
 
     @ManyToMany
-    @JoinTable(name = "event_partipants",
+    @JoinTable(name = "event_participants",
             joinColumns = @JoinColumn(name ="event_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id") )
     private Set<Member> participants;

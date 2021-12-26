@@ -20,7 +20,7 @@ public enum OfferStatus {
         this.s = s;
     }
 
-    public OfferStatus getDefault() {
+    public static OfferStatus getDefault() {
         return OfferStatus.OPEN_TO_APPLICATIONS;
     }
 

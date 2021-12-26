@@ -18,10 +18,7 @@ public interface EventRepo<T extends Event> extends JpaRepository<T, Long> {
     @Query("Select e from Event e where event_type = 'Event'")
     List<Event> findAllEvents();
 
-    @Query("Select re FROM RecurringEvent re WHERE re.parentEvent = :event")
-    List<RecurringEvent> getRecurringEventsOfEvent(@Param("event") Event event);
-
     @Query("Select re FROM RecurringEvent re WHERE re.parentEvent = :event AND re.date = :date")
-    RecurringEvent getRecurringEventByDate(@Param("date")LocalDateTime date, @Param("event") Event event);
+    RecurringEvent findRecurringEventByDate(@Param("date")LocalDateTime date, @Param("event") Event event);
 
 }

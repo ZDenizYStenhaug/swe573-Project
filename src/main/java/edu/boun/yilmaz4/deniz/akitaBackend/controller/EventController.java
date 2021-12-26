@@ -109,7 +109,7 @@ public class EventController {
     @PostMapping(Routing.URI_EVENT_REGISTER)
     public String register(Model model,
                            @RequestParam("eventId") Long eventId,
-                           @ModelAttribute("eventRegistrationResponse") EventRegistrationResponse response,
+                           @ModelAttribute("response") EventRegistrationResponse response,
                            BindingResult bindingResult){
         logger.info("-> {}", "register");
         response.setUsername(memberService.getCurrentUserLogin());

@@ -2,12 +2,14 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.OfferApplicatonResponse;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferDateValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +25,6 @@ import java.io.IOException;
 @Controller
 @RequestMapping(Routing.ROOT_OFFER)
 public class OfferController{
-
     private static final Logger logger = LoggerFactory.getLogger(OfferController.class);
 
     @Autowired
@@ -35,7 +36,10 @@ public class OfferController{
     @Autowired
     private OfferValidator offerValidator;
     @Autowired
+    private OfferDateValidator dateValidator;
+    @Autowired
     private MessageService messageService;
+
 
     @GetMapping(Routing.URI_ADD)
     public String addOffer(Model model) {
@@ -99,6 +103,36 @@ public class OfferController{
             Member member = memberService.findByUsername(username);
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
+        OfferApplicatonResponse response = new OfferApplicatonResponse();
+        response.setOfferId(offer.getId());
+        model.addAttribute("response", response);
         return "view-offer";
+    }
+
+    @PostMapping(Routing.URI_OFFER_APPLY)
+    public String apply(Model model,
+                        @RequestParam("offerId") Long offerId,
+                        @ModelAttribute("response") OfferApplicatonResponse response,
+                        BindingResult bindingResult) {
+        logger.info("-> {}", "apply");
+        response.setUsername(memberService.getCurrentUserLogin());
+        response.setOfferId(offerId);
+        if (response.getUsername().equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(response.getUsername());
+        Offer offer = offerService.findOfferById(response.getOfferId());
+        Offer appliedOffer;
+        if (!offer.getDate().equals(response.getDate())) {
+            offer = offerService.getRecurringOfferByDate(response.getDate(), offer);
+        }
+        dateValidator.validate(offer, bindingResult);
+        if(bindingResult.hasErrors()) {
+            return "offer-registration-unsuccessful";
+        }
+        appliedOffer = offerService.apply(offer, member);
+        model.addAttribute("applied_offer", appliedOffer);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "offer-application-successful";
     }
 }

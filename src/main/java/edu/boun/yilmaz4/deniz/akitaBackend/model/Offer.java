@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -42,6 +43,9 @@ public class Offer implements Serializable {
     @Enumerated(EnumType.STRING)
     private RepeatingType repeatingType;
 
+    @OneToMany(mappedBy = "parentOffer")
+    private Set<RecurringOffer> recurringOffers = new HashSet<>();
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
@@ -62,7 +66,7 @@ public class Offer implements Serializable {
     private Set<Member> applicants;
 
     @ManyToMany
-    @JoinTable(name = "offer_partipants",
+    @JoinTable(name = "offer_participants",
             joinColumns = @JoinColumn(name = "offer_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id"))
     private Set<Member> participants;
@@ -141,6 +145,14 @@ public class Offer implements Serializable {
 
     public void setRepeatingType(RepeatingType repeatingType) {
         this.repeatingType = repeatingType;
+    }
+
+    public Set<RecurringOffer> getRecurringOffers() {
+        return recurringOffers;
+    }
+
+    public void setRecurringOffers(Set<RecurringOffer> recurringOffers) {
+        this.recurringOffers = recurringOffers;
     }
 
     @Transient

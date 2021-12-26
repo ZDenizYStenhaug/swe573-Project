@@ -69,6 +69,12 @@ public class Member implements Serializable {
     @ManyToMany(mappedBy = "participants")
     private Set<Event> registeredEvents = new HashSet<>();
 
+    @ManyToMany(mappedBy = "applicants")
+    private Set<Offer> appliedOffers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "participants")
+    private Set<Offer> participatingOffers = new HashSet<>();
+
     @OneToMany(mappedBy = "receiver")
     private Set<Message> messages = new HashSet<>();
 
@@ -193,6 +199,22 @@ public class Member implements Serializable {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
+    }
+
+    public Set<Offer> getAppliedOffers() {
+        return appliedOffers;
+    }
+
+    public void setAppliedOffers(Set<Offer> appliedOffers) {
+        this.appliedOffers = appliedOffers;
+    }
+
+    public Set<Offer> getParticipatingOffers() {
+        return participatingOffers;
+    }
+
+    public void setParticipatingOffers(Set<Offer> participatingOffers) {
+        this.participatingOffers = participatingOffers;
     }
 
     public Set<Event> getRegisteredEvents() {
