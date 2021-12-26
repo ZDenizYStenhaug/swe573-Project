@@ -49,7 +49,7 @@
     <ul>
         <li>Name: <span th:text="${event.name}"></span></li>
         <li>Description: <span th:text="${event.description}"></span></li>
-        <li>Time: <span th:text="${#temporals.format(event.date, 'dd-MM-yyyy HH:mm')}"></span></li>
+        <li>Next meeting: <span th:text="${#temporals.format(event.date, 'dd-MM-yyyy HH:mm')}"></span></li>
         <li>Duration: <span th:text="${event.duration}"></span></li>
         <li>Frequency: <span th:text="${event.repeatingType}"></span></li>
         <li>Status: <span th:text="${event.status}"></span></li>
@@ -63,7 +63,10 @@
     <p th:text="${#authentication.name}"></p>
     <p th:text="${event.organizer.username}"></p>
     <div th:if="not(${#authentication.name} eq ${event.organizer.username})">
-        <form method="POST" th:action="@{/event/register(eventId=${event.id}, username=${#authentication.name})}">
+        <form method="POST" th:action="@{/event/register(eventId=${event.id})}" th:object="${response}" enctype="multipart/form-data">
+            <select class="selectpicker" multiple th:field="*{date}">
+                <option th:each="d: ${dates}" th:value="${{d}}" th:text="${#temporals.format(d, 'dd-MM-yyyy HH:mm')}"></option>
+            </select>
             <button type="submit" name="submit" value="value" class="btn btn-success">Register!</button>
         </form>
     </div>
@@ -71,7 +74,7 @@
         <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
     </div>
     <hr>
-    <h3>Current participants:</h3>
+    <h4>Participants for next meeting</h4>
     <table class="table table-sm">
         <thead>
         <tr>

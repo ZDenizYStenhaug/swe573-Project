@@ -7,9 +7,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DiscriminatorColumn(name = "event_type")
 public class Event implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +37,9 @@ public class Event implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private RepeatingType repeatingType;
+
+    @OneToMany(mappedBy = "parentEvent")
+    private Set<RecurringEvent> recurringEvents = new HashSet<>();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -110,6 +115,14 @@ public class Event implements Serializable {
         this.repeatingType = repeatingType;
     }
 
+    public Set<RecurringEvent> getRecurringEvents() {
+        return recurringEvents;
+    }
+
+    public void setRecurringEvents(Set<RecurringEvent> recurringEvents) {
+        this.recurringEvents = recurringEvents;
+    }
+
     public EventStatus getStatus() {
         return status;
     }
@@ -120,6 +133,10 @@ public class Event implements Serializable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
     }
     public Set<Tag> getEventTags() {
         return eventTags;

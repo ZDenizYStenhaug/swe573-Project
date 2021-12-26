@@ -3,8 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.model.datatype;
 public enum RepeatingType {
     NOT_REPEATING("not repeating"),
     DAILY("daily"),
-    WEEKLY("weekly"),
-    MONTHLY("monthly");
+    WEEKLY("weekly");
 
     public static RepeatingType fromString(String value) {
         for (RepeatingType a : RepeatingType.values()) {

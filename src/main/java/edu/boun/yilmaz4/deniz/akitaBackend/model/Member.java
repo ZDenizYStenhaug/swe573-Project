@@ -66,6 +66,9 @@ public class Member implements Serializable {
     @OneToMany(mappedBy = "organizer")
     private Set<Event> events = new HashSet<>();
 
+    @ManyToMany(mappedBy = "participants")
+    private Set<Event> registeredEvents = new HashSet<>();
+
     @OneToMany(mappedBy = "receiver")
     private Set<Message> messages = new HashSet<>();
 
@@ -190,6 +193,14 @@ public class Member implements Serializable {
 
     public void setEvents(Set<Event> events) {
         this.events = events;
+    }
+
+    public Set<Event> getRegisteredEvents() {
+        return registeredEvents;
+    }
+
+    public void setRegisteredEvents(Set<Event> registeredEvents) {
+        this.registeredEvents = registeredEvents;
     }
 
     public Set<Message> getMessages() {

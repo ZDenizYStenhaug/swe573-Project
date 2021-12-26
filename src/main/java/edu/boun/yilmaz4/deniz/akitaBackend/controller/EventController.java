@@ -1,13 +1,12 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.DateValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Set;
 
 @Controller
 @RequestMapping(Routing.ROOT_EVENT)
@@ -34,6 +32,8 @@ public class EventController {
     private TagService tagService;
     @Autowired
     private EventValidator eventValidator;
+    @Autowired
+    private DateValidator dateValidator;
     @Autowired
     private MessageService messageService;
 
@@ -94,28 +94,47 @@ public class EventController {
         logger.info("-> {}", "viewEvent");
         Event event = eventService.findEventById(eventId);
         model.addAttribute("event", event);
+        model.addAttribute("dates", eventService.getDatesOfRecurringEvents(event));
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
             Member member = memberService.findByUsername(username);
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
+        EventRegistrationResponse response = new EventRegistrationResponse();
+        response.setEventId(event.getId());
+        model.addAttribute("response", response);
         return "view-event";
     }
 
     @PostMapping(Routing.URI_EVENT_REGISTER)
     public String register(Model model,
                            @RequestParam("eventId") Long eventId,
-                           @RequestParam("username") String username){
+                           @ModelAttribute("eventRegistrationResponse") EventRegistrationResponse response,
+                           BindingResult bindingResult){
         logger.info("-> {}", "register");
-        if (username.equals("anonymousUser")) {
+        response.setUsername(memberService.getCurrentUserLogin());
+        response.setEventId(eventId);
+        if (response.getUsername().equals("anonymousUser")) {
             return "login";
         }
-        Member member = memberService.findByUsername(username);
-        Event event = eventService.findEventById(eventId);
-        Set<Member> participants = event.getParticipants();
-        participants.add(member);
-        event.setParticipants(participants);
-        eventService.saveEvent(event);
+        Member member = memberService.findByUsername(response.getUsername());
+        Event event = eventService.findEventById(response.getEventId());
+        Event registeredEvent = new Event();
+        if (event.getDate().equals(response.getDate())) {
+            dateValidator.validate(event, bindingResult);
+            if(bindingResult.hasErrors()) {
+                return "event-registration-unsuccessful";
+            }
+            registeredEvent = eventService.register(event, member);
+        } else {
+            event = eventService.getRecurringEventByDate(response.getDate(), event);
+            dateValidator.validate(event, bindingResult);
+            if (bindingResult.hasErrors()) {
+                return "event-registration-unsuccessful";
+            }
+            registeredEvent = eventService.register(event, member);
+        }
+        model.addAttribute("registered_event", registeredEvent);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "event-registration-successful";
     }

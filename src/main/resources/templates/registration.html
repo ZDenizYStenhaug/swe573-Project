@@ -79,7 +79,6 @@
                 <option value="" disabled>Choose your interests</option>
                 <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
                 <p class="has-error" th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"}></p>
-
             </select>
         </div>
         <div class="form-group" style="margin-bottom: 30px">
