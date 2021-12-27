@@ -9,7 +9,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
-import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferDateValidator;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferApplicationValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ public class OfferController{
     @Autowired
     private OfferValidator offerValidator;
     @Autowired
-    private OfferDateValidator dateValidator;
+    private OfferApplicationValidator applicationValidator;
     @Autowired
     private MessageService messageService;
 
@@ -126,9 +126,9 @@ public class OfferController{
         if (!offer.getDate().equals(response.getDate())) {
             offer = offerService.getRecurringOfferByDate(response.getDate(), offer);
         }
-        dateValidator.validate(offer, bindingResult);
+        applicationValidator.validate(offer, bindingResult);
         if(bindingResult.hasErrors()) {
-            return "offer-registration-unsuccessful";
+            return "offer-application-unsuccessful";
         }
         appliedOffer = offerService.apply(offer, member);
         model.addAttribute("applied_offer", appliedOffer);

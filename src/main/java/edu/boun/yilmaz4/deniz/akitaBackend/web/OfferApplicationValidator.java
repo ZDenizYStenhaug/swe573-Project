@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class OfferDateValidator implements Validator {
+public class OfferApplicationValidator implements Validator {
 
     @Autowired
     private OfferService offerService;
