@@ -60,8 +60,6 @@
         </li>
     </ul>
     <hr>
-    <p th:text="${#authentication.name}"></p>
-    <p th:text="${event.organizer.username}"></p>
     <div th:if="not(${#authentication.name} eq ${event.organizer.username})">
         <form method="POST" th:action="@{/event/register(eventId=${event.id})}" th:object="${response}" enctype="multipart/form-data">
             <select class="selectpicker" multiple th:field="*{date}">

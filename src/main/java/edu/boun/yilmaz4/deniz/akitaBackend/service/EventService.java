@@ -26,11 +26,11 @@ public class EventService {
     public Event addEvent(Event event) {
         logger.info("Saving event " + event);
         event.setStatus(EventStatus.getDefault());
-        eventRepo.save(event);
-        LocalDateTime date = event.getDate();
-        date = getNextEventDate(event.getRepeatingType(), date);
-        // check the repeating type. if the type is not notRepeating, save the following 4 occurences as recurring events.
+        event = eventRepo.save(event);
+        // save the following 4 repeating events if there's any.
         if (!event.getRepeatingType().equals(RepeatingType.NOT_REPEATING)){
+            LocalDateTime date = event.getDate();
+            date = getNextEventDate(event.getRepeatingType(), date);
             for (int i = 0; i < 4; i++){
                 RecurringEvent recurringEvent = new RecurringEvent();
                 recurringEvent.setDate(date);
@@ -39,7 +39,7 @@ public class EventService {
                 date = getNextEventDate(event.getRepeatingType(), date);
             }
         }
-        return eventRepo.save(event);
+        return event;
     }
 
     @Transactional (readOnly = true)

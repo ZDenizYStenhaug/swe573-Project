@@ -5,6 +5,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.RecurringOffer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.OfferRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,22 @@ public class OfferService {
 
     @Transactional
     public Offer addOffer(Offer offer) {
-        offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
         logger.info("saving offer " + offer);
-        return offerRepo.save(offer);
+        offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
+        offer = offerRepo.save(offer);
+        // save the following 4 offers if there's any
+        if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            LocalDateTime date = offer.getDate();
+            date = getNextOfferDate(offer.getRepeatingType(), date);
+            for (int i = 0; i < 4; i++) {
+                RecurringOffer ro = new RecurringOffer();
+                ro.setDate(date);
+                saveRecurringOffer(ro, offer);
+                offerRepo.save(ro);
+                date = getNextOfferDate(offer.getRepeatingType(), date);
+            }
+        }
+        return offer;
     }
 
     @Transactional (readOnly = true)
@@ -36,7 +51,6 @@ public class OfferService {
         logger.info("getting all offers");
         return offerRepo.findAll();
     }
-
 
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Offer offer) {
@@ -107,5 +121,17 @@ public class OfferService {
     @Transactional
     public Offer updateOffer(Offer offer) {
         return offerRepo.save(offer);
+    }
+
+    public LocalDateTime getNextOfferDate(RepeatingType type, LocalDateTime date) {
+        switch (type) {
+            case DAILY:
+                return date.plusDays(1);
+            case WEEKLY:
+                return date.plusWeeks(1);
+            case MONTHLY:
+                return date.plusMonths(1);
+        }
+        return date;
     }
 }

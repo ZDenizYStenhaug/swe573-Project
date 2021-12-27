@@ -33,13 +33,13 @@
             </ul>
 
             <div class="text-end" sec:authorize="isAnonymous()">
-                <a href="/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
-                <a href="/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
+                <a href="/member/login" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Login</a>
+                <a href="/member/registration" align="right" class="btn btn-warning" role="button" aria-pressed="true">Sign-up</a>
             </div>
 
             <div class="text-end" sec:authorize="isAuthenticated()">
                 <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
-                <a href="/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
+                <a href="/member/ profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
                 <a href="/member/logout" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
 

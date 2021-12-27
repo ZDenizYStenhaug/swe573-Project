@@ -106,6 +106,7 @@ public class OfferController{
         OfferApplicatonResponse response = new OfferApplicatonResponse();
         response.setOfferId(offer.getId());
         model.addAttribute("response", response);
+        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(offer));
         return "view-offer";
     }
 
