@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,5 +45,15 @@ public class MessageService {
     @Transactional
     public void delete(Long messageId) {
         messageRepo.delete(messageId, MessageStatus.DELETED);
+    }
+
+    @Transactional
+    public void sendMessage(Member member, String text) {
+        Message message = new Message();
+        message.setReceiver(member);
+        message.setDate(LocalDateTime.now());
+        message.setText(text);
+        message.setStatus(MessageStatus.getDefault());
+        messageRepo.save(message);
     }
 }

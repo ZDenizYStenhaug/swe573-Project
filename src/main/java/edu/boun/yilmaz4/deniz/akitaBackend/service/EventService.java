@@ -21,6 +21,8 @@ public class EventService {
 
     @Autowired
     private EventRepo<Event> eventRepo;
+    @Autowired
+    private MessageService messageService;
 
     @Transactional
     public Event addEvent(Event event) {
@@ -97,7 +99,9 @@ public class EventService {
         Set<Member> participants = event.getParticipants();
         participants.add(member);
         event.setParticipants(participants);
-        // TODO: send message to the owner of the event.
+        // send message to the organizer of the event.
+        String message = member.getUsername() + " registered to your event " + event.getName() + " organized on " + event.getDate().toString();
+        messageService.sendMessage(event.getOrganizer(), message);
         return updateEvent(event);
     }
 
@@ -121,7 +125,7 @@ public class EventService {
     }
 
     // TODO: write tests
-    public LocalDateTime getNextEventDate(RepeatingType type, LocalDateTime date){
+    public LocalDateTime getNextEventDate(RepeatingType type, LocalDateTime date) {
         switch (type) {
             case DAILY:
                 return date.plusDays(1);
@@ -132,5 +136,4 @@ public class EventService {
         }
         return date;
     }
-
 }

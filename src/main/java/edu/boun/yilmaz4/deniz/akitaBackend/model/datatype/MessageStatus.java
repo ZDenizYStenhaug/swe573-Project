@@ -22,8 +22,8 @@ public enum MessageStatus {
         this.s = s;
     }
 
-    public Role getDefault() {
-        return Role.USER;
+    public static MessageStatus getDefault() {
+        return MessageStatus.UNREAD;
     }
 
     public String toString() {

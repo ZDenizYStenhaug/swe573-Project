@@ -23,7 +23,7 @@ public class Message implements Serializable {
     private LocalDateTime date;
 
     @Column(nullable = false)
-    private String message;
+    private String text;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -49,12 +49,12 @@ public class Message implements Serializable {
         this.date = date;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String message) {
+        this.text = message;
     }
 
     public MessageStatus getStatus() {

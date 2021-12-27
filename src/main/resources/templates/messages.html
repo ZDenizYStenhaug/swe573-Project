@@ -50,7 +50,7 @@
             <td colspan="2"> No Messages Available </td>
         </tr>
         <tr th:each="um: ${unreadMessages}" class="table-danger">
-            <td><span th:text="${um.message}"></span></td>
+            <td><span th:text="${um.text}"></span></td>
             <td><span th:text="${#temporals.format(um.date, 'dd-MM-yyyy HH:mm')}"></span></td>
             <td>
                 <form method="POST" th:action="@{/message/read(messageId=${um.id})}">
@@ -64,7 +64,7 @@
             </td>
         </tr>
         <tr th:each="rm: ${readMessages}">
-            <td><span th:text="${rm.message}"></span></td>
+            <td><span th:text="${rm.text}"></span></td>
             <td><span th:text="${#temporals.format(rm.date, 'dd-MM-yyyy HH:mm')}"></span></td>
             <td>
                 <form method="POST" th:action="@{/message/unread(messageId=${rm.id})}">
