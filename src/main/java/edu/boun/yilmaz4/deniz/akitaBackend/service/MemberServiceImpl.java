@@ -26,9 +26,10 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberRepo memberRepo;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private MessageService messageService;
 
     @Transactional(readOnly = true)
     public Member findMemberById(Long id) {
@@ -43,7 +44,11 @@ public class MemberServiceImpl implements MemberService {
         member.setCredit(5);
         member.setReputationPoints(5);
         member.setBadge(Badge.NEWCOMER);
-        return memberRepo.save(member);
+        member = memberRepo.save(member);
+        // send welcome message
+        String text = "Welcome to Akita!";
+        messageService.sendMessage(member, text);
+        return member;
     }
 
     @Override

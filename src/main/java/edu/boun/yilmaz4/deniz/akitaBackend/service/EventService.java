@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -100,7 +101,8 @@ public class EventService {
         participants.add(member);
         event.setParticipants(participants);
         // send message to the organizer of the event.
-        String message = member.getUsername() + " registered to your event " + event.getName() + " organized on " + event.getDate().toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String message = member.getUsername() + " registered to your event " + event.getName() + " organized on " + event.getDate().format(formatter);
         messageService.sendMessage(event.getOrganizer(), message);
         return updateEvent(event);
     }
