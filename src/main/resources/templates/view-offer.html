@@ -67,7 +67,7 @@
 
     <div th:if="not(${#authentication.name} eq ${offer.offerer.username})">
         <form method="POST" th:action="@{/offer/apply(offerId=${offer.id})}" th:object="${response}" enctype="multipart/form-data">
-            <select class="selectpicker" multiple th:field="*{date}">
+            <select class="selectpicker" th:field="*{date}">
                 <option th:each="d: ${dates}" th:value="${{d}}" th:text="${#temporals.format(d, 'dd-MM-yyyy HH:mm')}"></option>
             </select>
             <button type="submit" name="submit" value="value" class="btn btn-success">Apply!</button>

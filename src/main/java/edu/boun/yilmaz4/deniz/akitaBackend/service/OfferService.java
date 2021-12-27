@@ -1,9 +1,6 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.RecurringOffer;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.OfferRepo;
@@ -16,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +23,8 @@ public class OfferService {
 
     @Autowired
     private OfferRepo offerRepo;
+    @Autowired
+    private MessageService messageService;
 
     @Transactional
     public Offer addOffer(Offer offer) {
@@ -85,9 +85,11 @@ public class OfferService {
     public List<LocalDateTime> getDatesOfRecurringOffers(Offer offer) {
         Set<RecurringOffer> recurringOffers = offer.getRecurringOffers();
         List<LocalDateTime> dates = new ArrayList<>();
+        dates.add(offer.getDate());
         for (RecurringOffer ro : recurringOffers) {
             dates.add(ro.getDate());
         }
+        Collections.sort(dates);
         return dates;
     }
 
@@ -104,6 +106,7 @@ public class OfferService {
         // send message to the offerer
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String text = member.getUsername() + " applied to your offer " + offer.getName() + " organized on " + offer.getDate().format(formatter);
+        messageService.sendMessage(offer.getOfferer(), text);
         return updateOffer(offer);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -84,9 +85,11 @@ public class EventService {
     public List<LocalDateTime> getDatesOfRecurringEvents(Event event) {
         Set<RecurringEvent> recurringEvents = event.getRecurringEvents();
         List<LocalDateTime> dates = new ArrayList<>();
+        dates.add(event.getDate());
         for (RecurringEvent re : recurringEvents) {
             dates.add(re.getDate());
         }
+        Collections.sort(dates);
         return dates;
     }
 
