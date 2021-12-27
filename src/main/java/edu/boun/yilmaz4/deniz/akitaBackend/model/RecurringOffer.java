@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 @Entity
 public class RecurringOffer extends Offer implements Serializable {
+
     @ManyToOne
     @JoinColumn(name = "offer_id")
     private Offer parentOffer;

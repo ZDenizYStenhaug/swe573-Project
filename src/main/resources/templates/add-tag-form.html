@@ -39,7 +39,7 @@
 TODO: check for duplicate tag names.
 <div>
     <h1>Tag Creation</h1>
-    <form action="#" th:action="@{/tag/form}" method="post" th:object="${tag}">
+    <form th:action="@{/tag/add}" method="post" th:object="${tag}">
         <tr>
             <td>Name:</td>
             <td><input type="text" th:field="*{name}" /></td>

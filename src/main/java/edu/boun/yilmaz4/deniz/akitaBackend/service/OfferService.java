@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +29,7 @@ public class OfferService {
     public Offer addOffer(Offer offer) {
         logger.info("saving offer " + offer);
         offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
-        offer = offerRepo.save(offer);
-        // save the following 4 offers if there's any
+        // save the following 4 repeating offers if there's any
         if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
             LocalDateTime date = offer.getDate();
             date = getNextOfferDate(offer.getRepeatingType(), date);
@@ -43,7 +41,7 @@ public class OfferService {
                 date = getNextOfferDate(offer.getRepeatingType(), date);
             }
         }
-        return offer;
+        return offerRepo.save(offer);
     }
 
     @Transactional (readOnly = true)

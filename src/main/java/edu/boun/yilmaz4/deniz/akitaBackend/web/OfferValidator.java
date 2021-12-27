@@ -38,7 +38,7 @@ public class OfferValidator implements Validator {
         }
         // the offer must have at least 2 tags
         if (offer.getOfferTags().size() < 2) {
-            errors.rejectValue("offerTags", "Number.offerForm.tags");
+            errors.rejectValue("offerTags", "Number.tags");
         }
         // maximum number of participants must be at least 1
         if (offer.getMaxNumOfParticipants() < 1) {

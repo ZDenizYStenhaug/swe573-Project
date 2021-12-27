@@ -58,7 +58,6 @@ public class Offer implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> offerTags;
 
-
     @ManyToMany
     @JoinTable(name = "offer_applicants",
             joinColumns = @JoinColumn(name = "offer_id"),

@@ -25,21 +25,20 @@ public class EventService {
     @Transactional
     public Event addEvent(Event event) {
         logger.info("Saving event " + event);
+        logger.info("Saving event " + event);
         event.setStatus(EventStatus.getDefault());
-        event = eventRepo.save(event);
-        // save the following 4 repeating events if there's any.
-        if (!event.getRepeatingType().equals(RepeatingType.NOT_REPEATING)){
+        // save the following 4 repeating events if there's any
+        if (!event.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
             LocalDateTime date = event.getDate();
             date = getNextEventDate(event.getRepeatingType(), date);
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < 4; i++) {
                 RecurringEvent recurringEvent = new RecurringEvent();
                 recurringEvent.setDate(date);
                 saveRecurringEvent(recurringEvent, event);
-                eventRepo.save(recurringEvent);
                 date = getNextEventDate(event.getRepeatingType(), date);
             }
         }
-        return event;
+        return eventRepo.save(event);
     }
 
     @Transactional (readOnly = true)

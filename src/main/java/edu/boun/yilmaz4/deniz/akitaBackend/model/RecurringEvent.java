@@ -1,8 +1,5 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
