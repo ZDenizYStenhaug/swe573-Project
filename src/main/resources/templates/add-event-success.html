@@ -38,7 +38,7 @@
 <body>
     <h3>Event added successfully!</h3>
 
-    <img class="img-thumbnail" th:src="@{${event.photosImagePath}}" style="margin-bottom: 10px; margin-top: 30px"/>
+    <img class="img-thumbnail" th:src="@{${event.photosImagePath}}" width=300, height=300 style="margin-bottom: 10px; margin-top: 30px"/>
     <ul>
         <li>Name: <span th:text="${event.name}"></span></li>
         <li>Description: <span th:text="${event.description}"></span></li>
