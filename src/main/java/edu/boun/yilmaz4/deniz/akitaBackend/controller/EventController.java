@@ -124,12 +124,12 @@ public class EventController {
             event = eventService.getRecurringEventByDate(response.getDate(), event);
         }
         dateValidator.validate(event, bindingResult);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         if(bindingResult.hasErrors()) {
             return "event-registration-unsuccessful";
         }
         registeredEvent = eventService.register(event, member);
         model.addAttribute("registered_event", registeredEvent);
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "event-registration-successful";
     }
 

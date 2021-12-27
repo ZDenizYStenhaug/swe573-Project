@@ -22,7 +22,7 @@ public class OfferService {
     private static final Logger logger = LoggerFactory.getLogger(OfferService.class);
 
     @Autowired
-    private OfferRepo offerRepo;
+    private OfferRepo<Offer> offerRepo;
     @Autowired
     private MessageService messageService;
 
@@ -48,7 +48,8 @@ public class OfferService {
     @Transactional (readOnly = true)
     public List<Offer> allOffers() {
         logger.info("getting all offers");
-        return offerRepo.findAll();
+        List<Offer> foo = offerRepo.findAll();
+        return foo;
     }
 
     @Transactional (readOnly = true)
@@ -113,6 +114,7 @@ public class OfferService {
     private void saveRecurringOffer(RecurringOffer ro, Offer offer) {
         ro.setName(offer.getName());
         ro.setDescription(offer.getDescription());
+        ro.setOfferer(offer.getOfferer());
         ro.setStatus(OfferStatus.getDefault());
         ro.setDuration(offer.getDuration());
         ro.setMaxNumOfParticipants(offer.getMaxNumOfParticipants());
@@ -120,6 +122,7 @@ public class OfferService {
         ro.setRepeatingType(offer.getRepeatingType());
         ro.setPhoto(offer.getPhotosImagePath());
         ro.setOfferTags(offer.getOfferTags());
+        ro.setParentOffer(offer);
         offerRepo.save(ro);
     }
 

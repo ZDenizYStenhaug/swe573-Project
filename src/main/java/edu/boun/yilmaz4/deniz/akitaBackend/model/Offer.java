@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DiscriminatorColumn(name = "offer_type")
 public class Offer implements Serializable {
 
     @Id
