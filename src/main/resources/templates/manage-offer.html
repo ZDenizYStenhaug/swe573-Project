@@ -38,9 +38,22 @@
         </div>
     </div>
 </header>
+<img class="img-thumbnail" th:src="@{${offer.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
 
-
-
-
+<ul>
+    <li>Name: <span th:text="${offer.name}"></span></li>
+    <li>Description: <span th:text="${offer.description}"></span></li>
+    <li>Time: <span th:text="${#temporals.format(offer.date, 'dd-MM-yyyy HH:mm')}"></span></li>
+    <li>Cancellation deadline: <span th:text="${offer.cancellationDeadline}"></span> days before the date</li>
+    <li>Duration: <span th:text="${offer.duration}"></span></li>
+    <li>Maximum number of participants: <span th:text="${offer.maxNumOfParticipants}"></span></li>
+    <li>Repeating Frequency <span th:text="${offer.repeatingType}"></span></li>
+    <li>Status: <span th:text="${offer.status}"></span></li>
+    <li>Owner: <span th:text="${offer.offerer.username}"></span>
+        <form method="POST" th:action="@{/member/view/profile(memberId=${offer.offerer.id})}">
+            <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+        </form>
+    </li>
+</ul>
 </body>
 </html>

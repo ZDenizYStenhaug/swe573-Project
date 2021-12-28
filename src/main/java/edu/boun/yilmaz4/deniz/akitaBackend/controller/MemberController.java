@@ -111,6 +111,10 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("offers", offerService.findAllOffersByMember(member));
+        model.addAttribute("events", eventService.findAllEventsByMember(member));
+        model.addAttribute("scheduledOffers", memberService.getScheduledOffers(member));
+        model.addAttribute("scheduledEvents", memberService.getScheduledEvents(member));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
     }

@@ -110,6 +110,21 @@ public class OfferController{
         return "view-offer";
     }
 
+    @PostMapping(Routing.URI_MANAGE)
+    public String manageOffer(Model model,
+                              @RequestParam("offerId") Long offerId) {
+        logger.info("-> {}", "manageOffer");
+        String username = memberService.getCurrentUserLogin();
+        Offer offer = offerService.findOfferById(offerId);
+        if (!username.equals(offer.getOfferer().getUsername())) {
+            return "/welcome";
+        }
+        model.addAttribute("offer", offer);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
+        model.addAttribute("offer");
+        return "manage-offer";
+    }
+
     @PostMapping(Routing.URI_OFFER_APPLY)
     public String apply(Model model,
                         @RequestParam("offerId") Long offerId,

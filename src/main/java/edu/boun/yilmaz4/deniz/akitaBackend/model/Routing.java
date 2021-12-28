@@ -2,8 +2,6 @@ package edu.boun.yilmaz4.deniz.akitaBackend.model;
 
 public class Routing {
 
-    // TODO: organize!
-
     public static final String ROOT_EVENT = "/event";
     public static final String ROOT_MESSAGE = "/message";
     public static final String ROOT_MEMBER = "/member";
@@ -12,11 +10,11 @@ public class Routing {
 
     public static final String URI_ADD = "/add";
     public static final String URI_ALL = "/all";
-
     public static final String URI_DELETE = "/delete";
     public static final String URI_EDIT = "/edit";
     public static final String URI_WELCOME = "/welcome";
     public static final String URI_VIEW = "/view";
+    public static final String URI_MANAGE = "/manage";
 
     public static final String URI_EVENT_REGISTER= "/register";
 
