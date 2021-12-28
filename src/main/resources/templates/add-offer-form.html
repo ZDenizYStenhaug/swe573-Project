@@ -80,6 +80,16 @@
                 <p class="has-error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"}></p>
             </div>
          </div>
+        <div class="form-group" style="margin-bottom: 10px">
+            <h4>Cancellation deadline</h4>
+            <select class="form-control" th:field="*{cancellationDeadline}">
+                <option value=1>1</option>
+                <option value=2>2</option>
+                <option value=3>3</option>
+                <option value=4>4</option>
+                <option value=5>5</option>
+            </select>
+        </div>
 
          <div class="form-group" style="margin-bottom: 20px">
             <h4>Duration:</h4>
