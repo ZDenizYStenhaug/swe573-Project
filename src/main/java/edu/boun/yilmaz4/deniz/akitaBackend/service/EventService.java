@@ -51,6 +51,11 @@ public class EventService {
         return eventRepo.findAllEvents();
     }
 
+    @Transactional(readOnly = true)
+    public List<Event> findAllEventsByMember(Member member) {
+        return eventRepo.findAllEventsByMember(member);
+    }
+
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Event event) {
         logger.info("checking if the member has or attends another event or offer that has the same date and time as the new event.");

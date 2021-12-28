@@ -3,10 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.SecurityService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -36,6 +33,10 @@ public class MemberController {
     private MemberValidator memberValidator;
     @Autowired
     private TagService tagService;
+    @Autowired
+    private OfferService offerService;
+    @Autowired
+    private EventService eventService;
 
     @GetMapping(Routing.URI_MEMBER_REGISTRATION)
     public String registration(Model model) {
@@ -95,6 +96,10 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("offers", offerService.findAllOffersByMember(member));
+        model.addAttribute("events", eventService.findAllEventsByMember(member));
+        model.addAttribute("scheduledOffers", memberService.getScheduledOffers(member));
+        model.addAttribute("scheduledEvents", memberService.getScheduledEvents(member));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
     }

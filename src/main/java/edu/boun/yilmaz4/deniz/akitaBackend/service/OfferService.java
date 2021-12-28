@@ -48,7 +48,12 @@ public class OfferService {
     @Transactional (readOnly = true)
     public List<Offer> allOffers() {
         logger.info("getting all offers");
-        return offerRepo.findAllOffers();;
+        return offerRepo.findAllOffers();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Offer> findAllOffersByMember(Member member) {
+        return offerRepo.findAllOffersByMember(member);
     }
 
     @Transactional (readOnly = true)

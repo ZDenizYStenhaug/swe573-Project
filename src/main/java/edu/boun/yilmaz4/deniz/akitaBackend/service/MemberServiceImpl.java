@@ -1,13 +1,12 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Badge;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,11 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -57,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public String getCurrentUserLogin() {
-        org.springframework.security.core.context.SecurityContext securityContext = SecurityContextHolder.getContext();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         String login = null;
         if (authentication != null)
@@ -82,5 +78,47 @@ public class MemberServiceImpl implements MemberService {
             talents.add(tag.getName());
         }
         return talents;
+    }
+
+    public List<ScheduleItem> getScheduledOffers(Member member) {
+        TreeMap<LocalDateTime, ScheduleItem> offers = new TreeMap<>();
+        for (Offer offer : member.getOffers()) {
+            ScheduleItem si = new ScheduleItem();
+            si.setOffer(offer);
+            si.setStatus("owner");
+            offers.put(offer.getDate(), si);
+        }
+        for (Offer offer : member.getAppliedOffers()) {
+            ScheduleItem si = new ScheduleItem();
+            si.setOffer(offer);
+            si.setStatus("application pending");
+            offers.put(offer.getDate(), si);
+        }
+        for (Offer offer : member.getParticipatingOffers()) {
+            ScheduleItem si = new ScheduleItem();
+            si.setOffer(offer);
+            si.setStatus("application accepted");
+            offers.put(offer.getDate(), si);
+        }
+        List<ScheduleItem> foo = new ArrayList<>( offers.values() );
+        return foo;
+    }
+
+    public List<ScheduleItem> getScheduledEvents(Member member) {
+        TreeMap<LocalDateTime, ScheduleItem> events = new TreeMap<>();
+        for (Event event : member.getEvents()) {
+            ScheduleItem si = new ScheduleItem();
+            si.setEvent(event);
+            si.setStatus("owner");
+            events.put(event.getDate(), si);
+        }
+        for (Event event : member.getRegisteredEvents()) {
+            ScheduleItem si = new ScheduleItem();
+            si.setEvent(event);
+            si.setStatus("participating");
+            events.put(event.getDate(), si);
+        }
+        List<ScheduleItem> foo = new ArrayList<>( events.values() );
+        return foo;
     }
 }

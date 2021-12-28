@@ -62,7 +62,8 @@
                 <form > <!-- TODO edit profile link-->
                     <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-primary">Edit profile</button>
                 </form>
-            </div>        </div>
+            </div>
+        </div>
 
         <div class = "col-sm-8">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -74,6 +75,9 @@
                         <li class="nav-item" >
                             <a class="nav-link px-5 text-dark" id="eventButt" onclick="showEvents()">Events</a>
                         </li>
+                        <li class="nav-item">
+                            <c class="nav-link px-5 text-dark" id="scheduleButt" onclick="showSchedule()">Schedule</c>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -81,7 +85,11 @@
                 <div class="container">
                     <div class="row">
                         <div class="flex-column">
-                            <div class="card mb-4 shadow-sm"  th:each="offer: ${member.offers}">
+                            <div th:if="${offers.isEmpty()}">
+                                <p>No offers to show.</p>
+                                <a href="/offer/add" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Add new offer!</a>
+                            </div>
+                            <div class="card mb-4 shadow-sm"  th:each="offer: ${offers}">
                                 <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="@{${offer.photosImagePath}}"/>
                                 <div class="card-body">
                                     <h4 class="card-title" th:text="${offer.name}"></h4>
@@ -107,11 +115,14 @@
             </div>
 
             <div id="events"  style="display:none">
-
                 <div class="container">
                     <div class="row">
                         <div class="flex-column">
-                            <div class="card mb-4 shadow-sm"  th:each="event: ${member.events}">
+                            <div th:if="${events.isEmpty()}">
+                                <p>No events to show.</p>
+                                <a href="/event/add" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Add new Event!</a>
+                            </div>
+                            <div class="card mb-4 shadow-sm"  th:each="event: ${events}">
                                 <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="@{${event.photosImagePath}}"/>
                                 <div class="card-body">
                                     <h4 class="card-title" th:text="${event.name}"></h4>
@@ -134,6 +145,72 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div id="schedule" style="display:none">
+                <div class="container">
+                    <h2>Offers</h2>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${scheduledOffers.isEmpty()}">
+                                <td colspan="2">No offers scheduled.</td>
+                            </tr>
+                            <tr th:each="so: ${scheduledOffers}">
+                                <td><span th:text="${#temporals.format(so.offer.date, 'dd.MM.yyyy HH:mm')}"></span></td>
+                                <td><span th:text="${so.offer.name}"></span></td>
+                                <td><span th:text="${so.status}"></span></td>
+                                <td th:if="${so.status == 'owner'}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
+                                </td>
+                                <td th:if="${so.status == 'application pending'}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-warning">Cancel application</button>
+                                </td>
+                                <td th:if="${so.status == 'application accepted'}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>*In the case of recurring offers that you are offering, only the 5 following occurrences are shown in the schedule.</p>
+
+                    <h2>Events</h2>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${scheduledEvents.isEmpty()}">
+                                <td colspan="2">No events scheduled.</td>
+                            </tr>
+                            <tr th:each="se: ${scheduledEvents}">
+                                <td><span th:text="${#temporals.format(se.event.date, 'dd.MM.yyyy HH:mm')}"></span></td>
+                                <td><span th:text="${se.event.name}"></span></td>
+                                <td><span th:text="${se.status}"></span></td>
+                                <td th:if="${se.status == 'owner'}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
+                                </td>
+                                <td th:if="${se.status == 'participating'}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p>*In the case of recurring events that you are organizing, only the 5 following occurrences are shown in the schedule.</p>
+
+                </div>
+
             </div>
         </div>
     </div>
