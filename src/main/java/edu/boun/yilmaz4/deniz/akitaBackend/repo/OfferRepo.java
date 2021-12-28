@@ -1,6 +1,5 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.repo;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.RecurringOffer;
 import org.springframework.data.jpa.repository.JpaRepository;
