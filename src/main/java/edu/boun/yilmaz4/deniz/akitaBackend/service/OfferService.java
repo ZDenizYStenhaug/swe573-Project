@@ -100,12 +100,13 @@ public class OfferService {
 
     @Transactional(readOnly = true)
     public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
+        Offer o = offerRepo.findRecurringOfferByDate(date, offer);
         return offerRepo.findRecurringOfferByDate(date, offer);
     }
 
     @Transactional
     public Offer apply(Offer offer, Member member) {
-        Set<Member> applicants = offer.getApplicants();
+        List<Member> applicants = offer.getApplicants();
         applicants.add(member);
         offer.setApplicants(applicants);
         // send message to the offerer

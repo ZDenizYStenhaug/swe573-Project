@@ -44,9 +44,8 @@
         </div>
     </div>
 </header>
-</body>
 
-<div style="margin-left: 30px">
+<div style="margin-left: 30px; margin-bottom: 30px">
     <img class="img-thumbnail" th:src="@{${offer.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
 
     <ul>
@@ -75,11 +74,18 @@
         </form>
     </div>
     <div th:if="${#authentication.name} eq ${offer.offerer.username}">
-        <form method="POST" th:action="@{/offer/manage(offerId=${offer.id})}">
+        <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+            <input type="hidden" th:value="${offer.id}" name="parentOfferId">
+            <input type="hidden" th:value="${offer.id}" name="selectedOfferId">
             <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
         </form>
     </div>
-
-
 </div>
+
+<footer class="text-muted">
+    <div class="container">
+        <p>Akita 2021</p>
+    </div>
+</footer>
+</body>
 </html>

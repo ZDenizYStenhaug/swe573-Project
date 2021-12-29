@@ -1,10 +1,7 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.OfferApplicatonResponse;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
@@ -39,7 +36,6 @@ public class OfferController{
     private OfferApplicationValidator applicationValidator;
     @Autowired
     private MessageService messageService;
-
 
     @GetMapping(Routing.URI_ADD)
     public String addOffer(Model model) {
@@ -106,22 +102,27 @@ public class OfferController{
         OfferApplicatonResponse response = new OfferApplicatonResponse();
         response.setOfferId(offer.getId());
         model.addAttribute("response", response);
+        model.addAttribute("offerManagementResponse", new OfferManagementResponse());
         model.addAttribute("dates", offerService.getDatesOfRecurringOffers(offer));
         return "view-offer";
     }
 
     @PostMapping(Routing.URI_MANAGE)
     public String manageOffer(Model model,
-                              @RequestParam("offerId") Long offerId) {
+                              @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
         logger.info("-> {}", "manageOffer");
         String username = memberService.getCurrentUserLogin();
-        Offer offer = offerService.findOfferById(offerId);
-        if (!username.equals(offer.getOfferer().getUsername())) {
-            return "/welcome";
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer;
+        if (parentOffer.getDate().equals(offerManagementResponse.getSelectedDate()) || offerManagementResponse.getSelectedDate() == null) {
+            selectedOffer = new Offer(parentOffer);
+        } else {
+            selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
         }
-        model.addAttribute("offer", offer);
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
-        model.addAttribute("offer");
         return "manage-offer";
     }
 

@@ -38,22 +38,107 @@
         </div>
     </div>
 </header>
-<img class="img-thumbnail" th:src="@{${offer.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
 
-<ul>
-    <li>Name: <span th:text="${offer.name}"></span></li>
-    <li>Description: <span th:text="${offer.description}"></span></li>
-    <li>Time: <span th:text="${#temporals.format(offer.date, 'dd-MM-yyyy HH:mm')}"></span></li>
-    <li>Cancellation deadline: <span th:text="${offer.cancellationDeadline}"></span> days before the date</li>
-    <li>Duration: <span th:text="${offer.duration}"></span></li>
-    <li>Maximum number of participants: <span th:text="${offer.maxNumOfParticipants}"></span></li>
-    <li>Repeating Frequency <span th:text="${offer.repeatingType}"></span></li>
-    <li>Status: <span th:text="${offer.status}"></span></li>
-    <li>Owner: <span th:text="${offer.offerer.username}"></span>
-        <form method="POST" th:action="@{/member/view/profile(memberId=${offer.offerer.id})}">
-            <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+<div style="margin-left: 30px; margin-right: 30px; margin-bottom: 30px">
+    <img class="img-thumbnail" th:src="@{${offer.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
+
+    <ul style="margin-bottom: 20px">
+        <li>Name: <span th:text="${offer.name}"></span></li>
+        <li>Description: <span th:text="${offer.description}"></span></li>
+        <li>Next Occurrence: <span th:text="${#temporals.format(offer.date, 'dd-MM-yyyy HH:mm')}"></span></li>
+        <li>Cancellation deadline: <span th:text="${offer.cancellationDeadline}"></span> days before the date</li>
+        <li>Duration: <span th:text="${offer.duration}"></span></li>
+        <li>Maximum number of participants: <span th:text="${offer.maxNumOfParticipants}"></span></li>
+        <li>Repeating Frequency <span th:text="${offer.repeatingType}"></span></li>
+        <li>Status: <span th:text="${offer.status}"></span></li>
+        <li>Owner: <span th:text="${offer.offerer.username}"></span>
+            <form method="POST" th:action="@{/member/view/profile(memberId=${offer.offerer.id})}">
+                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+            </form>
+        </li>
+    </ul>
+
+    <button type="submit" name="submit" value="value" class="btn btn-secondary">Edit Offer</button>
+
+    <hr>
+
+    <div style="margin-bottom: 30px">
+        <p>Please select the date of the offer that you want to see the applicants and the participants of:</p>
+        <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+            <select class="selectpicker" th:field="*{selectedDate}">
+                <option th:each="d: ${dates}" th:value="${{d}}" th:text="${#temporals.format(d, 'dd-MM-yyyy HH:mm')}"></option>
+            </select>
+            <input type="hidden" th:value="${offer.id}" name="parentOfferId">
+            <button type="submit" name="submit" value="value" class="btn btn-success">Show</button>
         </form>
-    </li>
-</ul>
+    </div>
+    <hr>
+    <h3>Applicants</h3>
+    <div id="applicants" style="margin-bottom: 20px">
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Profile</th>
+                <th scope="col">Accept</th>
+                <th scope="col">Decline</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${selectedOffer.applicants.size() == 0}">
+                <td colspan="4">There are no applicants for this service yet.</td>
+            </tr>
+            <tr th:each="a : ${selectedOffer.applicants}">
+                <td><span th:text="${a.username}"></span> </td>
+                <td>
+                    <form method="POST" th:action="@{/member/view/profile(memberId=${a.id})}">
+                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                    </form>
+                </td>
+                <td>
+                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-success">Accept</button>
+                </td>
+                <td>
+                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Decline</button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <hr>
+    <h3>Participants</h3>
+    <div id="participants" style="margin-bottom: 20px">
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Profile</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${selectedOffer.participants.isEmpty()}">
+                <td colspan="2">There are no applicants for this service yet.</td>
+            </tr>
+            <tr th:each="p : ${selectedOffer.participants}">
+                <td><span th:text="${p.username}"></span> </td>
+                <td>
+                    <form method="POST" th:action="@{/member/view/profile(memberId=${p.id})}">
+                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<footer class="text-muted">
+    <div class="container">
+        <p>Akita 2021</p>
+    </div>
+</footer>
+
 </body>
 </html>

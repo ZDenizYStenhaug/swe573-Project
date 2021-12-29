@@ -54,7 +54,7 @@
             <td><span th:text="${#temporals.format(um.date, 'dd-MM-yyyy HH:mm')}"></span></td>
             <td>
                 <form method="POST" th:action="@{/message/read(messageId=${um.id})}">
-                    <button type="submit" name="submit" value="value" class="btn btn-info">Mark as read</button>
+                    <button type="submit" name="submit" valued="value" class="btn btn-info">Mark as read</button>
                 </form>
             </td>
             <td>

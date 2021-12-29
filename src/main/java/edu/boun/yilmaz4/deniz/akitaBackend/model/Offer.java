@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -63,13 +64,33 @@ public class Offer implements Serializable {
     @JoinTable(name = "offer_applicants",
             joinColumns = @JoinColumn(name = "offer_id"),
             inverseJoinColumns =  @JoinColumn(name = "member_id"))
-    private Set<Member> applicants;
+    private List<Member> applicants;
 
     @ManyToMany
     @JoinTable(name = "offer_participants",
             joinColumns = @JoinColumn(name = "offer_id"),
             inverseJoinColumns = @JoinColumn(name = "member_id"))
-    private Set<Member> participants;
+    private List<Member> participants;
+
+    public Offer() {
+
+    }
+
+    public Offer(Offer offerToCopy) {
+        this.name = offerToCopy.getName();
+        this.description = offerToCopy.getDescription();
+        this.offerer = offerToCopy.getOfferer();
+        this.date = offerToCopy.getDate();
+        this.duration = offerToCopy.getDuration();
+        this.maxNumOfParticipants = offerToCopy.getMaxNumOfParticipants();
+        this.cancellationDeadline = offerToCopy.getCancellationDeadline();
+        this.repeatingType = offerToCopy.getRepeatingType();
+        this.recurringOffers = offerToCopy.getRecurringOffers();
+        this.status = offerToCopy.getStatus();
+        this.offerTags =offerToCopy.getOfferTags();
+        this.applicants = offerToCopy.getApplicants();
+        this.participants = offerToCopy.getParticipants();
+    }
 
     public Long getId() {
         return id;
@@ -174,19 +195,19 @@ public class Offer implements Serializable {
         this.offerTags = offerTags;
     }
 
-    public Set<Member> getApplicants() {
+    public List<Member> getApplicants() {
         return applicants;
     }
 
-    public void setApplicants(Set<Member> applicants) {
+    public void setApplicants(List<Member> applicants) {
         this.applicants = applicants;
     }
 
-    public Set<Member> getParticipants() {
+    public List<Member> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(Set<Member> participants) {
+    public void setParticipants(List<Member> participants) {
         this.participants = participants;
     }
 }
