@@ -166,15 +166,17 @@
                                 <td><span th:text="${#temporals.format(so.offer.date, 'dd.MM.yyyy HH:mm')}"></span></td>
                                 <td><span th:text="${so.offer.name}"></span></td>
                                 <td><span th:text="${so.status}"></span></td>
-                                <td th:if="${so.status == 'owner'}">
-                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
-                                </td>
-                                <td th:if="${so.status == 'application pending'}">
-                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-warning">Cancel application</button>
-                                </td>
-                                <td th:if="${so.status == 'application accepted'}">
-                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
-                                </td>
+                                <div th:if="${#authentication.name} eq ${member.username}">
+                                    <td th:if="${so.status == 'owner'}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
+                                    </td>
+                                    <td th:if="${so.status == 'application pending'}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-warning">Cancel application</button>
+                                    </td>
+                                    <td th:if="${so.status == 'application accepted'}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
+                                    </td>
+                                </div>
                             </tr>
                         </tbody>
                     </table>
@@ -198,17 +200,18 @@
                                 <td><span th:text="${#temporals.format(se.event.date, 'dd.MM.yyyy HH:mm')}"></span></td>
                                 <td><span th:text="${se.event.name}"></span></td>
                                 <td><span th:text="${se.status}"></span></td>
-                                <td th:if="${se.status == 'owner'}">
-                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
-                                </td>
-                                <td th:if="${se.status == 'participating'}">
-                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
-                                </td>
+                                <div th:if="${#authentication.name} eq ${member.username}">
+                                    <td th:if="${se.status == 'owner'}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
+                                    </td>
+                                    <td th:if="${se.status == 'participating'}">
+                                        <button type="submit" name="submit" value="value"  class="btn btn-sm btn-danger">Drop out</button>
+                                    </td>
+                                </div>
                             </tr>
                         </tbody>
                     </table>
                     <p>*In the case of recurring events that you are organizing, only the 5 following occurrences are shown in the schedule.</p>
-
                 </div>
 
             </div>

@@ -119,6 +119,7 @@ public class OfferController{
         } else {
             selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
         }
+
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
         model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
@@ -152,4 +153,20 @@ public class OfferController{
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "offer-application-successful";
     }
+
+    @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
+    public String acceptApplication(Model model,
+                             @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
+        selectedOffer = offerService.acceptApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
+        String username = memberService.getCurrentUserLogin();
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
+        return "manage-offer";
+    }
+
+
 }

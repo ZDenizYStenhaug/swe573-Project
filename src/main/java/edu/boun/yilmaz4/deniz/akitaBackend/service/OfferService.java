@@ -25,9 +25,49 @@ public class OfferService {
     private OfferRepo<Offer> offerRepo;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MemberServiceImpl memberService;
 
     @Transactional
-    public Offer addOffer(Offer offer) {
+    public Offer acceptApplication(Offer offer, Long memberId) {
+        // if this application will be the last one acc. to the max number of participants, then it should send a message to every other participant.
+        Member applicant = memberService.findMemberById(memberId);
+        // remove member from applicants
+        List<Member> applicants = offer.getApplicants();
+        applicants.remove(applicant);
+        offer.setApplicants(applicants);
+        // save member to participants
+        List<Member> participants = offer.getParticipants();
+        participants.add(applicant);
+        offer.setParticipants(participants);
+        sendAcceptanceMessage(applicant, offer);
+        // send message to other applicants that the quota for this offer is full
+        if (offer.getParticipants().size() >= offer.getMaxNumOfParticipants()) {
+            sendQuotaMessage(applicant, offer);
+        }
+        return offerRepo.save(offer);
+    }
+
+    public void sendAcceptanceMessage(Member applicant, Offer offer) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been accepted!";
+        messageService.sendMessage(applicant, text);
+    }
+
+   public void sendQuotaMessage(Member applicant, Offer offer) {
+       for (Member m : offer.getApplicants()) {
+           if (m.equals(applicant)) {
+               continue;
+           } else {
+               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+               String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined for quota reasons.";
+               messageService.sendMessage(m, text);
+           }
+       }
+   }
+
+    @Transactional
+    public Offer addOffer (Offer offer) {
         logger.info("saving offer " + offer);
         offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
         // save the following 4 repeating offers if there's any
@@ -49,6 +89,18 @@ public class OfferService {
     public List<Offer> allOffers() {
         logger.info("getting all offers");
         return offerRepo.findAllOffers();
+    }
+
+    @Transactional
+    public Offer apply(Offer offer, Member member) {
+        List<Member> applicants = offer.getApplicants();
+        applicants.add(member);
+        offer.setApplicants(applicants);
+        // send message to the offerer
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = member.getUsername() + " applied to your offer " + offer.getName() + " organized on " + offer.getDate().format(formatter);
+        messageService.sendMessage(offer.getOfferer(), text);
+        return updateOffer(offer);
     }
 
     @Transactional(readOnly = true)
@@ -102,18 +154,6 @@ public class OfferService {
     public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
         Offer o = offerRepo.findRecurringOfferByDate(date, offer);
         return offerRepo.findRecurringOfferByDate(date, offer);
-    }
-
-    @Transactional
-    public Offer apply(Offer offer, Member member) {
-        List<Member> applicants = offer.getApplicants();
-        applicants.add(member);
-        offer.setApplicants(applicants);
-        // send message to the offerer
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-        String text = member.getUsername() + " applied to your offer " + offer.getName() + " organized on " + offer.getDate().format(formatter);
-        messageService.sendMessage(offer.getOfferer(), text);
-        return updateOffer(offer);
     }
 
     private void saveRecurringOffer(RecurringOffer ro, Offer offer) {

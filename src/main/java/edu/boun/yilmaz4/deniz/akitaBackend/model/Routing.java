@@ -28,7 +28,7 @@ public class Routing {
     public static final String URI_MESSAGE_UNREAD = "/unread";
 
     public static final String URI_OFFER_APPLY = "/apply";
-    public static final String URI_OFFER_ACCEPT_APPLICATION = "/accept";
+    public static final String URI_OFFER_ACCEPT_APPLICATION = "/accept-application";
     public static final String URI_OFFER_DELETE_APPLICATION = "/delete-application";
     public static final String URI_OFFER_DELETE_REGISTRATION = "/delete-registration";
 

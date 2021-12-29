@@ -85,23 +85,35 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${selectedOffer.applicants.size() == 0}">
-                <td colspan="4">There are no applicants for this service yet.</td>
+
+            <tr th:if="${selectedOffer.maxNumOfParticipants <= selectedOffer.participants.size()}">
+                <td colspan="4" style="color:red">The quota for this offer is full.</td>
             </tr>
-            <tr th:each="a : ${selectedOffer.applicants}">
-                <td><span th:text="${a.username}"></span> </td>
-                <td>
-                    <form method="POST" th:action="@{/member/view/profile(memberId=${a.id})}">
-                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
-                    </form>
-                </td>
-                <td>
-                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-success">Accept</button>
-                </td>
-                <td>
-                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Decline</button>
-                </td>
+            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())}">
+                <tr th:if="${selectedOffer.applicants.size() == 0}">
+                    <td colspan="4">There are no applicants for this service yet.</td>
+                </tr>
+                <tr th:each="a : ${selectedOffer.applicants}">
+                    <td><span th:text="${a.username}"></span> </td>
+                    <td>
+                        <form method="POST" th:action="@{/member/view/profile(memberId=${a.id})}">
+                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/offer/accept-application}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+                            <input type="hidden" th:value="${offer.id}" name="parentOfferId">
+                            <input type="hidden" th:value="${selectedOffer.id}" name="selectedOfferId">
+                            <input type="hidden" th:value="${a.id}" name="applicantMemberId">
+                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-success">Accept</button>
+                        </form>
+                    </td>
+                    <td>
+                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Decline</button>
+                    </td>
+                </tr>
             </tr>
+
             </tbody>
 
         </table>
