@@ -73,8 +73,7 @@ public class OfferService {
         // save the following 4 repeating offers if there's any
         if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
             LocalDateTime date = offer.getDate();
-            date = getNextOfferDate(offer.getRepeatingType(), date);
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 RecurringOffer ro = new RecurringOffer();
                 ro.setDate(date);
                 saveRecurringOffer(ro, offer);
@@ -139,20 +138,64 @@ public class OfferService {
         return offerRepo.findOfferById(id);
     }
 
+    // only gets the offers whose dates are after the current time
     public List<LocalDateTime> getDatesOfRecurringOffers(Offer offer) {
         Set<RecurringOffer> recurringOffers = offer.getRecurringOffers();
         List<LocalDateTime> dates = new ArrayList<>();
-        dates.add(offer.getDate());
+        LocalDateTime now = LocalDateTime.now();
         for (RecurringOffer ro : recurringOffers) {
-            dates.add(ro.getDate());
+            if(!ro.getDate().isBefore(now)){
+                dates.add(ro.getDate());
+            }
         }
         Collections.sort(dates);
         return dates;
     }
 
+    public List<LocalDateTime> getDatesForOpenToApplicationOffers(Offer parent) {
+        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
+        List<LocalDateTime> dates = new ArrayList<>();
+        for(RecurringOffer ro : recurringOffers) {
+            if(ro.getStatus().equals(OfferStatus.OPEN_TO_APPLICATIONS))
+                dates.add(ro.getDate());
+        }
+        Collections.sort(dates);
+        return dates;
+    }
+
+    @Transactional
+    public Offer getTheFollowingOffer(List<LocalDateTime> dates, Offer parent) {
+        LocalDateTime followingOfferDate = dates.get(0);
+        parent.setDate(followingOfferDate);
+        // update the parent status as well if neccessary
+        if(LocalDateTime.now().plusDays(parent.getCancellationDeadline()).isAfter(parent.getDate())) {
+            parent.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
+        }
+        offerRepo.save(parent);
+        // update the status of the other recurring offers.
+        updateStatusOfRecurringOffers(parent);
+
+        return parent;
+    }
+
+    @Transactional
+    public void updateStatusOfRecurringOffers (Offer parent) {
+        // set the past offers' status to PAST_OFFER
+        // set the status of the offers whose cancellation date is past to CLOSED_TO_APPLICATIONS
+        LocalDateTime now = LocalDateTime.now();
+        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
+        for (RecurringOffer ro : recurringOffers) {
+            if (ro.getDate().isBefore(now)) {
+                ro.setStatus(OfferStatus.PAST_OFFER);
+            } else if (now.plusDays(ro.getCancellationDeadline()).isAfter(ro.getDate())) {
+                ro.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
+            }
+        offerRepo.save(ro);
+    }
+}
+
     @Transactional(readOnly = true)
     public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
-        Offer o = offerRepo.findRecurringOfferByDate(date, offer);
         return offerRepo.findRecurringOfferByDate(date, offer);
     }
 
@@ -164,7 +207,6 @@ public class OfferService {
         ro.setDuration(offer.getDuration());
         ro.setMaxNumOfParticipants(offer.getMaxNumOfParticipants());
         ro.setCancellationDeadline(offer.getCancellationDeadline());
-        ro.setRepeatingType(offer.getRepeatingType());
         ro.setPhoto(offer.getPhotosImagePath());
         ro.setOfferTags(offer.getOfferTags());
         ro.setParentOffer(offer);

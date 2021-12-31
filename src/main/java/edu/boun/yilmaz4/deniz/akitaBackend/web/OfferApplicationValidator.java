@@ -2,6 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.web;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;

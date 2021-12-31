@@ -14,6 +14,9 @@ public class RecurringOffer extends Offer implements Serializable {
 
     public RecurringOffer() {}
 
+    public RecurringOffer(Offer offer) {
+    }
+
     public Offer getParentOffer() {
         return parentOffer;
     }

@@ -43,11 +43,11 @@
         <li>Name: <span th:text="${offer.name}"></span></li>
         <li>Description: <span th:text="${offer.description}"></span></li>
         <li>Time: <span th:text="${#temporals.format(offer.date, 'dd-MM-yyyy HH:mm')}"></span></li>
-        <li>Duration: <span th:text="${offer.duration}"></span></li>
+        <li>Duration: <span th:text="${offer.duration}"></span> hours</li>
         <li>Maximum number of participants: <span th:text="${offer.maxNumOfParticipants}"></span></li>
-        <li>repeatingType <span th:text="${offer.repeatingType}"></span></li>
+        <li>Repeating type: <span th:text="${offer.repeatingType}"></span></li>
         <li>Status: <span th:text="${offer.status}"></span></li>
-        <li>OffererId: <span th:text="${offer.offerer.username}"></span></li>
+        <li>Offerer: <span th:text="${offer.offerer.username}"></span></li>
     </ul>
     <hr>
 </body>

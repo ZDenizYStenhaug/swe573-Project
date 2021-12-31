@@ -18,6 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping(Routing.ROOT_OFFER)
@@ -93,7 +95,9 @@ public class OfferController{
                             @RequestParam("offerId") Long offerId) {
         logger.info("-> {}", "viewOffer");
         Offer offer = offerService.findOfferById(offerId);
-        model.addAttribute("offer", offer);
+        List<LocalDateTime> dates = offerService.getDatesOfRecurringOffers(offer);
+        Offer parent = offerService.getTheFollowingOffer(dates, offer);
+        //
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
             Member member = memberService.findByUsername(username);
@@ -101,9 +105,10 @@ public class OfferController{
         }
         OfferApplicatonResponse response = new OfferApplicatonResponse();
         response.setOfferId(offer.getId());
+        model.addAttribute("offer", parent);
         model.addAttribute("response", response);
         model.addAttribute("offerManagementResponse", new OfferManagementResponse());
-        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(offer));
+        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parent));
         return "view-offer";
     }
 
@@ -119,7 +124,6 @@ public class OfferController{
         } else {
             selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
         }
-
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
         model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
@@ -139,16 +143,13 @@ public class OfferController{
             return "login";
         }
         Member member = memberService.findByUsername(response.getUsername());
-        Offer offer = offerService.findOfferById(response.getOfferId());
-        Offer appliedOffer;
-        if (!offer.getDate().equals(response.getDate())) {
-            offer = offerService.getRecurringOfferByDate(response.getDate(), offer);
-        }
-        applicationValidator.validate(offer, bindingResult);
+        Offer parent = offerService.findOfferById(response.getOfferId());
+        Offer appliedOffer = offerService.getRecurringOfferByDate(response.getDate(), parent);
+        applicationValidator.validate(appliedOffer, bindingResult);
         if(bindingResult.hasErrors()) {
             return "offer-application-unsuccessful";
         }
-        appliedOffer = offerService.apply(offer, member);
+        appliedOffer = offerService.apply(appliedOffer, member);
         model.addAttribute("applied_offer", appliedOffer);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "offer-application-successful";
