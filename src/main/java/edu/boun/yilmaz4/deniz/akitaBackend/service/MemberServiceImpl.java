@@ -82,19 +82,26 @@ public class MemberServiceImpl implements MemberService {
 
     public List<ScheduleItem> getScheduledOffers(Member member) {
         TreeMap<LocalDateTime, ScheduleItem> offers = new TreeMap<>();
+        LocalDateTime now = LocalDateTime.now();
         for (Offer offer : member.getOffers()) {
+            if (offer.getDate().isBefore(now))
+                continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);
             si.setStatus("owner");
             offers.put(offer.getDate(), si);
         }
         for (Offer offer : member.getAppliedOffers()) {
+            if (offer.getDate().isBefore(now))
+                continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);
             si.setStatus("application pending");
             offers.put(offer.getDate(), si);
         }
         for (Offer offer : member.getParticipatingOffers()) {
+            if (offer.getDate().isBefore(now))
+                continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);
             si.setStatus("application accepted");
@@ -106,13 +113,18 @@ public class MemberServiceImpl implements MemberService {
 
     public List<ScheduleItem> getScheduledEvents(Member member) {
         TreeMap<LocalDateTime, ScheduleItem> events = new TreeMap<>();
+        LocalDateTime now = LocalDateTime.now();
         for (Event event : member.getEvents()) {
+            if (event.getDate().isBefore(now))
+                continue;
             ScheduleItem si = new ScheduleItem();
             si.setEvent(event);
             si.setStatus("owner");
             events.put(event.getDate(), si);
         }
         for (Event event : member.getRegisteredEvents()) {
+            if (event.getDate().isBefore(now))
+                continue;
             ScheduleItem si = new ScheduleItem();
             si.setEvent(event);
             si.setStatus("participating");
