@@ -76,7 +76,10 @@
                             <a class="nav-link px-5 text-dark" id="eventButt" onclick="showEvents()">Events</a>
                         </li>
                         <li class="nav-item">
-                            <c class="nav-link px-5 text-dark" id="scheduleButt" onclick="showSchedule()">Schedule</c>
+                            <a class="nav-link px-5 text-dark" id="scheduleButt" onclick="showSchedule()">Schedule</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-5 text-dark" id="ongoingButt" onclick="showOngoing()">Ongoing</a>
                         </li>
                     </ul>
                 </div>
@@ -96,14 +99,9 @@
                                     <p class="card-text" th:text="${offer.description}"></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <form> <!-- TODO view offer page link -->
+                                            <form method="POST" th:action="@{/offer/view(offerId=${offer.id})}">
                                                 <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">View</button>
                                             </form>
-                                            <div th:if="${#authentication.name} eq ${member.username}">
-                                                <form > <!-- TODO manage offer page link-->
-                                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Manage</button>
-                                                </form>
-                                            </div>
                                         </div>
                                         <small class="text-muted">duration: <span th:text="${offer.duration}"> hours</span></small>
                                     </div>
@@ -129,14 +127,9 @@
                                     <p class="card-text" th:text="${event.description}"></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <form> <!-- TODO view event page link -->
+                                            <form method="POST" th:action="@{/event/view(eventId=${event.id})}">
                                                 <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">View</button>
                                             </form>
-                                            <div th:if="${#authentication.name} eq ${member.username}">
-                                                <form > <!-- TODO manage event page link-->
-                                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Manage</button>
-                                                </form>
-                                            </div>
                                         </div>
                                         <small class="text-muted">duration: <span th:text="${event.duration}"> hours</span></small>
                                     </div>
@@ -168,8 +161,11 @@
                                 <td><span th:text="${so.status}"></span></td>
                                 <div th:if="${#authentication.name} eq ${member.username}">
                                     <td th:if="${so.status == 'owner'}">
-                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
-                                    </td>
+                                        <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+                                            <input type="hidden" th:value="${so.offer.id}" name="parentOfferId">
+                                            <input type="hidden" th:value="${so.offer.id}" name="selectedOfferId">
+                                            <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
+                                        </form>                                    </td>
                                     <td th:if="${so.status == 'application pending'}">
                                         <button type="submit" name="submit" value="value" class="btn btn-sm btn-warning">Cancel application</button>
                                     </td>
@@ -202,7 +198,11 @@
                                 <td><span th:text="${se.status}"></span></td>
                                 <div th:if="${#authentication.name} eq ${member.username}">
                                     <td th:if="${se.status == 'owner'}">
-                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-info">Manage</button>
+                                        <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+                                            <input type="hidden" th:value="${se.offer.parentOffer.id}" name="parentOfferId">
+                                            <input type="hidden" th:value="${se.offer.id}" name="selectedOfferId">
+                                            <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
+                                        </form>
                                     </td>
                                     <td th:if="${se.status == 'participating'}">
                                         <button type="submit" name="submit" value="value"  class="btn btn-sm btn-danger">Drop out</button>
@@ -213,7 +213,9 @@
                     </table>
                     <p>*In the case of recurring events that you are organizing, only the 5 following occurrences are shown in the schedule.</p>
                 </div>
-
+            </div>
+            <div id="ongoing" style="display: none;">
+                ongoing div
             </div>
         </div>
     </div>
