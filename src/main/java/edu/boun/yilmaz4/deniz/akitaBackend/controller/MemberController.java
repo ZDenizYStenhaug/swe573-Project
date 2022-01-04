@@ -3,6 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.ScheduleItem;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(Routing.ROOT_MEMBER)
@@ -93,13 +95,16 @@ public class MemberController {
             return "login";
         }
         Member member = memberService.findByUsername(username);
+        List<ScheduleItem> scheduledOffers = memberService.getScheduledOffers(member);
+        List<ScheduleItem> scheduledEvents =  memberService.getScheduledEvents(member);
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
         model.addAttribute("offers", offerService.findAllOffersByMember(member));
         model.addAttribute("events", eventService.findAllEventsByMember(member));
-        model.addAttribute("scheduledOffers", memberService.getScheduledOffers(member));
-        model.addAttribute("scheduledEvents", memberService.getScheduledEvents(member));
+        model.addAttribute("scheduledOffers",scheduledOffers);
+        model.addAttribute("scheduledEvents", scheduledEvents);
+        model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
     }
@@ -108,13 +113,16 @@ public class MemberController {
     public String viewProfilePage(Model model,
                                   @RequestParam(value = "memberId") Long memberId) {
         Member member = memberService.findMemberById(memberId);
+        List<ScheduleItem> scheduledOffers = memberService.getScheduledOffers(member);
+        List<ScheduleItem> scheduledEvents =  memberService.getScheduledEvents(member);
         model.addAttribute("member", member);
         model.addAttribute("interests", memberService.getInterestNames(member));
         model.addAttribute("talents", memberService.getTalentsNames(member));
         model.addAttribute("offers", offerService.findAllOffersByMember(member));
         model.addAttribute("events", eventService.findAllEventsByMember(member));
-        model.addAttribute("scheduledOffers", memberService.getScheduledOffers(member));
-        model.addAttribute("scheduledEvents", memberService.getScheduledEvents(member));
+        model.addAttribute("scheduledOffers", scheduledOffers);
+        model.addAttribute("scheduledEvents", scheduledEvents);
+        model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
     }

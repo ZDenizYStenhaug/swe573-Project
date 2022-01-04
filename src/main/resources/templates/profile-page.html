@@ -78,7 +78,7 @@
                         <li class="nav-item">
                             <a class="nav-link px-5 text-dark" id="scheduleButt" onclick="showSchedule()">Schedule</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" th:if="${#authentication.name} eq ${member.username}">
                             <a class="nav-link px-5 text-dark" id="ongoingButt" onclick="showOngoing()">Ongoing</a>
                         </li>
                     </ul>
@@ -199,7 +199,7 @@
                                 <div th:if="${#authentication.name} eq ${member.username}">
                                     <td th:if="${se.status == 'owner'}">
                                         <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
-                                            <input type="hidden" th:value="${se.offer.parentOffer.id}" name="parentOfferId">
+                                            <input type="hidden" th:value="${se.offer.id}" name="parentOfferId">
                                             <input type="hidden" th:value="${se.offer.id}" name="selectedOfferId">
                                             <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
                                         </form>
@@ -215,7 +215,10 @@
                 </div>
             </div>
             <div id="ongoing" style="display: none;">
-                ongoing div
+                <div th:if="${ongoing.ongoingEvent} == null and ${ongoing.ongoingOffer} == null">
+                    <p> You don't have an ongoing offer or event.</p>
+                </div>
+
             </div>
         </div>
     </div>

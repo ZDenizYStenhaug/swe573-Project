@@ -80,6 +80,28 @@ public class MemberServiceImpl implements MemberService {
         return talents;
     }
 
+    public OngoingActivityResponse getOngoingActivity (List<ScheduleItem> scheduledOffers, List<ScheduleItem> scheduleEvents) {
+        OngoingActivityResponse ongoing = new OngoingActivityResponse();
+        LocalDateTime now = LocalDateTime.now();
+        for (ScheduleItem so : scheduledOffers) {
+            LocalDateTime beginning = so.getOffer().getDate();
+            LocalDateTime end = so.getOffer().getDate().plusHours(so.getOffer().getDuration());
+            if (now.isAfter(beginning) && now.isBefore(end)) {
+                ongoing.setOngoingOffer(so.getOffer());
+                return ongoing;
+            }
+        }
+        for (ScheduleItem se : scheduleEvents) {
+            LocalDateTime beginning = se.getEvent().getDate();
+            LocalDateTime end = se.getEvent().getDate().plusHours(se.getEvent().getDuration());
+            if (now.isAfter(beginning) && now.isBefore(end)) {
+                ongoing.setOngoingEvent(se.getEvent());
+                return ongoing;
+            }
+        }
+        return ongoing;
+    }
+
     public List<ScheduleItem> getScheduledOffers(Member member) {
         TreeMap<LocalDateTime, ScheduleItem> offers = new TreeMap<>();
         LocalDateTime now = LocalDateTime.now();
