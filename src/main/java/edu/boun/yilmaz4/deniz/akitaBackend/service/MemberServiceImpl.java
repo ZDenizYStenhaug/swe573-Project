@@ -136,16 +136,18 @@ public class MemberServiceImpl implements MemberService {
     public List<ScheduleItem> getScheduledEvents(Member member) {
         TreeMap<LocalDateTime, ScheduleItem> events = new TreeMap<>();
         LocalDateTime now = LocalDateTime.now();
+        // get the events that the member is ogranizing
         for (Event event : member.getEvents()) {
-            if (event.getDate().isBefore(now))
+            if (event.getDate().plusHours(event.getDuration()).isBefore(now))
                 continue;
             ScheduleItem si = new ScheduleItem();
             si.setEvent(event);
             si.setStatus("owner");
             events.put(event.getDate(), si);
         }
+        // get the event that the member is attending
         for (Event event : member.getRegisteredEvents()) {
-            if (event.getDate().isBefore(now))
+            if (event.getDate().plusHours(event.getDuration()).isBefore(now))
                 continue;
             ScheduleItem si = new ScheduleItem();
             si.setEvent(event);

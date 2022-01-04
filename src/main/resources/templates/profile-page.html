@@ -198,11 +198,8 @@
                                 <td><span th:text="${se.status}"></span></td>
                                 <div th:if="${#authentication.name} eq ${member.username}">
                                     <td th:if="${se.status == 'owner'}">
-                                        <form method="POST" th:action="@{/offer/manage}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
-                                            <input type="hidden" th:value="${se.offer.id}" name="parentOfferId">
-                                            <input type="hidden" th:value="${se.offer.id}" name="selectedOfferId">
-                                            <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
-                                        </form>
+                                        <!-- TODO: add the link to the button -->
+                                        <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
                                     </td>
                                     <td th:if="${se.status == 'participating'}">
                                         <button type="submit" name="submit" value="value"  class="btn btn-sm btn-danger">Drop out</button>
@@ -218,7 +215,12 @@
                 <div th:if="${ongoing.ongoingEvent} == null and ${ongoing.ongoingOffer} == null">
                     <p> You don't have an ongoing offer or event.</p>
                 </div>
-
+                <div th:if="enot(${ongoing.ongoingEvent} == null)">
+                    <p>Event name: <span th:text="${ongoing.ongoingEvent.name}"></span> </p>
+                </div>
+                <div th:if="not(${ongoing.ongoingOffer} == null)">
+                    <p>Offer name: <span th:text="${ongoing.ongoingOffer.name}"></span> </p>
+                </div>
             </div>
         </div>
     </div>
