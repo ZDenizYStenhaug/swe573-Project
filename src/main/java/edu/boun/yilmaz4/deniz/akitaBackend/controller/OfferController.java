@@ -127,6 +127,7 @@ public class OfferController{
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
         model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
+        model.addAttribute("isCancellationDatePassed", selectedOffer.getDate().plusDays(selectedOffer.getCancellationDeadline()).isAfter(LocalDateTime.now()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
         return "manage-offer";
     }

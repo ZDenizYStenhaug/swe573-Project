@@ -44,27 +44,10 @@ public class OfferService {
         // send message to other applicants that the quota for this offer is full
         if (offer.getParticipants().size() >= offer.getMaxNumOfParticipants()) {
             sendQuotaMessage(applicant, offer);
+
         }
         return offerRepo.save(offer);
     }
-
-    public void sendAcceptanceMessage(Member applicant, Offer offer) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-        String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been accepted!";
-        messageService.sendMessage(applicant, text);
-    }
-
-   public void sendQuotaMessage(Member applicant, Offer offer) {
-       for (Member m : offer.getApplicants()) {
-           if (m.equals(applicant)) {
-               continue;
-           } else {
-               DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-               String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined for quota reasons.";
-               messageService.sendMessage(m, text);
-           }
-       }
-   }
 
     @Transactional
     public Offer addOffer (Offer offer) {
@@ -77,7 +60,6 @@ public class OfferService {
                 RecurringOffer ro = new RecurringOffer();
                 ro.setDate(date);
                 saveRecurringOffer(ro, offer);
-                offerRepo.save(ro);
                 date = getNextOfferDate(offer.getRepeatingType(), date);
             }
         }
@@ -191,8 +173,8 @@ public class OfferService {
                 ro.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
             }
         offerRepo.save(ro);
+        }
     }
-}
 
     @Transactional(readOnly = true)
     public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
@@ -211,6 +193,24 @@ public class OfferService {
         ro.setOfferTags(offer.getOfferTags());
         ro.setParentOffer(offer);
         offerRepo.save(ro);
+    }
+
+    public void sendAcceptanceMessage(Member applicant, Offer offer) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been accepted!";
+        messageService.sendMessage(applicant, text);
+    }
+
+    public void sendQuotaMessage(Member applicant, Offer offer) {
+        for (Member m : offer.getApplicants()) {
+            if (m.equals(applicant)) {
+                continue;
+            } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+                String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined for quota reasons.";
+                messageService.sendMessage(m, text);
+            }
+        }
     }
 
     @Transactional

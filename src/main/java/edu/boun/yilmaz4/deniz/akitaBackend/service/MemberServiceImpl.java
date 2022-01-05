@@ -105,24 +105,27 @@ public class MemberServiceImpl implements MemberService {
     public List<ScheduleItem> getScheduledOffers(Member member) {
         TreeMap<LocalDateTime, ScheduleItem> offers = new TreeMap<>();
         LocalDateTime now = LocalDateTime.now();
+        // get the offers that the member is offering
         for (Offer offer : member.getOffers()) {
-            if (offer.getDate().isBefore(now))
+            if (offer.getDate().plusHours(offer.getDuration()).isBefore(now))
                 continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);
             si.setStatus("owner");
             offers.put(offer.getDate(), si);
         }
+        // get the offer that the member has applied
         for (Offer offer : member.getAppliedOffers()) {
-            if (offer.getDate().isBefore(now))
+            if (offer.getDate().plusHours(offer.getDuration()).isBefore(now))
                 continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);
             si.setStatus("application pending");
             offers.put(offer.getDate(), si);
         }
+        // get the offers that the member is participating
         for (Offer offer : member.getParticipatingOffers()) {
-            if (offer.getDate().isBefore(now))
+            if (offer.getDate().plusHours(offer.getDuration()).isBefore(now))
                 continue;
             ScheduleItem si = new ScheduleItem();
             si.setOffer(offer);

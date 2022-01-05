@@ -215,11 +215,108 @@
                 <div th:if="${ongoing.ongoingEvent} == null and ${ongoing.ongoingOffer} == null">
                     <p> You don't have an ongoing offer or event.</p>
                 </div>
-                <div th:if="enot(${ongoing.ongoingEvent} == null)">
-                    <p>Event name: <span th:text="${ongoing.ongoingEvent.name}"></span> </p>
+                <div th:if="not(${ongoing.ongoingEvent} == null)">
+                    <h1>Ongoing Event!</h1>
+                    <h3><span th:text="${ongoing.ongoingEvent.name}"></span> </h3>
+                    <p><span th:text="${ongoing.ongoingEvent.description}"></span> </p>
+                    <h4>Organizer:</h4>
+                    <table class="table table-borderless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span th:text="${ongoing.ongoingEvent.organizer.username}"></span></td>
+                            <td>
+                                <form method="POST" th:action="@{/member/view/profile(memberId=${ongoing.ongoingEvent.organizer.id})}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h4>Participants</h4>
+                    <table class="table table-borderless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="participant: ${ongoing.ongoingEvent.participants}">
+                            <td><span th:text="${participant.username}"></span></td>
+                            <td>
+                                <form method="POST" th:action="@{/member/view/profile(memberId=${participant.id})}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                 </div>
                 <div th:if="not(${ongoing.ongoingOffer} == null)">
-                    <p>Offer name: <span th:text="${ongoing.ongoingOffer.name}"></span> </p>
+                    <h1>Ongoing Offer!</h1>
+                    <h3><span th:text="${ongoing.ongoingOffer.name}"></span> </h3>
+                    <p><span th:text="${ongoing.ongoingOffer.description}"></span> </p>
+                    <h4>Organizer:</h4>
+                    <table class="table table-borderless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span th:text="${ongoing.ongoingOffer.offerer.username}"></span></td>
+                            <td>
+                                <form method="POST" th:action="@{/member/view/profile(memberId=${ongoing.ongoingOffer.offerer.id})}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <h4>Participants</h4>
+                    <table class="table table-borderless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Username</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="participant: ${ongoing.ongoingOffer.participants}">
+                            <td><span th:text="${participant.username}"></span></td>
+                            <td>
+                                <form method="POST" th:action="@{/member/view/profile(memberId=${participant.id})}">
+                                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
+                                </form>
+                            </td>
+                            <td>
+                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

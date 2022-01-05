@@ -28,7 +28,7 @@ public class EventService {
 
     @Transactional
     public Event addEvent(Event event) {
-        logger.info("Saving event " + event);   
+        logger.info("Saving event " + event);
         logger.info("Saving event " + event);
         event.setStatus(EventStatus.getDefault());
         // save the following 4 repeating events if there's any

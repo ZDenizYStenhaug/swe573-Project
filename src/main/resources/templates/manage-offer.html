@@ -89,7 +89,10 @@
             <tr th:if="${selectedOffer.maxNumOfParticipants <= selectedOffer.participants.size()}">
                 <td colspan="4" style="color:red">The quota for this offer is full.</td>
             </tr>
-            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())}">
+            <tr th:if="${isCancellationDatePassed}">
+                <td colspan="4" style="color:red"> The deadline for editing set for the offer has passed. You cannot accept more applications.</td>
+            </tr>
+            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())} and ${isCancellationDatePassed}">
                 <tr th:if="${selectedOffer.applicants.size() == 0}">
                     <td colspan="4">There are no applicants for this service yet.</td>
                 </tr>
