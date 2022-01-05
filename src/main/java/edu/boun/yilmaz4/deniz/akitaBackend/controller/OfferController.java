@@ -2,6 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
@@ -95,8 +96,11 @@ public class OfferController{
                             @RequestParam("offerId") Long offerId) {
         logger.info("-> {}", "viewOffer");
         Offer offer = offerService.findOfferById(offerId);
-        List<LocalDateTime> dates = offerService.getDatesOfRecurringOffers(offer);
-        Offer parent = offerService.getTheFollowingOffer(dates, offer);
+        if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            List<LocalDateTime> dates = offerService.getDatesOfRecurringOffers(offer);
+            offer = offerService.getTheFollowingOffer(dates, offer);
+        }
+
         //
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
@@ -104,11 +108,10 @@ public class OfferController{
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
         OfferApplicatonResponse response = new OfferApplicatonResponse();
-        response.setOfferId(offer.getId());
-        model.addAttribute("offer", parent);
+        model.addAttribute("offer", offer);
         model.addAttribute("response", response);
         model.addAttribute("offerManagementResponse", new OfferManagementResponse());
-        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parent));
+        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(offer));
         return "view-offer";
     }
 
