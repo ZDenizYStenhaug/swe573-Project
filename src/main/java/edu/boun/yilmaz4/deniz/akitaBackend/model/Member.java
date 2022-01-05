@@ -78,6 +78,12 @@ public class Member implements Serializable {
     @OneToMany(mappedBy = "receiver")
     private Set<Message> messages = new HashSet<>();
 
+    @OneToMany(mappedBy = "receiver")
+    private Set<EventFeedback> eventFeedbacks = new HashSet<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private Set<OfferFeedback> offerFeedback = new HashSet<>();
+
     public Member() {
     }
 
@@ -231,5 +237,21 @@ public class Member implements Serializable {
 
     public void setMessages(Set<Message> messages) {
         this.messages = messages;
+    }
+
+    public Set<EventFeedback> getEventFeedbacks() {
+        return eventFeedbacks;
+    }
+
+    public void setEventFeedbacks(Set<EventFeedback> eventFeedbacks) {
+        this.eventFeedbacks = eventFeedbacks;
+    }
+
+    public Set<OfferFeedback> getOfferFeedback() {
+        return offerFeedback;
+    }
+
+    public void setOfferFeedback(Set<OfferFeedback> offerFeedback) {
+        this.offerFeedback = offerFeedback;
     }
 }
