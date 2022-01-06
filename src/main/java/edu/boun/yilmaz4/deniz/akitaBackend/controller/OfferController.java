@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -191,8 +190,6 @@ public class OfferController{
             List<LocalDateTime> dates = offerService.getDatesOfRecurringOffers(offer);
             offer = offerService.getTheFollowingOffer(dates, offer);
         }
-
-        //
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
             Member member = memberService.findByUsername(username);
