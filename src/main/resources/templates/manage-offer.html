@@ -85,14 +85,17 @@
             </tr>
             </thead>
             <tbody>
-
-            <tr th:if="${selectedOffer.maxNumOfParticipants <= selectedOffer.participants.size()}">
-                <td colspan="4" style="color:red">The quota for this offer is full.</td>
-            </tr>
-            <tr th:if="${isCancellationDatePassed}">
-                <td colspan="4" style="color:red"> The deadline for editing set for the offer has passed. You cannot accept more applications.</td>
-            </tr>
-            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())} and not ${isCancellationDatePassed}">
+            <div th:if="${creditFlag}">
+                <tr><td colspan="4" style="color:red">You can't accept applications for this offer because you're at the maximum number of credits.</td></tr>
+            </div>
+            <div th:if="not ${creditFlag}">
+                <tr th:if="${selectedOffer.maxNumOfParticipants <= selectedOffer.participants.size()}">
+                    <td colspan="4" style="color:red">The quota for this offer is full.</td>
+                </tr>
+                <tr th:if="${isCancellationDatePassed}">
+                    <td colspan="4" style="color:red"> The deadline for editing set for the offer has passed. You cannot accept more applications.</td>
+                </tr>
+                <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())} and not ${isCancellationDatePassed}">
                 <tr th:if="${selectedOffer.applicants.size() == 0}">
                     <td colspan="4">There are no applicants for this service yet.</td>
                 </tr>
@@ -120,6 +123,8 @@
                         </form>
                     </td>
                 </tr>
+            </div>
+
             </tr>
 
             </tbody>

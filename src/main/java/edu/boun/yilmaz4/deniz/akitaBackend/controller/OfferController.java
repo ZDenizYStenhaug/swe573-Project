@@ -158,6 +158,7 @@ public class OfferController{
                               @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
         logger.info("-> {}", "manageOffer");
         String username = memberService.getCurrentUserLogin();
+        Member member = memberService.findByUsername(username);
         Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
         Offer selectedOffer;
         if (parentOffer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
@@ -169,15 +170,12 @@ public class OfferController{
                 selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
             }
         }
-        List<LocalDateTime> dates = new ArrayList<>();
-        if(parentOffer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
-            dates.add(selectedOffer.getDate());
-        } else {
-            dates =  offerService.getDatesOfRecurringOffers(parentOffer);
-        }
+        // is true when the credit that the member is going to gain by giving the offer is larger than 15, they can't accept participants.
+        boolean creditFlag = member.getCredit() + selectedOffer.getDuration() > 15;
+        model.addAttribute("creditFlag", creditFlag);
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", dates);
+        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
         model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
         return "manage-offer";
