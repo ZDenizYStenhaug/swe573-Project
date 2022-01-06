@@ -40,6 +40,10 @@ public class Member implements Serializable {
     @Column(nullable = false)
     private int credit;
 
+    private int blockedCredits;
+
+    private int lifetimeCredits;
+
     @Column(nullable = false)
     private int reputationPoints;
 
@@ -253,5 +257,21 @@ public class Member implements Serializable {
 
     public void setOfferFeedback(Set<OfferFeedback> offerFeedback) {
         this.offerFeedback = offerFeedback;
+    }
+
+    public int getBlockedCredits() {
+        return blockedCredits;
+    }
+
+    public void setBlockedCredits(int blockedCredits) {
+        this.blockedCredits = blockedCredits;
+    }
+
+    public int getLifetimeCredits() {
+        return lifetimeCredits;
+    }
+
+    public void setLifetimeCredits(int lifetimeCredits) {
+        this.lifetimeCredits = lifetimeCredits;
     }
 }

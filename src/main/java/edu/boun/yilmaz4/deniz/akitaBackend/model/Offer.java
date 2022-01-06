@@ -52,6 +52,8 @@ public class Offer implements Serializable {
     @Enumerated(EnumType.STRING)
     private OfferStatus status;
 
+    private int endOfferRequests;
+
     private String photo;
 
     @ManyToMany

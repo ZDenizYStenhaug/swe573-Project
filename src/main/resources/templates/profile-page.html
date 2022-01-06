@@ -53,7 +53,11 @@
             <p th:text="${member.email}" style="margin-bottom: 20px"></p>
 
             <p style="margin-bottom: 10px"><span th:text="${member.reputationPoints}" ></span> reputation points</p>
-            <p style="margin-bottom: 20px"><span th:text="${member.reputationPoints}"></span> credits</p>
+            <p style="margin-bottom: 20px"><span th:text="${member.credits}"></span> credits</p>
+            <p style="margin-bottom: 20px"><span th:text="${member.lifetimeCredits}"></span> credits</p>
+            <div th:if="${#authentication.name} eq ${member.username}">
+                <p style="margin-bottom: 20px"><span th:text="${member.blockedCredits}"></span> credits</p>
+            </div>
 
             <p style="margin-bottom: 10px">Talents: <span th:text="${#strings.listJoin(talents, ', ')}"></span></p>
             <p style="margin-bottom: 20px">Interests: <span th:text="${#strings.listJoin(interests, ', ')}"></span></p>

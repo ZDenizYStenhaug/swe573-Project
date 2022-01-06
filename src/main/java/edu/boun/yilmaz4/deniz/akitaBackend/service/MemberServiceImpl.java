@@ -38,6 +38,8 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(Role.getDefault());
         member.setCredit(5);
+        member.setLifetimeCredits(5);
+        member.setBlockedCredits(0);
         member.setReputationPoints(5);
         member.setBadge(Badge.NEWCOMER);
         member = memberRepo.save(member);
@@ -83,18 +85,22 @@ public class MemberServiceImpl implements MemberService {
     public OngoingActivityResponse getOngoingActivity (List<ScheduleItem> scheduledOffers, List<ScheduleItem> scheduleEvents) {
         OngoingActivityResponse ongoing = new OngoingActivityResponse();
         LocalDateTime now = LocalDateTime.now();
+        // check offers
         for (ScheduleItem so : scheduledOffers) {
             LocalDateTime beginning = so.getOffer().getDate();
             LocalDateTime end = so.getOffer().getDate().plusHours(so.getOffer().getDuration());
-            if (now.isAfter(beginning) && now.isBefore(end)) {
+            // the offer needs to be ongoing (time-wise) but also must have participants.
+            if (now.isAfter(beginning) && now.isBefore(end) && so.getOffer().getParticipants().size() > 0) {
                 ongoing.setOngoingOffer(so.getOffer());
                 return ongoing;
             }
         }
+        // check events.
         for (ScheduleItem se : scheduleEvents) {
             LocalDateTime beginning = se.getEvent().getDate();
             LocalDateTime end = se.getEvent().getDate().plusHours(se.getEvent().getDuration());
-            if (now.isAfter(beginning) && now.isBefore(end)) {
+            // the event needs to be ongoing (time-wise) but also must have participants.
+            if (now.isAfter(beginning) && now.isBefore(end) && se.getEvent().getParticipants().size() > 0) {
                 ongoing.setOngoingEvent(se.getEvent());
                 return ongoing;
             }
