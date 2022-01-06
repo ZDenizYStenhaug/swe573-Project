@@ -50,7 +50,8 @@ public class OfferController{
 
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
+        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
+        model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
         return "manage-offer";
     }
@@ -58,8 +59,16 @@ public class OfferController{
     @PostMapping(Routing.URI_OFFER_DECLINE_APPLICATION)
     public String declineApplication(Model model,
                                      @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
+        selectedOffer = offerService.declineApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
 
-        return "manageOffer";
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
+        model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
+        return "manage-offer";
     }
 
     @GetMapping(Routing.URI_ADD)
@@ -169,7 +178,7 @@ public class OfferController{
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
         model.addAttribute("dates", dates);
-        model.addAttribute("isCancellationDatePassed", selectedOffer.getDate().plusDays(selectedOffer.getCancellationDeadline()).isAfter(LocalDateTime.now()));
+        model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
         return "manage-offer";
     }

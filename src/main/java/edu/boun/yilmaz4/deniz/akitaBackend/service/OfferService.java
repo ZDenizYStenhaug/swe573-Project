@@ -48,6 +48,21 @@ public class OfferService {
     }
 
     @Transactional
+    public Offer declineApplication(Offer offer, Long memberId) {
+        Member applicant = memberService.findMemberById(memberId);
+        // remove member from applicants
+        List<Member> applicants = offer.getApplicants();
+        applicants.remove(applicant);
+        offer.setApplicants(applicants);
+        // update member's number of refusals
+        applicant.setNumOfRefusals(applicant.getNumOfRefusals() + 1);
+        applicant.setBlockedCredits(applicant.getBlockedCredits() - offer.getDuration());
+        memberService.updateMember(applicant);
+        sendRefusalMessage(applicant, offer);
+        return offerRepo.save(offer);
+    }
+
+    @Transactional
     public void declineRemainingApplications(Offer offer) {
         List<Member> applicants = offer.getApplicants();
         for(Member applicant : applicants) {
@@ -217,16 +232,16 @@ public class OfferService {
         messageService.sendMessage(applicant, text);
     }
 
-    public void sendQuotaMessage(Member applicant, Offer offer) {
-        for (Member m : offer.getApplicants()) {
-            if (m.equals(applicant)) {
-                continue;
-            } else {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-                String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined for quota reasons.";
-                messageService.sendMessage(m, text);
-            }
-        }
+    public void sendQuotaMessage(Member member, Offer offer) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined for quota reasons.";
+        messageService.sendMessage(member, text);
+    }
+
+    private void sendRefusalMessage(Member receiver, Offer offer) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined.";
+        messageService.sendMessage(receiver, text);
     }
 
     @Transactional

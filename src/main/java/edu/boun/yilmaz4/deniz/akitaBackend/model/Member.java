@@ -47,6 +47,8 @@ public class Member implements Serializable {
     @Column(nullable = false)
     private int reputationPoints;
 
+    private int numOfRefusals;
+
     @Column(nullable = false)
     private Badge badge;
 
@@ -273,5 +275,13 @@ public class Member implements Serializable {
 
     public void setLifetimeCredits(int lifetimeCredits) {
         this.lifetimeCredits = lifetimeCredits;
+    }
+
+    public int getNumOfRefusals() {
+        return numOfRefusals;
+    }
+
+    public void setNumOfRefusals(int numOfRefusals) {
+        this.numOfRefusals = numOfRefusals;
     }
 }

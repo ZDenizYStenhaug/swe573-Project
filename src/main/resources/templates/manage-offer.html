@@ -92,7 +92,7 @@
             <tr th:if="${isCancellationDatePassed}">
                 <td colspan="4" style="color:red"> The deadline for editing set for the offer has passed. You cannot accept more applications.</td>
             </tr>
-            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())} and ${isCancellationDatePassed}">
+            <tr th:if="${(selectedOffer.maxNumOfParticipants > selectedOffer.participants.size())} and not ${isCancellationDatePassed}">
                 <tr th:if="${selectedOffer.applicants.size() == 0}">
                     <td colspan="4">There are no applicants for this service yet.</td>
                 </tr>
@@ -112,7 +112,12 @@
                         </form>
                     </td>
                     <td>
-                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Decline</button>
+                        <form method="POST" th:action="@{/offer/decline-application}" th:object="${offerManagementResponse}" enctype="multipart/form-data">
+                            <input type="hidden" th:value="${offer.id}" name="parentOfferId">
+                            <input type="hidden" th:value="${selectedOffer.id}" name="selectedOfferId">
+                            <input type="hidden" th:value="${a.id}" name="applicantMemberId">
+                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Decline</button>
+                        </form>
                     </td>
                 </tr>
             </tr>

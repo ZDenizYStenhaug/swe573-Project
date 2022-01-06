@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
         member.setCredit(5);
         member.setLifetimeCredits(5);
         member.setBlockedCredits(0);
-        member.setReputationPoints(5);
+        member.setReputationPoints(10);
         member.setBadge(Badge.NEWCOMER);
         member = memberRepo.save(member);
         // send welcome message
