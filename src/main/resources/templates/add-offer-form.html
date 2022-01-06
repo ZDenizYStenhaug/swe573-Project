@@ -107,7 +107,9 @@
                 <option value=11>11</option>
                 <option value=12>12</option>
             </select>
-        </div>
+             <p class="has-error" th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"}></p>
+
+         </div>
 
         <div class="form-group" style="margin-bottom: 20px">
             <h4>Repeating type:</h4>

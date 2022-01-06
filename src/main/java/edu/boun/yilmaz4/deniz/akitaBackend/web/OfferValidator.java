@@ -44,6 +44,10 @@ public class OfferValidator implements Validator {
         if (offer.getMaxNumOfParticipants() < 1) {
             errors.rejectValue("maxNumOfParticipants", "Number.offerForm.maxNumOfParticipants");
         }
+        // if the member will have more than 15 credits if they create and give this offer, they can't create it.
+        if(member.getCredit() + offer.getDuration() > 15) {
+            errors.rejectValue("duration", "Duration.offerForm");
+        }
     }
 
 }
