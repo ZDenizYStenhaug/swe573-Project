@@ -166,4 +166,8 @@ public class MemberServiceImpl implements MemberService {
         List<ScheduleItem> foo = new ArrayList<>( events.values() );
         return foo;
     }
+
+    public Member updateMember(Member member) {
+        return memberRepo.save(member);
+    }
 }

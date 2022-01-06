@@ -40,7 +40,12 @@
 </header>
 
 <h4>Could not apply. </h4>
-<p>You have another event or offer scheduled for that date and time. Please try again with another date.</p>
+<div th:if="not ${flag}">
+    <p>You have another event or offer scheduled for that date and time. Please try again with another date.</p>
+</div>
+<div  th:if="${flag}">
+    <p>You don't have enough credits to apply for this offer.</p>
+</div>
 
 </body>
 </html>

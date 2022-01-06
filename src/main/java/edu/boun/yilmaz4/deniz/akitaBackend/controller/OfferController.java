@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -39,6 +40,27 @@ public class OfferController{
     private OfferApplicationValidator applicationValidator;
     @Autowired
     private MessageService messageService;
+
+    @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
+    public String acceptApplication(Model model,
+                                    @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
+        selectedOffer = offerService.acceptApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
+
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
+        return "manage-offer";
+    }
+
+    @PostMapping(Routing.URI_OFFER_DECLINE_APPLICATION)
+    public String declineApplication(Model model,
+                                     @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+
+        return "manageOffer";
+    }
 
     @GetMapping(Routing.URI_ADD)
     public String addOffer(Model model) {
@@ -79,7 +101,7 @@ public class OfferController{
     }
 
     @GetMapping(Routing.URI_ALL)
-    public String getAllOffers(Model model) {
+    public String allOffers(Model model) {
         logger.info("-> {}", "getAllOffers");
         String username = memberService.getCurrentUserLogin();
         model.addAttribute("allOffers", offerService.allOffers());
@@ -90,6 +112,68 @@ public class OfferController{
         }
         return "offers";
     }
+
+    @PostMapping(Routing.URI_OFFER_APPLY)
+    public String apply(Model model,
+                        @RequestParam("offerId") Long offerId,
+                        @ModelAttribute("response") OfferApplicatonResponse response,
+                        BindingResult bindingResult) {
+        logger.info("-> {}", "apply");
+        response.setUsername(memberService.getCurrentUserLogin());
+        response.setOfferId(offerId);
+        if (response.getUsername().equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(response.getUsername());
+        Offer offer = offerService.findOfferById(response.getOfferId());
+        if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            offer = offerService.getRecurringOfferByDate(response.getDate(), offer);
+        }
+        // check if the member has any clashing activities
+        applicationValidator.validate(offer, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("flag", false);
+            return "offer-application-unsuccessful";
+        } else if (member.getCredit() - member.getBlockedCredits() - offer.getDuration() < 0) {
+            model.addAttribute("flag", true);
+            return "offer-application-unsuccessful";
+        }
+        offer = offerService.apply(offer, member);
+        model.addAttribute("applied_offer", offer);
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "offer-application-successful";
+    }
+
+    @PostMapping(Routing.URI_MANAGE)
+    public String manageOffer(Model model,
+                              @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+        logger.info("-> {}", "manageOffer");
+        String username = memberService.getCurrentUserLogin();
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer;
+        if (parentOffer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            selectedOffer = offerService.findOfferById(parentOffer.getId());
+        } else {
+            if (offerManagementResponse.getSelectedDate() == null) {
+                selectedOffer = offerService.getRecurringOfferByDate(parentOffer.getDate(), parentOffer);
+            } else {
+                selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
+            }
+        }
+        List<LocalDateTime> dates = new ArrayList<>();
+        if(parentOffer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            dates.add(selectedOffer.getDate());
+        } else {
+            dates =  offerService.getDatesOfRecurringOffers(parentOffer);
+        }
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", dates);
+        model.addAttribute("isCancellationDatePassed", selectedOffer.getDate().plusDays(selectedOffer.getCancellationDeadline()).isAfter(LocalDateTime.now()));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
+        return "manage-offer";
+    }
+
 
     @PostMapping(Routing.URI_VIEW)
     public String viewOffer(Model model,
@@ -114,64 +198,4 @@ public class OfferController{
         model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(offer));
         return "view-offer";
     }
-
-    @PostMapping(Routing.URI_MANAGE)
-    public String manageOffer(Model model,
-                              @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
-        logger.info("-> {}", "manageOffer");
-        String username = memberService.getCurrentUserLogin();
-        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
-        Offer selectedOffer;
-        if (parentOffer.getDate().equals(offerManagementResponse.getSelectedDate()) || offerManagementResponse.getSelectedDate() == null) {
-            selectedOffer = new Offer(parentOffer);
-        } else {
-            selectedOffer = offerService.getRecurringOfferByDate(offerManagementResponse.getSelectedDate(), parentOffer);
-        }
-        model.addAttribute("offer", parentOffer);
-        model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
-        model.addAttribute("isCancellationDatePassed", selectedOffer.getDate().plusDays(selectedOffer.getCancellationDeadline()).isAfter(LocalDateTime.now()));
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
-        return "manage-offer";
-    }
-
-    @PostMapping(Routing.URI_OFFER_APPLY)
-    public String apply(Model model,
-                        @RequestParam("offerId") Long offerId,
-                        @ModelAttribute("response") OfferApplicatonResponse response,
-                        BindingResult bindingResult) {
-        logger.info("-> {}", "apply");
-        response.setUsername(memberService.getCurrentUserLogin());
-        response.setOfferId(offerId);
-        if (response.getUsername().equals("anonymousUser")) {
-            return "login";
-        }
-        Member member = memberService.findByUsername(response.getUsername());
-        Offer parent = offerService.findOfferById(response.getOfferId());
-        Offer appliedOffer = offerService.getRecurringOfferByDate(response.getDate(), parent);
-        applicationValidator.validate(appliedOffer, bindingResult);
-        if(bindingResult.hasErrors()) {
-            return "offer-application-unsuccessful";
-        }
-        appliedOffer = offerService.apply(appliedOffer, member);
-        model.addAttribute("applied_offer", appliedOffer);
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        return "offer-application-successful";
-    }
-
-    @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
-    public String acceptApplication(Model model,
-                             @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
-        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
-        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
-        selectedOffer = offerService.acceptApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
-        String username = memberService.getCurrentUserLogin();
-        model.addAttribute("offer", parentOffer);
-        model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesOfRecurringOffers(parentOffer));
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
-        return "manage-offer";
-    }
-
-
 }

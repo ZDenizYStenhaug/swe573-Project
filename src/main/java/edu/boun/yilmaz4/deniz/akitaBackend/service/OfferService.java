@@ -30,7 +30,6 @@ public class OfferService {
 
     @Transactional
     public Offer acceptApplication(Offer offer, Long memberId) {
-        // if this application will be the last one acc. to the max number of participants, then it should send a message to every other participant.
         Member applicant = memberService.findMemberById(memberId);
         // remove member from applicants
         List<Member> applicants = offer.getApplicants();
@@ -43,10 +42,19 @@ public class OfferService {
         sendAcceptanceMessage(applicant, offer);
         // send message to other applicants that the quota for this offer is full
         if (offer.getParticipants().size() >= offer.getMaxNumOfParticipants()) {
-            sendQuotaMessage(applicant, offer);
-
+            declineRemainingApplications(offer);
         }
         return offerRepo.save(offer);
+    }
+
+    @Transactional
+    public void declineRemainingApplications(Offer offer) {
+        List<Member> applicants = offer.getApplicants();
+        for(Member applicant : applicants) {
+            applicant.setBlockedCredits(applicant.getBlockedCredits() - offer.getDuration());
+            memberService.updateMember(applicant);
+            sendQuotaMessage(applicant, offer);
+        }
     }
 
     @Transactional
@@ -74,9 +82,13 @@ public class OfferService {
 
     @Transactional
     public Offer apply(Offer offer, Member member) {
+        // add the member to applicants
         List<Member> applicants = offer.getApplicants();
         applicants.add(member);
         offer.setApplicants(applicants);
+        // block member's credits
+        member.setBlockedCredits(member.getBlockedCredits() + offer.getDuration());
+        memberService.updateMember(member);
         // send message to the offerer
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String text = member.getUsername() + " applied to your offer " + offer.getName() + " organized on " + offer.getDate().format(formatter);
@@ -135,8 +147,12 @@ public class OfferService {
     }
 
     public List<LocalDateTime> getDatesForOpenToApplicationOffers(Offer parent) {
-        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
         List<LocalDateTime> dates = new ArrayList<>();
+        if(parent.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            dates.add(parent.getDate());
+            return dates;
+        }
+        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
         for(RecurringOffer ro : recurringOffers) {
             if(ro.getStatus().equals(OfferStatus.OPEN_TO_APPLICATIONS))
                 dates.add(ro.getDate());
