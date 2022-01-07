@@ -11,12 +11,12 @@ public class Routing {
     public static final String URI_ADD = "/add";
     public static final String URI_ALL = "/all";
     public static final String URI_DELETE = "/delete";
-    public static final String URI_EDIT = "/edit";
     public static final String URI_WELCOME = "/welcome";
     public static final String URI_VIEW = "/view";
     public static final String URI_MANAGE = "/manage";
 
     public static final String URI_EVENT_REGISTER= "/register";
+    public static final String URI_EVENT_DELETE_REGISTRATION = "/delete-registration";
 
     public static final String URI_MEMBER_LOGIN = "/login";
     public static final String URI_MEMBER_LOGOUT = "/logout";

@@ -2,10 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventDateValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventValidator;
 import org.slf4j.Logger;
@@ -18,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(Routing.ROOT_EVENT)
@@ -36,6 +34,8 @@ public class EventController {
     private EventDateValidator dateValidator;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private OfferService offerService;
 
     @GetMapping(Routing.URI_ADD)
     public String addEvent(Model model) {
@@ -73,6 +73,27 @@ public class EventController {
         model.addAttribute("event", savedEvent);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "add-event-success";
+    }
+
+    @PostMapping(Routing.URI_EVENT_DELETE_REGISTRATION)
+    public String deleteRegistration(Model model,
+                                     @RequestParam("eventId") Long eventId) {
+        String username = memberService.getCurrentUserLogin();
+        Member member = memberService.findByUsername(username);
+        Event event = eventService.findEventById(eventId);
+        eventService.deleteOfferApplication(event, member);
+        List<ScheduleItem> scheduledOffers = memberService.getScheduledOffers(member);
+        List<ScheduleItem> scheduledEvents =  memberService.getScheduledEvents(member);
+        model.addAttribute("member", member);
+        model.addAttribute("interests", memberService.getInterestNames(member));
+        model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("offers", offerService.findAllOffersByMember(member));
+        model.addAttribute("events", eventService.findAllEventsByMember(member));
+        model.addAttribute("scheduledOffers",scheduledOffers);
+        model.addAttribute("scheduledEvents", scheduledEvents);
+        model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "profile-page";
     }
 
     @GetMapping(Routing.URI_ALL)

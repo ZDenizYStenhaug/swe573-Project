@@ -25,6 +25,8 @@ public class EventService {
     private EventRepo<Event> eventRepo;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MemberServiceImpl memberService;
 
     @Transactional
     public Event addEvent(Event event) {
@@ -81,6 +83,17 @@ public class EventService {
         return false;
     }
 
+    @Transactional
+    public void deleteOfferApplication(Event event, Member member) {
+        // update the offer's applicants
+        Set<Member> participants = event.getParticipants();
+        participants.remove(member);
+        event.setParticipants(participants);
+        updateEvent(event);
+        // send message the offerer
+        sendRegistrationDeletedMessage(event, member);
+    }
+    
     @Transactional (readOnly = true)
     public Event findEventById(Long id) {
         logger.info("Getting the event by id " + id);
@@ -145,5 +158,12 @@ public class EventService {
                 return date.plusMonths(1);
         }
         return date;
+    }
+
+    public void sendRegistrationDeletedMessage(Event event, Member member) {
+        Member receiver = event.getOrganizer();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = member.getUsername() + " dropped out of your event named " + event.getName() + " on " + event.getDate().format(formatter) + ".";
+        messageService.sendMessage(receiver, text);
     }
 }

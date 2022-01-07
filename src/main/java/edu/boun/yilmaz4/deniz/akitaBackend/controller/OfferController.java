@@ -48,7 +48,7 @@ public class OfferController{
 
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
+        model.addAttribute("dates", offerService.getDatesForUpcomingOffers(parentOffer));
         model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
         return "manage-offer";
@@ -63,7 +63,7 @@ public class OfferController{
 
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
+        model.addAttribute("dates", offerService.getDatesForUpcomingOffers(parentOffer));
         model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
         return "manage-offer";
@@ -194,7 +194,7 @@ public class OfferController{
         model.addAttribute("creditFlag", creditFlag);
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesForOpenToApplicationOffers(parentOffer));
+        model.addAttribute("dates", offerService.getDatesForUpcomingOffers(parentOffer));
         model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(username))));
         return "manage-offer";

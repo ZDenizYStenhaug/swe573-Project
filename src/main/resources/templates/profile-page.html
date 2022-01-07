@@ -174,7 +174,6 @@
                                     </td>
                                     <td th:if="${so.status == 'application pending'}">
                                         <form method="POST" th:action="@{/offer/delete-application(offerId=${so.offer.id})}">
-                                            <input type="hidden" th:value="${so.offer.id}" name="offerId">
                                             <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Cancel application</button>
                                         </form>
                                     </td>
@@ -208,7 +207,9 @@
                                         <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
                                     </td>
                                     <td th:if="${se.status == 'participating'}">
-                                        <button type="submit" name="submit" value="value"  class="btn btn-sm btn-danger">Drop out</button>
+                                        <form method="POST" th:action="@{/event/delete-registration(eventId=${se.event.id})}">
+                                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
+                                        </form>
                                     </td>
                                 </div>
                             </tr>

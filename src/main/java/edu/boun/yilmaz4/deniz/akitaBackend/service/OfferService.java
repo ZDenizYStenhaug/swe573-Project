@@ -190,6 +190,21 @@ public class OfferService {
         return dates;
     }
 
+    public List<LocalDateTime> getDatesForUpcomingOffers(Offer parent) {
+        List<LocalDateTime> dates = new ArrayList<>();
+        if(parent.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
+            dates.add(parent.getDate());
+            return dates;
+        }
+        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
+        for(RecurringOffer ro : recurringOffers) {
+            if(ro.getStatus().equals(OfferStatus.OPEN_TO_APPLICATIONS) || ro.getStatus().equals(OfferStatus.CLOSED_TO_APPLICATIONS) )
+                dates.add(ro.getDate());
+        }
+        Collections.sort(dates);
+        return dates;
+    }
+
     @Transactional
     public Offer getTheFollowingOffer(List<LocalDateTime> dates, Offer parent) {
         LocalDateTime followingOfferDate = dates.get(0);
