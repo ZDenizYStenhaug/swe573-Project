@@ -7,6 +7,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.web.TagValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class TagController implements WebMvcConfigurer {
     private MemberServiceImpl memberService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private TagValidator tagValidator;
 
     @GetMapping(Routing.URI_ADD)
     public String showTagForm(Model model) {
@@ -41,6 +44,7 @@ public class TagController implements WebMvcConfigurer {
 
     @PostMapping(Routing.URI_ADD)
     public String saveNewTag(@Valid Tag tag, BindingResult bindingResult, Model model) {
+        tagValidator.validate(tag, bindingResult);
         if (bindingResult.hasErrors()) {
             return "add-tag-form";
         }

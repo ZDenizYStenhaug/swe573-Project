@@ -40,16 +40,6 @@ public class MemberController {
     @Autowired
     private EventService eventService;
 
-    @GetMapping(Routing.URI_MEMBER_REGISTRATION)
-    public String registration(Model model) {
-        if (securityService.isAuthenticated()) {
-            return "redirect:/";
-        }
-        model.addAttribute("member", new Member());
-        model.addAttribute("tags", tagService.getAllTags());
-        return "registration";
-    }
-
     @GetMapping(Routing.URI_MEMBER_LOGOUT)
     public String logout (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -78,6 +68,16 @@ public class MemberController {
         model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
+    }
+
+    @GetMapping(Routing.URI_MEMBER_REGISTRATION)
+    public String registration(Model model) {
+        if (securityService.isAuthenticated()) {
+            return "redirect:/";
+        }
+        model.addAttribute("member", new Member());
+        model.addAttribute("tags", tagService.getAllTags());
+        return "registration";
     }
 
     @PostMapping(Routing.URI_MEMBER_REGISTRATION)

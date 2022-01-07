@@ -22,12 +22,7 @@ public class TagService {
         return tagRepo.findAll();
     }
 
-    public String checkIfTagExitst(Tag newTag) {
-        String message = "";
-        for (Tag tag : tagRepo.findAll()) {
-            if (tag.getName().equals(newTag.getName()))
-                return "The tag named " + tag.getName() + " already exists";
-        }
-        return message;
+    public Tag findByName(String name) {
+        return tagRepo.findByName(name);
     }
 }
