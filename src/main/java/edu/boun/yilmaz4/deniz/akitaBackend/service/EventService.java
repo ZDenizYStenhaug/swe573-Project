@@ -2,6 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.EventRepo;
 import org.slf4j.Logger;
@@ -53,11 +54,6 @@ public class EventService {
         return eventRepo.findAllEvents();
     }
 
-    @Transactional(readOnly = true)
-    public List<Event> findAllEventsByMember(Member member) {
-        return eventRepo.findAllEventsByMember(member);
-    }
-
     @Transactional (readOnly = true)
     public boolean checkForUniqueTimestamp(Member member, Event event) {
         logger.info("checking if the member has or attends another event or offer that has the same date and time as the new event.");
@@ -93,7 +89,53 @@ public class EventService {
         // send message the offerer
         sendRegistrationDeletedMessage(event, member);
     }
-    
+
+    @Transactional
+    public void endEvent(Event event) {
+        event.setStatus(EventStatus.PAST_EVENT);
+        eventRepo.save(event);
+        if(event.getClass().equals(RecurringEvent.class)) {
+            Event parent = ((RecurringEvent) event).getParentEvent();
+            addRecurringEvent(parent);
+        }
+    }
+
+    public void addRecurringEvent(Event parent) {
+        LocalDateTime latestDate = getLatestDate(getDatesOfRecurringEvents(parent));
+        RecurringEvent recurringEvent = new RecurringEvent();
+        recurringEvent.setParentEvent(parent);
+        recurringEvent.setName(parent.getName());
+        recurringEvent.setDescription(parent.getDescription());
+        recurringEvent.setName(parent.getName());
+        recurringEvent.setDescription(parent.getDescription());
+        recurringEvent.setOrganizer(parent.getOrganizer());
+        recurringEvent.setStatus(EventStatus.getDefault());
+        recurringEvent.setDuration(parent.getDuration());
+        if (parent.getRepeatingType().equals(RepeatingType.DAILY)) {
+            recurringEvent.setDate(latestDate.plusDays(1));
+        } else if (parent.getRepeatingType().equals(RepeatingType.WEEKLY)) {
+            recurringEvent.setDate(latestDate.plusWeeks(1));
+        } else if(parent.getRepeatingType().equals(RepeatingType.MONTHLY)) {
+            recurringEvent.setDate(latestDate.plusMonths(1));
+        }
+        eventRepo.save(recurringEvent);
+    }
+
+    public LocalDateTime getLatestDate(List<LocalDateTime> dates) {
+        LocalDateTime latest = LocalDateTime.now();
+        for (LocalDateTime date : dates) {
+            if (date.isAfter(latest)) {
+                latest = date;
+            }
+        }
+        return latest;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Event> findAllEventsByMember(Member member) {
+        return eventRepo.findAllEventsByMember(member);
+    }
+
     @Transactional (readOnly = true)
     public Event findEventById(Long id) {
         logger.info("Getting the event by id " + id);

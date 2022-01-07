@@ -202,10 +202,6 @@
                                 <td><span th:text="${se.event.name}"></span></td>
                                 <td><span th:text="${se.status}"></span></td>
                                 <div th:if="${#authentication.name} eq ${member.username}">
-                                    <td th:if="${se.status == 'owner'}">
-                                        <!-- TODO: add the link to the button -->
-                                        <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
-                                    </td>
                                     <td th:if="${se.status == 'participating'}">
                                         <form method="POST" th:action="@{/event/delete-registration(eventId=${se.event.id})}">
                                             <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
@@ -232,7 +228,6 @@
                         <tr>
                             <th scope="col">Username</th>
                             <th scope="col"></th>
-                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -242,9 +237,6 @@
                                 <form method="POST" th:action="@{/member/view/profile(memberId=${ongoing.ongoingEvent.organizer.id})}">
                                     <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
                                 </form>
-                            </td>
-                            <td>
-                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
                             </td>
                         </tr>
                         </tbody>
@@ -266,13 +258,14 @@
                                     <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
                                 </form>
                             </td>
-                            <td>
-                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
-                            </td>
                         </tr>
                         </tbody>
                     </table>
-
+                    <div  th:if="${#authentication.name} eq ${ongoing.ongoingEvent.organizer.username}">
+                        <form method="POST" th:action="@{/event/end-event(eventId=${ongoing.ongoingEvent.id})}">
+                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">End Event</button>
+                        </form>
+                    </div>
                 </div>
                 <div th:if="not(${ongoing.ongoingOffer} == null)">
                     <h1>Ongoing Offer!</h1>

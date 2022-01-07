@@ -18,6 +18,7 @@ public class Routing {
 
     public static final String URI_EVENT_REGISTER= "/register";
     public static final String URI_EVENT_DELETE_REGISTRATION = "/delete-registration";
+    public static final String URI_EVENT_END_EVENT = "/end-event";
 
     public static final String URI_ADD_OFFER_FEEDBACK = "/add-offer-feedback";
     public static final String URI_ADD_EVENT_FEEDBACK = "/add-event-feedback";

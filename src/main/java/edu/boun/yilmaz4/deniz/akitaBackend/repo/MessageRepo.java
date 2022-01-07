@@ -12,6 +12,9 @@ import java.util.List;
 
 public interface MessageRepo extends JpaRepository<Message,Long> {
 
+    @Query("SELECT m FROM Message m WHERE m.receiver = :member")
+    List<Message> getAllForMember(@Param("member") Member member);
+
     // check if any unread message exists
     @Query("SELECT COUNT(m) FROM Message m WHERE m.receiver = :member AND m.status = 'UNREAD'")
     int checkIfUnreadExists(@Param("member") Member member);

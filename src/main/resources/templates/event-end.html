@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       lang="en">
-    <head>
+<head>
     <meta charset="UTF-8">
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -44,53 +44,6 @@
         </div>
     </div>
 </header>
-<div style="margin-left: 30px">
-    <img class="img-thumbnail" th:src="@{${event.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
-    <ul>
-        <li>Name: <span th:text="${event.name}"></span></li>
-        <li>Description: <span th:text="${event.description}"></span></li>
-        <li>Next meeting: <span th:text="${#temporals.format(event.date, 'dd-MM-yyyy HH:mm')}"></span></li>
-        <li>Duration: <span th:text="${event.duration}"></span></li>
-        <li>Frequency: <span th:text="${event.repeatingType}"></span></li>
-        <li>Status: <span th:text="${event.status}"></span></li>
-        <li>Organizer: <span th:text="${event.organizer.username}"></span>
-            <form method="POST" th:action="@{/member/view/profile(memberId=${event.organizer.id})}">
-                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
-            </form>
-        </li>
-    </ul>
-    <hr>
-    <div th:if="not(${#authentication.name} eq ${event.organizer.username})">
-        <form method="POST" th:action="@{/event/register(eventId=${event.id})}" th:object="${response}" enctype="multipart/form-data">
-            <select class="selectpicker" th:field="*{date}">
-                <option th:each="d: ${dates}" th:value="${{d}}" th:text="${#temporals.format(d, 'dd-MM-yyyy HH:mm')}"></option>
-            </select>
-            <button type="submit" name="submit" value="value" class="btn btn-success">Register!</button>
-        </form>
-    </div>
-    <hr>
-    <h4>Participants for next meeting</h4>
-    <table class="table table-sm">
-        <thead>
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr  th:if="${event.participants.isEmpty()}">
-                <td colspan="2">There are no participants yet.</td>
-            </tr>
-            <tr th:each="member: ${event.participants}">
-                <td><span th:text="${member.username}"></span></td>
-                <td>
-                    <form method="POST" th:action="@{/member/view/profile(memberId=${member.id})}">
-                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<h4>Thank you!</h4>
 </body>
 </html>

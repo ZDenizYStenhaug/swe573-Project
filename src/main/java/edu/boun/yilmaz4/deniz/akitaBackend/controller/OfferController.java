@@ -42,7 +42,6 @@ public class OfferController {
     @PostMapping(Routing.URI_OFFER_END_OFFER)
     public String endOffer(Model model,
                            @RequestParam("offerId") Long offerId) {
-
         Offer offer = offerService.findOfferById(offerId);
         // update the endOfferRequest value
         offerService.updateEndOfferRequest(offer);

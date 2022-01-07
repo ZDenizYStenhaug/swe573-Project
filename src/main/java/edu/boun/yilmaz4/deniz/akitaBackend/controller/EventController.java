@@ -37,6 +37,17 @@ public class EventController {
     @Autowired
     private OfferService offerService;
 
+
+    @PostMapping(Routing.URI_EVENT_END_EVENT)
+    public String endEvent(Model model,
+                           @RequestParam("eventId") Long eventId) {
+        Event event = eventService.findEventById(eventId);
+        eventService.endEvent(event);
+        Member member = memberService.findByUsername(memberService.getCurrentUserLogin());
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "event-end";
+    }
+
     @GetMapping(Routing.URI_ADD)
     public String addEvent(Model model) {
         String username = memberService.getCurrentUserLogin();
