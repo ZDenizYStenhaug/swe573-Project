@@ -10,6 +10,7 @@
 
 </head>
 <body>
+
 <header class="p-3 bg-dark text-white">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -18,10 +19,10 @@
             </a>
 
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="/welcome" class="nav-link navbar-brand">AKITA</a></li>
+                <li><a href="" class="nav-link navbar-brand">AKITA</a></li>
                 <li><a href="/offer/all" class="nav-link px-2 text-white">Offers</a></li>
                 <li><a href="/event/all" class="nav-link px-2 text-white">Events</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+                <li><a href="/tag/all" class="nav-link px-2 text-white">Tags</a></li>
             </ul>
 
             <div class="text-end" sec:authorize="isAnonymous()">
@@ -31,13 +32,13 @@
 
             <div class="text-end" sec:authorize="isAuthenticated()">
                 <a href="/message/all/" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Messages (<span th:text="${messageCount}">messageCount</span>)</a>
+
                 <a href="/member/profile" align="right" class="btn btn-outline-light me-2" role="button" aria-pressed="true">Go to profile</a>
                 <a href="/member/logout" align="right" class="btn btn-warning" role="button" aria-pressed="true">Logout</a>
             </div>
         </div>
     </div>
 </header>
-
 <h4>Registration successful!</h4>
 
 <p>Event name: <span th:text="${registered_event.name}"></span></p>
