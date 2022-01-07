@@ -3,6 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.model;
 public class Routing {
 
     public static final String ROOT_EVENT = "/event";
+    public static final String ROOT_FEEDBACK = "/feedback";
     public static final String ROOT_MESSAGE = "/message";
     public static final String ROOT_MEMBER = "/member";
     public static final String ROOT_OFFER = "/offer";
@@ -17,6 +18,9 @@ public class Routing {
 
     public static final String URI_EVENT_REGISTER= "/register";
     public static final String URI_EVENT_DELETE_REGISTRATION = "/delete-registration";
+
+    public static final String URI_ADD_OFFER_FEEDBACK = "/add-offer-feedback";
+    public static final String URI_ADD_EVENT_FEEDBACK = "/add-event-feedback";
 
     public static final String URI_MEMBER_LOGIN = "/login";
     public static final String URI_MEMBER_LOGOUT = "/logout";

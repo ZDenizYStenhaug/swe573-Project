@@ -16,6 +16,10 @@ public class OfferFeedback implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
 
+    private int rating;
+
+    private String comment;
+
     @ManyToOne
     @JoinColumn(name = "offer_id")
     private Offer offer;
@@ -58,5 +62,21 @@ public class OfferFeedback implements Serializable {
 
     public void setReceiver(Member receiver) {
         this.receiver = receiver;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

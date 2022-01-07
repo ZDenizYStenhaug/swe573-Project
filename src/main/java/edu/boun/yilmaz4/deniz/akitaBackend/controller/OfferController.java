@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(Routing.ROOT_OFFER)
-public class OfferController{
+public class OfferController {
     private static final Logger logger = LoggerFactory.getLogger(OfferController.class);
 
     @Autowired
@@ -52,7 +52,7 @@ public class OfferController{
         if (member.equals(offer.getOfferer())) {
             return "offer-end";
         }
-        model.addAttribute("feedbackResponse", new FeedbackResponse());
+        model.addAttribute("offerFeedback", new OfferFeedback());
         model.addAttribute("offer", offer);
         return "feedback";
     }

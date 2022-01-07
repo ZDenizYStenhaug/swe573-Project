@@ -289,9 +289,62 @@ public class OfferService {
         // if all the participants and the offerer ended the offer:
         if (offer.getEndOfferRequests() == offer.getParticipants().size() + 1) {
             offer.setStatus(OfferStatus.PAST_OFFER);
-            // TODO: add new repeating offer
+            // credit exchange
+            creditExchange(offer);
+            // repeating offer case
+            if(offer.getClass().equals(RecurringOffer.class)) {
+                Offer parent = ((RecurringOffer) offer).getParentOffer();
+                addRecurringOffer(parent);
+            }
         }
         return offerRepo.save(offer);
+    }
+
+    public void addRecurringOffer(Offer parent) {
+        LocalDateTime latestDate = getLatestDate(getDatesForUpcomingOffers(parent));
+        RecurringOffer recurringOffer = new RecurringOffer();
+        recurringOffer.setParentOffer(parent);
+        recurringOffer.setName(parent.getName());
+        recurringOffer.setDescription(parent.getDescription());
+        recurringOffer.setOfferer(parent.getOfferer());
+        recurringOffer.setStatus(OfferStatus.getDefault());
+        recurringOffer.setDuration(parent.getDuration());
+        recurringOffer.setMaxNumOfParticipants(parent.getMaxNumOfParticipants());
+        recurringOffer.setCancellationDeadline(parent.getCancellationDeadline());
+        if (parent.getRepeatingType().equals(RepeatingType.DAILY)) {
+            recurringOffer.setDate(latestDate.plusDays(1));
+        } else if (parent.getRepeatingType().equals(RepeatingType.WEEKLY)) {
+            recurringOffer.setDate(latestDate.plusWeeks(1));
+        } else if(parent.getRepeatingType().equals(RepeatingType.MONTHLY)) {
+            recurringOffer.setDate(latestDate.plusMonths(1));
+        }
+        offerRepo.save(recurringOffer);
+    }
+
+    public LocalDateTime getLatestDate(List<LocalDateTime> dates) {
+        LocalDateTime latest = LocalDateTime.now();
+        for (LocalDateTime date : dates) {
+            if (date.isAfter(latest)) {
+                latest = date;
+            }
+        }
+        return latest;
+    }
+
+    public void creditExchange(Offer offer) {
+        int credit = offer.getDuration();
+        //add credits to the offerer's credits.
+        Member offerer = offer.getOfferer();
+        offerer.setCredit(offerer.getCredit() + credit);
+        offerer.setLifetimeCredits(offerer.getLifetimeCredits() + credit);
+        memberService.updateMember(offerer);
+        // lower participant's credits.
+        List<Member> participants = offer.getParticipants();
+        for(Member participant : participants) {
+            participant.setCredit(participant.getCredit() - credit);
+            participant.setBlockedCredits(participant.getBlockedCredits() - credit);
+            memberService.updateMember(participant);
+        }
     }
 
     @Transactional

@@ -16,6 +16,10 @@ public class EventFeedback implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime date;
 
+    private int rating;
+
+    private String text;
+
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
@@ -58,5 +62,21 @@ public class EventFeedback implements Serializable {
 
     public void setReceiver(Member receiver) {
         this.receiver = receiver;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }
