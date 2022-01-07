@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -26,6 +27,8 @@ public class MemberServiceImpl implements MemberService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private OfferService offerService;
 
     @Transactional(readOnly = true)
     public Member findMemberById(Long id) {
@@ -138,8 +141,7 @@ public class MemberServiceImpl implements MemberService {
             si.setStatus("application accepted");
             offers.put(offer.getDate(), si);
         }
-        List<ScheduleItem> foo = new ArrayList<>( offers.values() );
-        return foo;
+        return new ArrayList<>( offers.values() );
     }
 
     public List<ScheduleItem> getScheduledEvents(Member member) {
@@ -163,11 +165,11 @@ public class MemberServiceImpl implements MemberService {
             si.setStatus("participating");
             events.put(event.getDate(), si);
         }
-        List<ScheduleItem> foo = new ArrayList<>( events.values() );
-        return foo;
+        return new ArrayList<>( events.values() );
     }
 
     public Member updateMember(Member member) {
         return memberRepo.save(member);
     }
+
 }

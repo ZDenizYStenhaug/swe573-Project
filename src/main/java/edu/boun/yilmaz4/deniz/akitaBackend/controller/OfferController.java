@@ -3,10 +3,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.OfferService;
-import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferApplicationValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
 import org.slf4j.Logger;
@@ -39,6 +36,8 @@ public class OfferController{
     private OfferApplicationValidator applicationValidator;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private EventService eventService;
 
     @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
     public String acceptApplication(Model model,
@@ -150,6 +149,27 @@ public class OfferController{
         model.addAttribute("applied_offer", offer);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "offer-application-successful";
+    }
+
+    @PostMapping(Routing.URI_OFFER_DELETE_APPLICATION)
+    public String deleteOfferApplication(Model model,
+                                         @RequestParam("offerId") Long offerId) {
+        String username = memberService.getCurrentUserLogin();
+        Member member = memberService.findByUsername(username);
+        Offer offer = offerService.findOfferById(offerId);
+        member = offerService.deleteOfferApplication(offer, member);
+        List<ScheduleItem> scheduledOffers = memberService.getScheduledOffers(member);
+        List<ScheduleItem> scheduledEvents =  memberService.getScheduledEvents(member);
+        model.addAttribute("member", member);
+        model.addAttribute("interests", memberService.getInterestNames(member));
+        model.addAttribute("talents", memberService.getTalentsNames(member));
+        model.addAttribute("offers", offerService.findAllOffersByMember(member));
+        model.addAttribute("events", eventService.findAllEventsByMember(member));
+        model.addAttribute("scheduledOffers",scheduledOffers);
+        model.addAttribute("scheduledEvents", scheduledEvents);
+        model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        return "profile-page";
     }
 
     @PostMapping(Routing.URI_MANAGE)

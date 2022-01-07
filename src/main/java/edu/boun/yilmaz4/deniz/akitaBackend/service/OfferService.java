@@ -141,6 +141,20 @@ public class OfferService {
         return false;
     }
 
+    @Transactional
+    public Member deleteOfferApplication(Offer offer, Member member) {
+        // update the offer's applicants
+        List<Member> applicants = offer.getApplicants();
+        applicants.remove(member);
+        offer.setApplicants(applicants);
+        updateOffer(offer);
+        // send message the offerer
+        sendApplicationDeletedMessage(offer, member);
+        // update member's blocked credits
+        member.setBlockedCredits(member.getBlockedCredits() - offer.getDuration());
+        return memberService.updateMember(member);
+    }
+
     @Transactional(readOnly = true)
     public Offer findOfferById(Long id) {
         logger.info("getting the offer by id " + id);
@@ -230,6 +244,13 @@ public class OfferService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been accepted!";
         messageService.sendMessage(applicant, text);
+    }
+
+    private void sendApplicationDeletedMessage(Offer offer, Member member) {
+        Member receiver = offer.getOfferer();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        String text = member.getUsername() + " calcelled their application for your offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + ".";
+        messageService.sendMessage(receiver, text);
     }
 
     public void sendQuotaMessage(Member member, Offer offer) {

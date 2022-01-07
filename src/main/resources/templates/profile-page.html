@@ -153,6 +153,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Status</th>
                             <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -169,12 +170,13 @@
                                             <input type="hidden" th:value="${so.offer.id}" name="parentOfferId">
                                             <input type="hidden" th:value="${so.offer.id}" name="selectedOfferId">
                                             <button type="submit" name="submit" value="value" class="btn btn-warning">Manage</button>
-                                        </form>                                    </td>
-                                    <td th:if="${so.status == 'application pending'}">
-                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-warning">Cancel application</button>
+                                        </form>
                                     </td>
-                                    <td th:if="${so.status == 'application accepted'}">
-                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Drop out</button>
+                                    <td th:if="${so.status == 'application pending'}">
+                                        <form method="POST" th:action="@{/offer/delete-application(offerId=${so.offer.id})}">
+                                            <input type="hidden" th:value="${so.offer.id}" name="offerId">
+                                            <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">Cancel application</button>
+                                        </form>
                                     </td>
                                 </div>
                             </tr>

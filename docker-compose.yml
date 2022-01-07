@@ -11,18 +11,18 @@ services:
       - PGTZ=Europe/Istanbul
     ports:
       - "5432:5432"
-#
-#  akita:
-#    build: .
-#    container_name: akita-app
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/akita
-#      - SPRING_DATASOURCE_USERNAME=akita
-#      - SPRING_DATASOURCE_PASSWORD=4k1t4
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-#    links:
-#      - database
-#    depends_on:
-#      - database
+
+  akita:
+    build: .
+    container_name: akita-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/akita
+      - SPRING_DATASOURCE_USERNAME=akita
+      - SPRING_DATASOURCE_PASSWORD=4k1t4
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    links:
+      - database
+    depends_on:
+      - database

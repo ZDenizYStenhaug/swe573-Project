@@ -2,6 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.ScheduleItem;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
@@ -50,35 +51,6 @@ public class MemberController {
         return "registration";
     }
 
-    @PostMapping(Routing.URI_MEMBER_REGISTRATION)
-    public String registration(@ModelAttribute("member") Member member,
-                               @RequestParam("image") MultipartFile multipartFile,
-                               BindingResult bindingResult) throws IOException {
-        memberValidator.validate(member, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return "registration";
-        }
-        String fileName = "image-" + member.getId();
-        member.setPhoto(fileName);
-        Member savedMember = memberService.register(member);
-        securityService.autoLogin(member.getUsername(), member.getPasswordConfirm());
-        String uploadDir = "user-photos/" + savedMember.getId();
-        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
-        return "redirect:/welcome";
-    }
-
-    @GetMapping(Routing.URI_MEMBER_LOGIN)
-    public String login(Model model, String error, String logout) {
-        if (securityService.isAuthenticated()) {
-            return "redirect:/welcome";
-        }
-        if (error != null)
-            model.addAttribute("error", "Your username and password is invalid.");
-        if (logout != null)
-            model.addAttribute("message", "You have been logged out successfully.");
-        return "login";
-    }
-
     @GetMapping(Routing.URI_MEMBER_LOGOUT)
     public String logout (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -109,6 +81,36 @@ public class MemberController {
         return "profile-page";
     }
 
+    @PostMapping(Routing.URI_MEMBER_REGISTRATION)
+    public String registration(@ModelAttribute("member") Member member,
+                               @RequestParam("image") MultipartFile multipartFile,
+                               BindingResult bindingResult) throws IOException {
+        memberValidator.validate(member, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+        String fileName = "image-" + member.getId();
+        member.setPhoto(fileName);
+        Member savedMember = memberService.register(member);
+        securityService.autoLogin(member.getUsername(), member.getPasswordConfirm());
+        String uploadDir = "user-photos/" + savedMember.getId();
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+        return "redirect:/welcome";
+    }
+
+    @GetMapping(Routing.URI_MEMBER_LOGIN)
+    public String login(Model model, String error, String logout) {
+        if (securityService.isAuthenticated()) {
+            return "redirect:/welcome";
+        }
+        if (error != null)
+            model.addAttribute("error", "Your username and password is invalid.");
+        if (logout != null)
+            model.addAttribute("message", "You have been logged out successfully.");
+        return "login";
+    }
+
+
     @PostMapping(Routing.URI_MEMBER_VIEW_PROFILE)
     public String viewProfilePage(Model model,
                                   @RequestParam(value = "memberId") Long memberId) {
@@ -127,22 +129,4 @@ public class MemberController {
         return "profile-page";
     }
 
-    @GetMapping(Routing.URI_EDIT)
-    public String editProfilePage(Model model) {
-        String username = memberService.getCurrentUserLogin();
-        if (username.equals("anonymousUser")) {
-            return "login";
-        }
-        Member member = memberService.findByUsername(username);
-        model.addAttribute("member", member);
-        return "edit-profile";
-    }
-
-    @PutMapping(Routing.URI_EDIT)
-    public String updateProfile(@ModelAttribute("member") Member member,
-                                @RequestParam("image") MultipartFile multipartFile,
-                                BindingResult bindingResult) {
-
-        return "redirect:/welcome";
-    }
 }
