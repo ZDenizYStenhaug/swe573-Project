@@ -59,4 +59,16 @@ public class TagController implements WebMvcConfigurer {
         }
         return "add-tag-success";
     }
+
+    @GetMapping(Routing.URI_ALL)
+    public String allTags(Model model) {
+        logger.info("-> {}", "allTags");
+        model.addAttribute("tags", tagService.getAllTags());
+        String username = memberService.getCurrentUserLogin();
+        if(!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
+        return "tags";
+    }
 }
