@@ -2,7 +2,6 @@ package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.config.FileUploadUtil;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.ScheduleItem;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;

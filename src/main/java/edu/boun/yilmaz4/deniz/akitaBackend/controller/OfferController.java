@@ -39,6 +39,24 @@ public class OfferController{
     @Autowired
     private EventService eventService;
 
+    @PostMapping(Routing.URI_OFFER_END_OFFER)
+    public String endOffer(Model model,
+                           @RequestParam("offerId") Long offerId) {
+
+        Offer offer = offerService.findOfferById(offerId);
+        // update the endOfferRequest value
+        offerService.updateEndOfferRequest(offer);
+        // the offerer does not give feedback. the participants can give feedback to the offerer.
+        Member member = memberService.findByUsername(memberService.getCurrentUserLogin());
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        if (member.equals(offer.getOfferer())) {
+            return "offer-end";
+        }
+        model.addAttribute("feedbackResponse", new FeedbackResponse());
+        model.addAttribute("offer", offer);
+        return "feedback";
+    }
+
     @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
     public String acceptApplication(Model model,
                                     @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {

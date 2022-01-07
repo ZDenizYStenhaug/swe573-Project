@@ -92,6 +92,9 @@ public class OfferService {
     @Transactional (readOnly = true)
     public List<Offer> allOffers() {
         logger.info("getting all offers");
+        //TODO: add selection with tags
+        //TODO: order by date
+        //TODO: don't get past offers, or closed to applications if it's not repeating.
         return offerRepo.findAllOffers();
     }
 
@@ -227,7 +230,7 @@ public class OfferService {
         LocalDateTime now = LocalDateTime.now();
         Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
         for (RecurringOffer ro : recurringOffers) {
-            if (ro.getDate().isBefore(now)) {
+            if (ro.getDate().isBefore(now.plusHours(ro.getDuration()))) {
                 ro.setStatus(OfferStatus.PAST_OFFER);
             } else if (now.plusDays(ro.getCancellationDeadline()).isAfter(ro.getDate())) {
                 ro.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
@@ -278,6 +281,17 @@ public class OfferService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
         String text = "Your application for the offer named " + offer.getName() + " on " + offer.getDate().format(formatter) + " has been declined.";
         messageService.sendMessage(receiver, text);
+    }
+
+    @Transactional
+    public Offer updateEndOfferRequest(Offer offer) {
+        offer.setEndOfferRequests(offer.getEndOfferRequests() + 1);
+        // if all the participants and the offerer ended the offer:
+        if (offer.getEndOfferRequests() == offer.getParticipants().size() + 1) {
+            offer.setStatus(OfferStatus.PAST_OFFER);
+            // TODO: add new repeating offer
+        }
+        return offerRepo.save(offer);
     }
 
     @Transactional

@@ -2,6 +2,8 @@ package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Badge;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
+import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,8 +94,8 @@ public class MemberServiceImpl implements MemberService {
         for (ScheduleItem so : scheduledOffers) {
             LocalDateTime beginning = so.getOffer().getDate();
             LocalDateTime end = so.getOffer().getDate().plusHours(so.getOffer().getDuration());
-            // the offer needs to be ongoing (time-wise) but also must have participants.
-            if (now.isAfter(beginning) && now.isBefore(end) && so.getOffer().getParticipants().size() > 0) {
+            // the offer needs to be ongoing (time-wise) but also must have participants and should not be a past offer.
+            if (now.isAfter(beginning) && now.isBefore(end) && so.getOffer().getParticipants().size() > 0 && !so.getOffer().getStatus().equals(OfferStatus.PAST_OFFER)) {
                 ongoing.setOngoingOffer(so.getOffer());
                 return ongoing;
             }
@@ -102,8 +104,8 @@ public class MemberServiceImpl implements MemberService {
         for (ScheduleItem se : scheduleEvents) {
             LocalDateTime beginning = se.getEvent().getDate();
             LocalDateTime end = se.getEvent().getDate().plusHours(se.getEvent().getDuration());
-            // the event needs to be ongoing (time-wise) but also must have participants.
-            if (now.isAfter(beginning) && now.isBefore(end) && se.getEvent().getParticipants().size() > 0) {
+            // the event needs to be ongoing (time-wise) but also must have participants and should not be a past offer.
+            if (now.isAfter(beginning) && now.isBefore(end) && se.getEvent().getParticipants().size() > 0 && !se.getEvent().getStatus().equals(EventStatus.PAST_EVENT)) {
                 ongoing.setOngoingEvent(se.getEvent());
                 return ongoing;
             }

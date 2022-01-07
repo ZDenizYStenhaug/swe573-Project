@@ -1,8 +1,11 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.controller;
 
 
+import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Tag;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.MessageService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.TagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,10 @@ public class TagController implements WebMvcConfigurer {
 
     @Autowired
     private TagService tagService;
+    @Autowired
+    private MemberServiceImpl memberService;
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping(Routing.URI_ADD)
     public String showTagForm(Model model) {
@@ -41,6 +48,11 @@ public class TagController implements WebMvcConfigurer {
         tag = tagService.saveTag(tag);
         model.addAttribute("tag", tag);
         model.addAttribute("allTags", tagService.getAllTags());
+        String username = memberService.getCurrentUserLogin();
+        if (!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
         return "add-tag-success";
     }
 }

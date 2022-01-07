@@ -278,6 +278,7 @@
                     <h1>Ongoing Offer!</h1>
                     <h3><span th:text="${ongoing.ongoingOffer.name}"></span> </h3>
                     <p><span th:text="${ongoing.ongoingOffer.description}"></span> </p>
+                    <hr>
                     <h4>Organizer:</h4>
                     <table class="table table-borderless">
                         <thead>
@@ -324,8 +325,9 @@
                         </tr>
                         </tbody>
                     </table>
-                    <!-- TODO should lead to the feedback page -->
-                    <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">End Offer</button>
+                    <form method="POST" th:action="@{/offer/end-offer(offerId=${ongoing.ongoingOffer.id})}">
+                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">End Offer</button>
+                    </form>
                 </div>
 
             </div>

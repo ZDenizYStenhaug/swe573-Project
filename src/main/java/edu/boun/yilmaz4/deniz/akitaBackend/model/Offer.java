@@ -212,4 +212,12 @@ public class Offer implements Serializable {
     public void setParticipants(List<Member> participants) {
         this.participants = participants;
     }
+
+    public int getEndOfferRequests() {
+        return endOfferRequests;
+    }
+
+    public void setEndOfferRequests(int endOfferRequests) {
+        this.endOfferRequests = endOfferRequests;
+    }
 }
