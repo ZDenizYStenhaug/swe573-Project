@@ -36,6 +36,7 @@ public class Routing {
     public static final String URI_OFFER_ACCEPT_APPLICATION = "/accept-application";
     public static final String URI_OFFER_DELETE_APPLICATION = "/delete-application";
     public static final String URI_OFFER_DECLINE_APPLICATION = "/decline-application";
+    public static final String URI_OFFER_REPORT_NO_SHOW = "/report-no-show";
     public static final String URI_OFFER_END_OFFER = "/end-offer";
 }
 

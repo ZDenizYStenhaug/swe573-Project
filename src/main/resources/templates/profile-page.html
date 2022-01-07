@@ -289,8 +289,10 @@
                                     <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-secondary">Go to profile</button>
                                 </form>
                             </td>
-                            <td>
-                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                            <td th:if="${#authentication.name} != ${ongoing.ongoingOffer.offerer.id}">
+                                    <form method="POST" th:action="@{/offer/report-no-show(offerId=${ongoing.ongoingOffer.id}, memberId=${ongoing.ongoingOffer.offerer.id})}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                                    </form>
                             </td>
                         </tr>
                         </tbody>
@@ -313,7 +315,11 @@
                                 </form>
                             </td>
                             <td>
-                                <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                                <div th:if="${#authentication.name} != ${participant.id}">
+                                    <form method="POST" th:action="@{/offer/report-no-show(offerId=${ongoing.ongoingOffer.id}, memberId=${participant.id})}">
+                                        <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-danger">Report no show</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         </tbody>

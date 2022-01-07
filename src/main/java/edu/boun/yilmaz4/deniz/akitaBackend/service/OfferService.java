@@ -114,9 +114,20 @@ public class OfferService {
         return updateOffer(offer);
     }
 
-    @Transactional(readOnly = true)
-    public List<Offer> findAllOffersByMember(Member member) {
-        return offerRepo.findAllOffersByMember(member);
+    public void creditExchange(Offer offer) {
+        int credit = offer.getDuration();
+        //add credits to the offerer's credits.
+        Member offerer = offer.getOfferer();
+        offerer.setCredit(offerer.getCredit() + credit);
+        offerer.setLifetimeCredits(offerer.getLifetimeCredits() + credit);
+        memberService.updateMember(offerer);
+        // lower participant's credits.
+        List<Member> participants = offer.getParticipants();
+        for(Member participant : participants) {
+            participant.setCredit(participant.getCredit() - credit);
+            participant.setBlockedCredits(participant.getBlockedCredits() - credit);
+            memberService.updateMember(participant);
+        }
     }
 
     @Transactional (readOnly = true)
@@ -157,6 +168,13 @@ public class OfferService {
         member.setBlockedCredits(member.getBlockedCredits() - offer.getDuration());
         return memberService.updateMember(member);
     }
+
+
+    @Transactional(readOnly = true)
+    public List<Offer> findAllOffersByMember(Member member) {
+        return offerRepo.findAllOffersByMember(member);
+    }
+
 
     @Transactional(readOnly = true)
     public Offer findOfferById(Long id) {
@@ -208,6 +226,11 @@ public class OfferService {
         return dates;
     }
 
+    @Transactional(readOnly = true)
+    public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
+        return offerRepo.findRecurringOfferByDate(date, offer);
+    }
+
     @Transactional
     public Offer getTheFollowingOffer(List<LocalDateTime> dates, Offer parent) {
         LocalDateTime followingOfferDate = dates.get(0);
@@ -224,24 +247,34 @@ public class OfferService {
     }
 
     @Transactional
-    public void updateStatusOfRecurringOffers (Offer parent) {
-        // set the past offers' status to PAST_OFFER
-        // set the status of the offers whose cancellation date is past to CLOSED_TO_APPLICATIONS
-        LocalDateTime now = LocalDateTime.now();
-        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
-        for (RecurringOffer ro : recurringOffers) {
-            if (ro.getDate().isBefore(now.plusHours(ro.getDuration()))) {
-                ro.setStatus(OfferStatus.PAST_OFFER);
-            } else if (now.plusDays(ro.getCancellationDeadline()).isAfter(ro.getDate())) {
-                ro.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
+    public void reportNoShow(Long offerId, Long memberId) {
+        Offer offer = findOfferById(offerId);
+        Member reportedMember = memberService.findMemberById(memberId);
+        //if the reported member is the offerer
+        if (offer.getOfferer().getId().equals(reportedMember.getId())) {
+            // end offer + no credit exchange
+            offer = endOffer(offer);
+        } else {
+            // if there's only one participant, end offer.
+            offer.setEndOfferRequests(offer.getEndOfferRequests() + 1);
+            if(offer.getParticipants().size() == 1) {
+                updateEndOfferRequest(offer);
+            } else {
+                // decrease the participant's credits.
+                reportedMember.setCredit(reportedMember.getCredit() - offer.getDuration());
+                reportedMember.setBlockedCredits(reportedMember.getBlockedCredits() - offer.getDuration());
+                memberService.updateMember(reportedMember);
             }
-        offerRepo.save(ro);
         }
-    }
-
-    @Transactional(readOnly = true)
-    public RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer) {
-        return offerRepo.findRecurringOfferByDate(date, offer);
+        offerRepo.save(offer);
+        // decrease reputation points of the reported member
+        int repPoints = reportedMember.getReputationPoints();
+        if (repPoints - 10 <= 0){
+            reportedMember.setReputationPoints(0);
+        } else {
+            reportedMember.setReputationPoints(repPoints - 10);
+        }
+        memberService.updateMember(reportedMember);
     }
 
     private void saveRecurringOffer(RecurringOffer ro, Offer offer) {
@@ -288,16 +321,22 @@ public class OfferService {
         offer.setEndOfferRequests(offer.getEndOfferRequests() + 1);
         // if all the participants and the offerer ended the offer:
         if (offer.getEndOfferRequests() == offer.getParticipants().size() + 1) {
-            offer.setStatus(OfferStatus.PAST_OFFER);
-            // credit exchange
-            creditExchange(offer);
-            // repeating offer case
-            if(offer.getClass().equals(RecurringOffer.class)) {
-                Offer parent = ((RecurringOffer) offer).getParentOffer();
-                addRecurringOffer(parent);
-            }
+           offer = endOffer(offer);
         }
         return offerRepo.save(offer);
+    }
+
+    @Transactional
+    public Offer endOffer(Offer offer) {
+        offer.setStatus(OfferStatus.PAST_OFFER);
+        // credit exchange
+        creditExchange(offer);
+        // repeating offer case
+        if(offer.getClass().equals(RecurringOffer.class)) {
+            Offer parent = ((RecurringOffer) offer).getParentOffer();
+            addRecurringOffer(parent);
+        }
+        return offer;
     }
 
     public void addRecurringOffer(Offer parent) {
@@ -331,25 +370,26 @@ public class OfferService {
         return latest;
     }
 
-    public void creditExchange(Offer offer) {
-        int credit = offer.getDuration();
-        //add credits to the offerer's credits.
-        Member offerer = offer.getOfferer();
-        offerer.setCredit(offerer.getCredit() + credit);
-        offerer.setLifetimeCredits(offerer.getLifetimeCredits() + credit);
-        memberService.updateMember(offerer);
-        // lower participant's credits.
-        List<Member> participants = offer.getParticipants();
-        for(Member participant : participants) {
-            participant.setCredit(participant.getCredit() - credit);
-            participant.setBlockedCredits(participant.getBlockedCredits() - credit);
-            memberService.updateMember(participant);
-        }
-    }
 
     @Transactional
     public Offer updateOffer(Offer offer) {
         return offerRepo.save(offer);
+    }
+
+    @Transactional
+    public void updateStatusOfRecurringOffers (Offer parent) {
+        // set the past offers' status to PAST_OFFER
+        // set the status of the offers whose cancellation date is past to CLOSED_TO_APPLICATIONS
+        LocalDateTime now = LocalDateTime.now();
+        Set<RecurringOffer> recurringOffers = parent.getRecurringOffers();
+        for (RecurringOffer ro : recurringOffers) {
+            if (ro.getDate().isBefore(now.plusHours(ro.getDuration()))) {
+                ro.setStatus(OfferStatus.PAST_OFFER);
+            } else if (now.plusDays(ro.getCancellationDeadline()).isAfter(ro.getDate())) {
+                ro.setStatus(OfferStatus.CLOSED_TO_APPLICATIONS);
+            }
+            offerRepo.save(ro);
+        }
     }
 
     public LocalDateTime getNextOfferDate(RepeatingType type, LocalDateTime date) {

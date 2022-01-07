@@ -39,44 +39,12 @@ public class OfferController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping(Routing.URI_OFFER_END_OFFER)
-    public String endOffer(Model model,
-                           @RequestParam("offerId") Long offerId) {
-        Offer offer = offerService.findOfferById(offerId);
-        // update the endOfferRequest value
-        offerService.updateEndOfferRequest(offer);
-        // the offerer does not give feedback. the participants can give feedback to the offerer.
-        Member member = memberService.findByUsername(memberService.getCurrentUserLogin());
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        if (member.equals(offer.getOfferer())) {
-            return "offer-end";
-        }
-        model.addAttribute("offerFeedback", new OfferFeedback());
-        model.addAttribute("offer", offer);
-        return "feedback";
-    }
-
     @PostMapping(Routing.URI_OFFER_ACCEPT_APPLICATION)
     public String acceptApplication(Model model,
                                     @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
         Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
         Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
         selectedOffer = offerService.acceptApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
-
-        model.addAttribute("offer", parentOffer);
-        model.addAttribute("selectedOffer", selectedOffer);
-        model.addAttribute("dates", offerService.getDatesForUpcomingOffers(parentOffer));
-        model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
-        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
-        return "manage-offer";
-    }
-
-    @PostMapping(Routing.URI_OFFER_DECLINE_APPLICATION)
-    public String declineApplication(Model model,
-                                     @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
-        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
-        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
-        selectedOffer = offerService.declineApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
 
         model.addAttribute("offer", parentOffer);
         model.addAttribute("selectedOffer", selectedOffer);
@@ -168,6 +136,21 @@ public class OfferController {
         return "offer-application-successful";
     }
 
+    @PostMapping(Routing.URI_OFFER_DECLINE_APPLICATION)
+    public String declineApplication(Model model,
+                                     @ModelAttribute("offerManagementResponse") OfferManagementResponse offerManagementResponse) {
+        Offer parentOffer = offerService.findOfferById(offerManagementResponse.getParentOfferId());
+        Offer selectedOffer = offerService.findOfferById(offerManagementResponse.getSelectedOfferId());
+        selectedOffer = offerService.declineApplication(selectedOffer, offerManagementResponse.getApplicantMemberId());
+
+        model.addAttribute("offer", parentOffer);
+        model.addAttribute("selectedOffer", selectedOffer);
+        model.addAttribute("dates", offerService.getDatesForUpcomingOffers(parentOffer));
+        model.addAttribute("isCancellationDatePassed", LocalDateTime.now().plusDays(selectedOffer.getCancellationDeadline()).isAfter(selectedOffer.getDate()));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(memberService.findByUsername(memberService.getCurrentUserLogin()))));
+        return "manage-offer";
+    }
+
     @PostMapping(Routing.URI_OFFER_DELETE_APPLICATION)
     public String deleteOfferApplication(Model model,
                                          @RequestParam("offerId") Long offerId) {
@@ -187,6 +170,23 @@ public class OfferController {
         model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "profile-page";
+    }
+
+    @PostMapping(Routing.URI_OFFER_END_OFFER)
+    public String endOffer(Model model,
+                           @RequestParam("offerId") Long offerId) {
+        Offer offer = offerService.findOfferById(offerId);
+        // update the endOfferRequest value
+        offerService.updateEndOfferRequest(offer);
+        // the offerer does not give feedback. the participants can give feedback to the offerer.
+        Member member = memberService.findByUsername(memberService.getCurrentUserLogin());
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        if (member.equals(offer.getOfferer())) {
+            return "offer-end";
+        }
+        model.addAttribute("offerFeedback", new OfferFeedback());
+        model.addAttribute("offer", offer);
+        return "feedback";
     }
 
     @PostMapping(Routing.URI_MANAGE)
@@ -217,6 +217,25 @@ public class OfferController {
         return "manage-offer";
     }
 
+    @PostMapping(Routing.URI_OFFER_REPORT_NO_SHOW)
+    public String reportNoShow(Model model,
+                            @RequestParam("offerId") Long offerId,
+                            @RequestParam("memberId") Long memberId) {
+        Member currentLogin = memberService.findByUsername(memberService.getCurrentUserLogin());
+        offerService.reportNoShow(offerId, memberId);
+        List<ScheduleItem> scheduledOffers = memberService.getScheduledOffers(currentLogin);
+        List<ScheduleItem> scheduledEvents =  memberService.getScheduledEvents(currentLogin);
+        model.addAttribute("member", currentLogin);
+        model.addAttribute("interests", memberService.getInterestNames(currentLogin));
+        model.addAttribute("talents", memberService.getTalentsNames(currentLogin));
+        model.addAttribute("offers", offerService.findAllOffersByMember(currentLogin));
+        model.addAttribute("events", eventService.findAllEventsByMember(currentLogin));
+        model.addAttribute("scheduledOffers",scheduledOffers);
+        model.addAttribute("scheduledEvents", scheduledEvents);
+        model.addAttribute("ongoing", memberService.getOngoingActivity(scheduledOffers, scheduledEvents));
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(currentLogin)));
+        return "profile-page";
+    }
 
     @PostMapping(Routing.URI_VIEW)
     public String viewOffer(Model model,
