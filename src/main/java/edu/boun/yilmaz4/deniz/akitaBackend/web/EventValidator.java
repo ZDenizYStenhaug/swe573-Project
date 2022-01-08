@@ -2,7 +2,6 @@ package edu.boun.yilmaz4.deniz.akitaBackend.web;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Event;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
-import edu.boun.yilmaz4.deniz.akitaBackend.model.Offer;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,8 @@ public class EventValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "NotEmpty");
         // date must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "date", "NotEmpty");
+        // address must be filled
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "NotEmpty");
         // check if the member has any other offer for that date and time
         if (eventService.checkForUniqueTimestamp(member, event)) {
             errors.rejectValue("date", "Duplicate.date");

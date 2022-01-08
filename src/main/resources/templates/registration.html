@@ -94,6 +94,7 @@
         <div class="form-group" style="margin-bottom: 10px">
             <input type="text" th:field="*{address}" class="form-control" placeholder="Address"
                    autofocus="true">
+            <p class="has-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"}></p>
         </div>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>

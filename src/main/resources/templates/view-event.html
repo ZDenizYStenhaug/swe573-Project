@@ -45,7 +45,7 @@
 </header>
 <div style="margin-left: 30px">
     <img class="img-thumbnail" th:src="@{${event.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
-    <ul>
+    <ul style="margin-bottom: 15px">
         <li>Name: <span th:text="${event.name}"></span></li>
         <li>Description: <span th:text="${event.description}"></span></li>
         <li>Next meeting: <span th:text="${#temporals.format(event.date, 'dd-MM-yyyy HH:mm')}"></span></li>
@@ -66,6 +66,31 @@
             </select>
             <button type="submit" name="submit" value="value" class="btn btn-success">Register!</button>
         </form>
+    </div>
+    <div style="margin-bottom: 30px">
+        <div th:fragment="shop_map" >
+            <!--Div element to display map-->
+            <div id="map" style="height: 250px; width: 300px;"></div>
+            <script th:inline="javascript">
+
+                function initMap() {
+                    var lat = [[${event.geolocation.latitude}]];
+                    var lng = [[${event.geolocation.longitude}]];
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        center: {lat: lat, lng: lng},
+                        zoom: 10
+                    });
+                    const marker = new google.maps.Marker({
+                        position: {lat: lat, lng: lng},
+                        map: map,
+                    });
+                }
+            </script>
+
+            <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+            </script>
+        </div>
     </div>
     <hr>
     <h4>Participants for next meeting</h4>

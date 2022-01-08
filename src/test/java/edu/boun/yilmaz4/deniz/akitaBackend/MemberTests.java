@@ -2,6 +2,7 @@ package edu.boun.yilmaz4.deniz.akitaBackend;
 
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Member;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.Message;
+import edu.boun.yilmaz4.deniz.akitaBackend.repo.GeoLocationRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MessageRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
@@ -22,6 +23,8 @@ public class MemberTests {
     private MemberServiceImpl memberService;
     @Autowired
     private MessageRepo messageRepo;
+    @Autowired
+    private GeoLocationRepo geoLocationRepo;
 
 
     @Test
@@ -31,6 +34,7 @@ public class MemberTests {
         member.setDescription("i like lemons");
         member.setEmail("random@gmail.com");
         member.setPassword("lemon");
+        member.setAddress("kadıköy");
         Member registeredMember = memberService.register(member);
         // check if member exists
         Assertions.assertNotNull(registeredMember);
@@ -39,6 +43,7 @@ public class MemberTests {
         Assertions.assertEquals(1, messages.size());
         deleteAllMessages(messages);
         memberRepo.delete(registeredMember);
+        geoLocationRepo.delete(member.getGeolocation());
         Assertions.assertNull(memberRepo.findMemberById(registeredMember.getId()));
     }
 

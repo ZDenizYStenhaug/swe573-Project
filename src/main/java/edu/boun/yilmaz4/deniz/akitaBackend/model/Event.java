@@ -59,6 +59,11 @@ public class Event implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "member_id") )
     private Set<Member> participants;
 
+    private String address;
+
+    @OneToOne
+    GeoLocation geolocation;
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -161,4 +166,19 @@ public class Event implements Serializable {
         return "/event-photos/" + id + "/" + photo;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public GeoLocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(GeoLocation geolocation) {
+        this.geolocation = geolocation;
+    }
 }

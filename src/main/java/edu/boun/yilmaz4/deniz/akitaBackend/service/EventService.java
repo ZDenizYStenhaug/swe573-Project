@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,13 +28,15 @@ public class EventService {
     @Autowired
     private MessageService messageService;
     @Autowired
-    private MemberServiceImpl memberService;
+    private GeoLocationService geoLocationService;
+
 
     @Transactional
-    public Event addEvent(Event event) {
+    public Event addEvent(Event event) throws IOException {
         logger.info("Saving event " + event);
         logger.info("Saving event " + event);
         event.setStatus(EventStatus.getDefault());
+        event.setGeolocation(geoLocationService.saveGeoLocation(event.getAddress()));
         // save the following 4 repeating events if there's any
         if (!event.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
             LocalDateTime date = event.getDate();

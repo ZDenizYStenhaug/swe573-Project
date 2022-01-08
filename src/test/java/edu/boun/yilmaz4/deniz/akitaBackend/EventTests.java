@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Message;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.EventRepo;
+import edu.boun.yilmaz4.deniz.akitaBackend.repo.GeoLocationRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MessageRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.EventService;
@@ -32,6 +33,8 @@ public class EventTests {
     private EventRepo eventRepo;
     @Autowired
     private MessageRepo messageRepo;
+    @Autowired
+    private GeoLocationRepo geoLocationRepo;
 
     @Test
     void addEventTest() throws IOException {
@@ -42,10 +45,12 @@ public class EventTests {
         event.setDuration(2);
         event.setRepeatingType(RepeatingType.NOT_REPEATING);
         event.setDate(LocalDateTime.now());
+        event.setAddress("kadıköy");
         Event registeredEvent = eventService.addEvent(event);
         Assertions.assertNotNull(registeredEvent);
         //delete
         eventRepo.delete(registeredEvent);
+        geoLocationRepo.delete(event.getGeolocation());
         Assertions.assertNull(eventRepo.findEventById(registeredEvent.getId()));
         deleteMember(member);
     }
@@ -62,18 +67,20 @@ public class EventTests {
 
     }
 
-    Event createEvent() {
+    Event createEvent() throws IOException {
         Event event = new Event();
         event.setName("dog meetup");
         event.setDescription("lets meet with our dogs");
         event.setDuration(2);
         event.setRepeatingType(RepeatingType.NOT_REPEATING);
         event.setDate(LocalDateTime.now());
+        event.setAddress("kadıköy");
         return eventService.addEvent(event);
     }
 
     void deleteEvent(Event event) {
         eventRepo.delete(event);
+        geoLocationRepo.delete(event.getGeolocation());
     }
 
 
@@ -83,6 +90,7 @@ public class EventTests {
         member.setDescription("i like lemons");
         member.setEmail("xyz@gmail.com");
         member.setPassword("lemon");
+        member.setAddress("kadıköy");
         return memberService.register(member);
     }
 
@@ -92,5 +100,6 @@ public class EventTests {
             messageRepo.delete(m);
         }
         memberRepo.delete(member);
+        geoLocationRepo.delete(member.getGeolocation());
     }
 }

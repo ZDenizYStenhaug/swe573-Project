@@ -32,6 +32,8 @@ public class OfferValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "NotEmpty");
         // date must be filled
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "date", "NotEmpty");
+        // address must be filled
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address", "NotEmpty");
         // check if the member has any other offer for that date and time
         if (offerService.checkForUniqueTimestamp(member, offer)){
             errors.rejectValue("date", "Duplicate.date");

@@ -30,4 +30,12 @@ public class GeoLocation implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
