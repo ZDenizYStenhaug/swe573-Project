@@ -90,6 +90,11 @@ public class Member implements Serializable {
     @OneToMany(mappedBy = "receiver")
     private Set<OfferFeedback> offerFeedback = new HashSet<>();
 
+    private String address;
+
+    @OneToOne
+    private GeoLocation geolocation;
+
     public Member() {
     }
 
@@ -283,5 +288,21 @@ public class Member implements Serializable {
 
     public void setNumOfRefusals(int numOfRefusals) {
         this.numOfRefusals = numOfRefusals;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public GeoLocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(GeoLocation geolocation) {
+        this.geolocation = geolocation;
     }
 }

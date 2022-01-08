@@ -16,8 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MessageService messageService;
     @Autowired
-    private OfferService offerService;
+    private GeoLocationImpService geoLocationService;
 
     @Transactional(readOnly = true)
     public Member findMemberById(Long id) {
@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Member register(Member member) {
+    public Member register(Member member) throws IOException {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(Role.getDefault());
         member.setCredit(5);
@@ -47,6 +47,8 @@ public class MemberServiceImpl implements MemberService {
         member.setBlockedCredits(0);
         member.setReputationPoints(10);
         member.setBadge(Badge.NEWCOMER);
+        // geolocation
+        member.setGeolocation(geoLocationService.getGeolocation(member.getAddress()));
         member = memberRepo.save(member);
         // send welcome message
         String text = "Welcome to Akita!";

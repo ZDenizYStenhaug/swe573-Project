@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.util.List;
 
 @SpringBootTest
@@ -24,7 +25,7 @@ public class MemberTests {
 
 
     @Test
-    void registrationTest() {
+    void registrationTest() throws IOException {
         Member member = new Member();
         member.setUsername("lemon");
         member.setDescription("i like lemons");

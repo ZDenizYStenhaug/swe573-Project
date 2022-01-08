@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class EventTests {
     private MessageRepo messageRepo;
 
     @Test
-    void addEventTest() {
+    void addEventTest() throws IOException {
         Member member = createMember();
         Event event = new Event();
         event.setName("dog meetup");
@@ -50,7 +51,7 @@ public class EventTests {
     }
 
     @Test
-    void endEventTest() {
+    void endEventTest() throws IOException {
         Member member = createMember();
         Event event = createEvent();
         eventService.endEvent(event);
@@ -76,7 +77,7 @@ public class EventTests {
     }
 
 
-    Member createMember() {
+    Member createMember() throws IOException {
         Member member = new Member();
         member.setUsername("lemon");
         member.setDescription("i like lemons");
