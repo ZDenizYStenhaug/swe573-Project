@@ -41,7 +41,7 @@
     <div class = "row" style="margin-bottom: 20px">
         <div class = "col-sm-3" style = "background-color:lightgrey; margin-bottom: 25px">
 
-            <img class="img-thumbnail" th:src="@{${member.photosImagePath}}" style="margin-bottom: 10px; margin-top: 30px"/>
+            <img class="img-thumbnail" th:src="@{${member.photosImagePath}}" width="300" height="300" style="margin-bottom: 10px; margin-top: 30px"/>
             <h3 th:text="${member.username}" style="margin-bottom: 10px"></h3>
             <p  style="margin-bottom: 20px"><span th:text="${member.badge}" class="badge badge-success"></span></p>
 
@@ -81,6 +81,9 @@
                         </li>
                         <li class="nav-item" th:if="${#authentication.name} eq ${member.username}">
                             <a class="nav-link px-5 text-dark" id="ongoingButt" onclick="showOngoing()">Ongoing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-5 text-dark" id="feedbackButt" onclick="showFeedbacks()">Feedbacks</a>
                         </li>
                     </ul>
                 </div>
@@ -325,7 +328,26 @@
                         <button type="submit" name="submit" value="value" class="btn btn-sm btn-danger">End Offer</button>
                     </form>
                 </div>
-
+            </div>
+            <div id="feedback" style="display: none;">
+                <table class="table table-borderless">
+                    <thead>
+                    <tr>
+                        <th scope="col">Offer</th>
+                        <th scope="col">Sender</th>
+                        <th scope="col">Rating</th>
+                        <th scope="col">Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="feedback : ${member.offerFeedback}">
+                        <td><span th:text="${feedback.offer.name}"></span> - <span th:text="${#temporals.format(feedback.offer.date, 'dd.MM.yyyy HH:mm')}"></span></td>
+                        <td><span th:text="${feedback.giver.username}"></span></td>
+                        <td><span th:text="${feedback.rating}"></span></td>
+                        <td><span th:text="${feedback.comment}"></span> </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

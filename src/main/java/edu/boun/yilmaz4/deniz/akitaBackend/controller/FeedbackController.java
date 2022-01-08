@@ -39,7 +39,7 @@ public class FeedbackController {
         offerFeedback.setGiver(member);
         feedbackService.saveOfferFeedback(offerFeedback);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        return "welcome";
+        return "redirect:/welcome";
     }
 
     @PostMapping(Routing.URI_ADD_EVENT_FEEDBACK)
@@ -54,7 +54,7 @@ public class FeedbackController {
         eventFeedback.setGiver(member);
         feedbackService.saveEventFeedback(eventFeedback);
         model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
-        return "welcome";
+        return "redirect:welcome";
     }
 
 }
