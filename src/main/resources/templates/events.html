@@ -56,12 +56,14 @@
             </div>
 
             <div class="input-group mb-3">
-                <select class="selectpicker" multiple data-live-search="true"  th:field="*{tags}">
-                    <option value="" disabled>Choose tags</option>
-                    <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
-                </select>
-                <!-- list offers -->
-                <a href="#" align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" style="margin-bottom: 20px">Search!</a>
+                <form method="GET" th:action="@{/event/all}" th:object="${searchResponse}" enctype="multipart/form-data">
+                    <select class="selectpicker" multiple data-live-search="true"  th:field="*{selectedTags}">
+                        <option value="" disabled>Choose tags</option>
+                        <option th:each="tag : ${tags}" th:value="${{tag}}" th:text="${tag.name}" ></option>
+                    </select>
+                    <!-- list offers -->
+                    <button align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" type="submit" style="margin-bottom: 20px">Search!</button>
+                </form>
             </div>
         </div>
     </section>

@@ -108,15 +108,17 @@ public class EventController {
     }
 
     @GetMapping(Routing.URI_ALL)
-    public String getAllEvents(Model model) {
+    public String getAllEvents(Model model,
+                               @ModelAttribute("selectedTags") SearchResponse searchResponse) {
         logger.info("-> {}", "getAllEvents");
-        model.addAttribute("allEvents", eventService.allEvents());
+        model.addAttribute("allEvents", eventService.allEvents(searchResponse));
         model.addAttribute("tags", tagService.getAllTags());
         String username = memberService.getCurrentUserLogin();
         if (!username.equals("anonymousUser")) {
             Member member = memberService.findByUsername(username);
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
+        model.addAttribute("searchResponse", new SearchResponse());
         return "events";
     }
 

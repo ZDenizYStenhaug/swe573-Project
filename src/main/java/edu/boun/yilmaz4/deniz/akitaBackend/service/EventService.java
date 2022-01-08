@@ -49,9 +49,23 @@ public class EventService {
     }
 
     @Transactional (readOnly = true)
-    public List<Event> allEvents() {
+    public List<Event> allEvents(SearchResponse searchResponse) {
         logger.info("Getting all events");
-        return eventRepo.findAllEvents();
+        List<Event> events =  eventRepo.findAllEvents();
+        Set<Tag> tags = searchResponse.getSelectedTags();
+        if (tags == null) {
+            return events;
+        }
+        List<Event> selectedEvents = new ArrayList<>();
+        for (Event e : events) {
+            Set<Tag> eventTags = e.getEventTags();
+            for(Tag eventTag : eventTags) {
+                if(tags.contains(eventTag)) {
+                    selectedEvents.add(e);
+                }
+            }
+        }
+        return selectedEvents;
     }
 
     @Transactional (readOnly = true)
