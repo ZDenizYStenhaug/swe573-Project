@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -93,15 +94,17 @@ public class OfferController {
     }
 
     @GetMapping(Routing.URI_ALL)
-    public String allOffers(Model model) {
+    public String allOffers(Model model,
+                            @ModelAttribute("selectedTags") SearchResponse searchResponse) {
         logger.info("-> {}", "getAllOffers");
         String username = memberService.getCurrentUserLogin();
-        model.addAttribute("allOffers", offerService.allOffers());
+        model.addAttribute("allOffers", offerService.allOffers(searchResponse));
         model.addAttribute("tags", tagService.getAllTags());
         if(!username.equals("anonymousUser")) {
             Member member = memberService.findByUsername(username);
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
+        model.addAttribute("searchResponse", new SearchResponse());
         return "offers";
     }
 

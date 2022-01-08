@@ -90,12 +90,23 @@ public class OfferService {
     }
 
     @Transactional (readOnly = true)
-    public List<Offer> allOffers() {
+    public List<Offer> allOffers(SearchResponse searchResponse) {
         logger.info("getting all offers");
-        //TODO: add selection with tags
-        //TODO: order by date
-        //TODO: don't get past offers, or closed to applications if it's not repeating.
-        return offerRepo.findAllOffers();
+        List<Offer> offers = offerRepo.findAllOffers();
+        Set<Tag> tags = searchResponse.getSelectedTags();
+        if (tags == null) {
+            return offers;
+        }
+        List<Offer> selectedOffers = new ArrayList<>();
+        for (Offer o : offers) {
+            Set<Tag> offerTags = o.getOfferTags();
+            for(Tag offerTag : offerTags) {
+                if(tags.contains(offerTag)) {
+                    selectedOffers.add(o);
+                }
+            }
+        }
+        return selectedOffers;
     }
 
     @Transactional

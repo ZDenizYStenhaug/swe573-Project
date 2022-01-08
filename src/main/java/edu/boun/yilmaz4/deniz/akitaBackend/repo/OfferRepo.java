@@ -14,7 +14,7 @@ public interface OfferRepo <T extends Offer> extends JpaRepository<T, Long>  {
     void deleteOfferById(Long id);
     Offer findOfferById(Long id);
 
-    @Query("Select o from Offer o where offer_type = 'Offer'")
+    @Query("Select o from Offer o where offer_type = 'Offer' and (o.status = 'OPEN_TO_APPLICATIONS' or o.status = 'CLOSED_TO_APPLICATIONS')")
     List<Offer> findAllOffers();
 
     @Query("Select o from Offer o where offer_type = 'Offer' and o.offerer = :member")
@@ -22,7 +22,5 @@ public interface OfferRepo <T extends Offer> extends JpaRepository<T, Long>  {
 
     @Query("Select ro from RecurringOffer ro where ro.parentOffer = :offer AND ro.date = :date")
     RecurringOffer findRecurringOfferByDate(@Param("date")LocalDateTime date, @Param("offer") Offer offer);
-
-
 
 }
