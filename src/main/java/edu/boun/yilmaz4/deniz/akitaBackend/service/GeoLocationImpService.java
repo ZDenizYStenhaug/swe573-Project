@@ -22,7 +22,7 @@ public class GeoLocationImpService {
     private GeoLocationRepo geoLocationRepo;
 
     private static final String URL = "https://maps.googleapis.com/maps/api/geocode/json";
-    private static final String API_KEY = "INSERT API KEY";
+    private static final String API_KEY = "API_KEY";
 
     public String getJSONByGoogle(String address) throws IOException {
         /*
@@ -56,13 +56,12 @@ public class GeoLocationImpService {
         return geoLocationRepo.save(geoLocation);
     }
 
-    public GeoLocation getGeolocation(String address) throws IOException {
+    public GeoLocation saveGeoLocation(String address) throws IOException {
         // 0: lat, 1: lng
         double[] values = getGeoLocation(address);
         GeoLocation geoLocation = new GeoLocation();
-        geoLocation.setLongitude(values[0]);
+        geoLocation.setLatitude(values[0]);
         geoLocation.setLongitude(values[1]);
-
         return save(geoLocation);
     }
 }

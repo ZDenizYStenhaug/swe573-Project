@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService {
         member.setReputationPoints(10);
         member.setBadge(Badge.NEWCOMER);
         // geolocation
-        member.setGeolocation(geoLocationService.getGeolocation(member.getAddress()));
+        member.setGeolocation(geoLocationService.saveGeoLocation(member.getAddress()));
         member = memberRepo.save(member);
         // send welcome message
         String text = "Welcome to Akita!";

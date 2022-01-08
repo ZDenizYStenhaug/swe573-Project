@@ -59,6 +59,34 @@
             <p style="margin-bottom: 10px">Talents: <span th:text="${#strings.listJoin(talents, ', ')}"></span></p>
             <p style="margin-bottom: 20px">Interests: <span th:text="${#strings.listJoin(interests, ', ')}"></span></p>
 
+
+            <div  style="margin-bottom: 30px">
+                <div th:fragment="shop_map" >
+                    <!--Div element to display map-->
+                    <div id="map" style="height: 250px; width: 300px;"></div>
+                    <script th:inline="javascript">
+
+                        function initMap() {
+                            var lat = [[${member.geolocation.latitude}]];
+                            var lng = [[${member.geolocation.longitude}]];
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                center: {lat: lat, lng: lng},
+                                zoom: 10
+                            });
+                            const marker = new google.maps.Marker({
+                                position: {lat: lat, lng: lng},
+                                map: map,
+                            });
+                        }
+
+                    </script>
+
+                    <script async defer
+                            src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap">
+                    </script>
+                </div>
+            </div>
+
             <div th:if="${#authentication.name} eq ${member.username}">
                 <form > <!-- TODO edit profile link-->
                     <button type="submit" name="submit" value="value" class="btn btn-sm btn-outline-primary">Edit profile</button>
