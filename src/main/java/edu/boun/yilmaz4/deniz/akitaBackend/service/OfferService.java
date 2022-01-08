@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class OfferService {
     private MessageService messageService;
     @Autowired
     private MemberServiceImpl memberService;
+    @Autowired
+    private GeoLocationService geoLocationService;
 
     @Transactional
     public Offer acceptApplication(Offer offer, Long memberId) {
@@ -73,9 +76,10 @@ public class OfferService {
     }
 
     @Transactional
-    public Offer addOffer (Offer offer) {
+    public Offer addOffer (Offer offer) throws IOException {
         logger.info("saving offer " + offer);
         offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
+        offer.setGeolocation(geoLocationService.saveGeoLocation(offer.getAddress()));
         // save the following 4 repeating offers if there's any
         if (!offer.getRepeatingType().equals(RepeatingType.NOT_REPEATING)) {
             LocalDateTime date = offer.getDate();

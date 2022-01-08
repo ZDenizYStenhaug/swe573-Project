@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
     @Autowired
     private MessageService messageService;
     @Autowired
-    private GeoLocationImpService geoLocationService;
+    private GeoLocationService geoLocationService;
 
     @Transactional(readOnly = true)
     public Member findMemberById(Long id) {

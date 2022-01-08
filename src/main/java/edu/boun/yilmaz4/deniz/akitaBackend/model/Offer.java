@@ -74,6 +74,11 @@ public class Offer implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "member_id"))
     private List<Member> participants;
 
+    private String address;
+
+    @OneToOne
+    private GeoLocation geolocation;
+
     public Offer() {
 
     }
@@ -219,5 +224,21 @@ public class Offer implements Serializable {
 
     public void setEndOfferRequests(int endOfferRequests) {
         this.endOfferRequests = endOfferRequests;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public GeoLocation getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(GeoLocation geolocation) {
+        this.geolocation = geolocation;
     }
 }

@@ -1,6 +1,6 @@
 package edu.boun.yilmaz4.deniz.akitaBackend;
 
-import edu.boun.yilmaz4.deniz.akitaBackend.service.GeoLocationImpService;
+import edu.boun.yilmaz4.deniz.akitaBackend.service.GeoLocationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.io.IOException;
 public class GeoLocationTests {
 
     @Autowired
-    private GeoLocationImpService geoLocationService;
+    private GeoLocationService geoLocationService;
 
     @Test
     void getGeoLocationTest() throws IOException {
