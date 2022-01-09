@@ -81,6 +81,16 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.17.0</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20211205</version>
+		</dependency>
 
 		<!--db-->
 		<dependency>
@@ -96,16 +106,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version> 2.6.0</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.11.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20211205</version>
 		</dependency>
 
 	</dependencies>

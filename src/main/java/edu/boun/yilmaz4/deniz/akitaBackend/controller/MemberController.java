@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.Routing;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.ScheduleItem;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.MemberValidator;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -83,7 +84,7 @@ public class MemberController {
     @PostMapping(Routing.URI_MEMBER_REGISTRATION)
     public String registration(@ModelAttribute("member") Member member,
                                @RequestParam("image") MultipartFile multipartFile,
-                               BindingResult bindingResult) throws IOException {
+                               BindingResult bindingResult) throws IOException, JSONException {
         memberValidator.validate(member, bindingResult);
         if (bindingResult.hasErrors()) {
             return "registration";

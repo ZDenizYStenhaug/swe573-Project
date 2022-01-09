@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.Role;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -39,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public Member register(Member member) throws IOException {
+    public Member register(Member member) throws IOException, JSONException {
         member.setPassword(bCryptPasswordEncoder.encode(member.getPassword()));
         member.setRole(Role.getDefault());
         member.setCredit(5);

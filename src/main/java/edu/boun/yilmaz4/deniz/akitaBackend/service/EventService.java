@@ -5,6 +5,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.EventStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.EventRepo;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,7 @@ public class EventService {
 
 
     @Transactional
-    public Event addEvent(Event event) throws IOException {
-        logger.info("Saving event " + event);
+    public Event addEvent(Event event) throws IOException, JSONException {
         logger.info("Saving event " + event);
         event.setStatus(EventStatus.getDefault());
         event.setGeolocation(geoLocationService.saveGeoLocation(event.getAddress()));
@@ -66,6 +66,24 @@ public class EventService {
                 if(tags.contains(eventTag)) {
                     selectedEvents.add(e);
                 }
+            }
+        }
+        return selectedEvents;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Event> allClosebyEvents(Member member) {
+        logger.info("getting all closeby offers for member " + member.getUsername());
+        List<Event> events = eventRepo.findAllEvents();
+        List<Event> selectedEvents = new ArrayList<>();
+        // check
+        for (Event e : events) {
+            GeoLocation memberLoc = member.getGeolocation();
+            GeoLocation eventLoc = e.getGeolocation();
+            double latDiff = Math.abs(memberLoc.getLatitude() - eventLoc.getLatitude());
+            double lngDiff = Math.abs(memberLoc.getLongitude() - eventLoc.getLongitude());
+            if(latDiff <= 0.4 && lngDiff <= 0.4) {
+                selectedEvents.add(e);
             }
         }
         return selectedEvents;

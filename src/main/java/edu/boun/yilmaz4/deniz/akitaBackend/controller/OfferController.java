@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferApplicationValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.OfferValidator;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -72,7 +72,7 @@ public class OfferController {
     public String addOffer(@ModelAttribute("offer") Offer offer,
                            @RequestParam("image") MultipartFile multipartFile,
                            BindingResult bindingResult,
-                           Model model) throws IOException {
+                           Model model) throws IOException, JSONException {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
             return "login";
@@ -105,6 +105,20 @@ public class OfferController {
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
         model.addAttribute("searchResponse", new SearchResponse());
+        return "offers";
+    }
+
+    @GetMapping(Routing.URI_ALL_CLOSEBY)
+    public String allClosebyOffers(Model model) {
+        String username = memberService.getCurrentUserLogin();
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(username);
+        model.addAttribute("allOffers", offerService.allClosebyOffers(member));
+        model.addAttribute("tags", tagService.getAllTags());
+        model.addAttribute("searchResponse", new SearchResponse());
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "offers";
     }
 

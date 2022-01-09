@@ -15,6 +15,8 @@ public class Routing {
     public static final String URI_WELCOME = "/welcome";
     public static final String URI_VIEW = "/view";
     public static final String URI_MANAGE = "/manage";
+    public static final String URI_ALL_CLOSEBY = "/all-closeby";
+
 
     public static final String URI_EVENT_REGISTER= "/register";
     public static final String URI_EVENT_DELETE_REGISTRATION = "/delete-registration";

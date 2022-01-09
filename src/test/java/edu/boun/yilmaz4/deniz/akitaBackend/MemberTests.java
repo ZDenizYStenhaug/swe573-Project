@@ -6,6 +6,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.repo.GeoLocationRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MemberRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.MessageRepo;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.MemberServiceImpl;
+import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class MemberTests {
 
 
     @Test
-    void registrationTest() throws IOException {
+    void registrationTest() throws IOException, JSONException {
         Member member = new Member();
         member.setUsername("lemon");
         member.setDescription("i like lemons");

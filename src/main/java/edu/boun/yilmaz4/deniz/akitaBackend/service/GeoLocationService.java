@@ -1,19 +1,18 @@
 package edu.boun.yilmaz4.deniz.akitaBackend.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import edu.boun.yilmaz4.deniz.akitaBackend.model.GeoLocation;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.GeoLocationRepo;
-import org.json.JSONObject;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-
 import org.apache.commons.io.IOUtils;
+import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 @Service
 public class GeoLocationService {
@@ -22,7 +21,7 @@ public class GeoLocationService {
     private GeoLocationRepo geoLocationRepo;
 
     private static final String URL = "https://maps.googleapis.com/maps/api/geocode/json";
-    private static final String API_KEY = "API_KEY";
+    private static final String API_KEY = "AIzaSyBnetbsYVKYFSovhvZERD7pUDGkQWuQUtI";
 
     public String getJSONByGoogle(String address) throws IOException {
         /*
@@ -40,7 +39,7 @@ public class GeoLocationService {
         return output.toString();
     }
 
-    public double[] getGeoLocation(String address) throws IOException {
+    public double[] getGeoLocation(String address) throws IOException, JSONException {
         String googleOutput = getJSONByGoogle(address);
         JSONObject json = new JSONObject(googleOutput);
         double[] geolocation = new double[2];
@@ -56,7 +55,7 @@ public class GeoLocationService {
         return geoLocationRepo.save(geoLocation);
     }
 
-    public GeoLocation saveGeoLocation(String address) throws IOException {
+    public GeoLocation saveGeoLocation(String address) throws IOException, JSONException {
         // 0: lat, 1: lng
         double[] values = getGeoLocation(address);
         GeoLocation geoLocation = new GeoLocation();
@@ -64,4 +63,6 @@ public class GeoLocationService {
         geoLocation.setLongitude(values[1]);
         return save(geoLocation);
     }
+
+
 }

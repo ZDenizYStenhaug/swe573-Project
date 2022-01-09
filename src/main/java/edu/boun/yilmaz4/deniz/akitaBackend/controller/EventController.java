@@ -5,6 +5,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.service.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventDateValidator;
 import edu.boun.yilmaz4.deniz.akitaBackend.web.EventValidator;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class EventController {
     public String addEvent(@ModelAttribute("event") Event event,
                            @RequestParam("image")MultipartFile multipartFile,
                            BindingResult bindingResult,
-                           Model model) throws IOException {
+                           Model model) throws IOException, JSONException {
         String username = memberService.getCurrentUserLogin();
         if (username.equals("anonymousUser")) {
             return "login";
@@ -119,6 +120,21 @@ public class EventController {
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
         model.addAttribute("searchResponse", new SearchResponse());
+        return "events";
+    }
+
+    @GetMapping(Routing.URI_ALL_CLOSEBY)
+    public String getAllClosebyEvents(Model model) {
+        logger.info("-> {}", "getAllClosebyEvents");
+        String username = memberService.getCurrentUserLogin();
+        if (username.equals("anonymousUser")) {
+            return "login";
+        }
+        Member member = memberService.findByUsername(username);
+        model.addAttribute("allEvents", eventService.allClosebyEvents(member));
+        model.addAttribute("tags", tagService.getAllTags());
+        model.addAttribute("searchResponse", new SearchResponse());
+        model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         return "events";
     }
 

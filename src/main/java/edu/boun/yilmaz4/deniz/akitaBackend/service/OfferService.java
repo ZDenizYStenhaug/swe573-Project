@@ -4,6 +4,7 @@ import edu.boun.yilmaz4.deniz.akitaBackend.model.*;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.OfferStatus;
 import edu.boun.yilmaz4.deniz.akitaBackend.model.datatype.RepeatingType;
 import edu.boun.yilmaz4.deniz.akitaBackend.repo.OfferRepo;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class OfferService {
     }
 
     @Transactional
-    public Offer addOffer (Offer offer) throws IOException {
+    public Offer addOffer (Offer offer) throws IOException, JSONException {
         logger.info("saving offer " + offer);
         offer.setStatus(OfferStatus.OPEN_TO_APPLICATIONS);
         offer.setGeolocation(geoLocationService.saveGeoLocation(offer.getAddress()));
@@ -108,6 +109,24 @@ public class OfferService {
                 if(tags.contains(offerTag)) {
                     selectedOffers.add(o);
                 }
+            }
+        }
+        return selectedOffers;
+    }
+
+    @Transactional (readOnly = true)
+    public List<Offer> allClosebyOffers(Member member){
+        logger.info("getting all closeby offers for member " + member.getUsername());
+        List<Offer> offers = offerRepo.findAllOffers();
+        List<Offer> selectedOffers = new ArrayList<>();
+        // check
+        for (Offer o : offers) {
+            GeoLocation memberLoc = member.getGeolocation();
+            GeoLocation offerLoc = o.getGeolocation();
+            double latDiff = Math.abs(memberLoc.getLatitude() - offerLoc.getLatitude());
+            double lngDiff = Math.abs(memberLoc.getLongitude() - offerLoc.getLongitude());
+            if(latDiff <= 0.4 && lngDiff <= 0.4) {
+                selectedOffers.add(o);
             }
         }
         return selectedOffers;

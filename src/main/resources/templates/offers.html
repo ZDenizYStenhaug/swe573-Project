@@ -66,6 +66,9 @@
                     <!-- list offers -->
                     <button align="right" class="btn btn-outline-primary" role="button" aria-pressed="true" type="submit" style="margin-bottom: 20px">Search!</button>
                 </form>
+                <form method="GET" th:action="@{/offer/all-closeby}">
+                    <button align="right" class="btn btn-outline-info" role="button" aria-pressed="true" type="submit" style="margin-bottom: 20px">Show close-by offers!</button>
+                </form>
             </div>
         </div>
     </section>
