@@ -143,10 +143,10 @@ public class Member implements Serializable {
     }
 
     @Transient
-    public String getPhotosImagePath() {
-        if (photo == null || id == null) return null;
+        public String getPhotosImagePath() {
+            if (photo == null || id == null) return null;
 
-        return "/user-photos/" + id + "/" + photo;
+            return "/user-photos/" + id + "/" + photo;
     }
 
     public void setPhoto(String photo) {

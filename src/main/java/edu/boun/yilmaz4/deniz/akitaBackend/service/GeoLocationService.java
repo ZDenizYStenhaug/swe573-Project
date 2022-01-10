@@ -21,7 +21,7 @@ public class GeoLocationService {
     private GeoLocationRepo geoLocationRepo;
 
     private static final String URL = "https://maps.googleapis.com/maps/api/geocode/json";
-    private static final String API_KEY = "API_KEY";
+    private static final String API_KEY = "AIzaSyCNRYFjOeKsdj020wVO1KimvBqLkS57-4o";
 
     public String getJSONByGoogle(String address) throws IOException {
         /*

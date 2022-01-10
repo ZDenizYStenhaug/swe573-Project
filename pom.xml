@@ -7,7 +7,7 @@
 	<groupId>edu.boun.yilmaz4.deniz</groupId>
 	<artifactId>akitaBackend</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.4</version>
+	<version>0.0.9</version>
 
 
 	<properties>

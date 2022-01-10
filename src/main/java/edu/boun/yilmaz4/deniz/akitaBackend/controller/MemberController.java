@@ -89,7 +89,7 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        String fileName = "image-" + member.getId();
+        String fileName = "image-" + member.getUsername();
         member.setPhoto(fileName);
         Member savedMember = memberService.register(member);
         securityService.autoLogin(member.getUsername(), member.getPasswordConfirm());
