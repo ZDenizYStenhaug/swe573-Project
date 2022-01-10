@@ -3,123 +3,156 @@
 !define table(x) class x << (T,#FFAAAA) >>
 hide methods
 
-table(members) {
-    <&key> id: int
-    name: varchar
-    surname: varchar
-    display_name: varchar
-    secret: varchar
+table(member) {
+    <&key> id: bigint
+    username: varchar
+    password: varchar
     email_address: varchar
-    reputation_points: int
-    profile_pic: ?
-    location: ?
+    description: varchar
+    role: Role
+    badge: Badge
+    credit: int
+    blocked_credits: int
+    lifetime_credits: int
+    num_of_refusals: int
+    address: varchar
+    photo: varchar
+    <&key> geolocation_id: bigint
 }
-table(accounts) {
-    <&key> id: int
-    member_id: int
-    credits: int
-    refused_count: int
+
+table(message) {
+    <&key> id: bigint
+    date: timestamp
+    status: varchar
+    text: varchar
+    <&key> member_id: bigint
 }
+
 table(tags) {
-    <&key> id: int
+    <&key> id: bigint
     name: varchar
 }
 
 table(interests) {
-    <&key> id: int
-    member_id: int
-    tag_id: int
+    <&key> member_id: bigint
+    <&key> tag_id: bigint
 }
-table(strong_suits) {
-    <&key> id: int
-    member_id: int
-    tag_id: int
+
+
+table(talents) {
+    <&key> member_id: bigint
+    <&key> tag_id: bigint
 }
-table(service_tags) {
-    <&key> id: int
-    service_id: int
-    tag_id: int
+
+table(offer_tags) {
+    <&key> offer_id: bigint
+    <&key> tag_id: bigint
 }
+
+
 table(event_tags) {
-    <&key> id: int
-    event_id: int
-    account_id: int
+    <&key> event_id: bigint
+    <&key> tag_id: bigint
 }
-table(admins) {
-    <&key> id: int
-    name: varchar
-    surname: varchar
-    display_name: varchar
-    secret: varchar
+
+table(geo_location) {
+    <&key> id: bigint
+    latitude: double
+    longitude: double
 }
-table(services) {
-    <&key> id: int
+
+table(offer) {
+    <&key> id: bigint
+    offer_type: varchar
     name: varchar
     description: varchar
-    offerer_account_id: int
-    time: date
+    date: timestamp
     duration: int
-    location: ?
+    status: varchar
+    repeating_type : varchar
     max_number_of_participants: int
     cancellationDeadline: int
+    end_offer_requests: int
+    photo: varchar
+    address: varchar
+    <&key> member_id: bigint
+    <&key> geolocation_id: bigint
+    <&key> offer_id: bigint
+}
+
+table(offer_applicants) {
+    <&key> offer_id: bigint
+    <&key> memebr_id: bigint
+}
+
+table(offer_participants) {
+    <&key> offer_id: bigint
+    <&key> member_id: bigint
+}
+
+table(offer_feedback) {
+    <&key> id: bigint
+    comment: varchar
+    rating: int
+    <&key> giver_id: bigint
+    <&key> receiver_id: bigint
+    <&key> offer_id: bigint
+}
+
+table(event) {
+    <&key> id: bigint
     status: varchar
-}
-table(service_participants) {
-    <&key> id: int
-    service_id: int
-    account_id: int
-    request_status: varchar
-}
-table(events) {
-    <&key> id: int
+    repeating_type: varchar
     name: varchar
     description: varchar
-    offerer_account_id: int
-    time: date
+    date: timestamp
     duration: int
-    location: ?
     status: varchar
+    photo: varchar
+    address: varchar
+    <&key> member_id: bigint
+    <&key> geolocation_id: bigint
+    <&key> event_id: bigint
 }
 table(event_participants) {
-    <&key> id: int
-    event_id: int
-    account_id: int
+    <&key> event_id: int
+    <&key> account_id: int
 }
-table(service_feedbacks) {
-    <&key> id: int
-    service_id: int
-    giver_account_id: int
-    taker_account_id: int
-    rating: int
-    comment: varchar
-}
+
 table(event_feedback) {
-    <&key> id: int
-    event_id: int
-    giver_account_id: int
-    taker_account_id: int
-    rating: int
+    <&key> id: bigint
     comment: varchar
+    rating: int
+    <&key> giver_id: bigint
+    <&key> receiver_id: bigint
+    <&key> event_id: bigint
 }
-members::id -- accounts::member_id : member_id
-members::id -- interests::member_id : member_id
-tags::id -- interests::tag_id : tag_id
-members::id -- strong_suits::member_id : member_id
-tags::id -- strong_suits::tag_id : tag_id
-services::id -- service_tags::service_id : service_id
-tags::id -- service_tags::tag_id : tag_id
-event_tags::event_id -- events::id : event_id
-tags::id -- event_tags::tag_id : tag_id
-services::offerer_account_id -- accounts::id : account_id
-service_participants::service_id -- services::id : service_id
-service_participants::account_id -- accounts::id : account_id
-events::offerer_account_id -- accounts::id : account_id
-event_participants::event_id -- events::id : event_id
-event_participants::account_id -- accounts::id : account_id
-service_feedbacks::service_id -- services::id : service_id
-service_feedbacks::giver_account -- accounts::id : account_id
-service_feedbacks::taker_account -- accounts::id : account_id
-event_feedback::event_id -- events::id : event_id
-event_feedback::giver_account_id -- accounts::id : account_id
-event_feedback::taker_account_id -- accounts::id : account_id
+
+member::geolocation_id -- geo_location::id
+message::member_id -- member::id
+member::id -- interests::member_id
+interests::tag_id -- tags::id
+member::id -- talents::member_id
+talents::tag_id -- tags::id
+offer_tags::offer_id -- offer::id
+offer_tags::tag_id -- tags::id
+event_tags::event_id -- event::id
+event_tags::tag_id -- tags::id
+offer::member_id -- member::id : offerer
+offer::geolocation_id -- geo_location::id
+offer::offer_id -- offer::id : parent
+offer_applicants::offer_id -- offer::id
+offer_applicants::member_id --member::id
+offer_participants::offer_id -- offer::id
+offer_participants::member_id -- member::id
+offer_feedback::giver_id -- member::id
+offer_feedback::receiver_id -- member::id
+offer_feedback::offer_id -- offer::id
+event::member_id -- member::id : organizer
+event::geolocation_id -- geo_location::id
+event::event_id -- event::id : parent
+event_participants::event_id -- event::id
+event_participants::member_id -- member::id
+event_feedback::event_id -- event::id
+
 @enduml
