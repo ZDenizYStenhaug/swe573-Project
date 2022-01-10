@@ -1,50 +1,172 @@
 @startuml
-enum FrequencyType {
+
+enum RepeatingType {
     DAILY
     WEEKLY
     MONTHLY
+    +fromString()
+    +toString()
+    +getDefault()
 }
 
-enum ServiceStatus {
-    REQUESTED
+enum OfferStatus {
     OPEN_FOR_APPLICATIONS
     CLOSED_FOR_APPLICATIONS
-    CANCELLED
-    DONE
+    PAST_OFFER
+    +fromString()
+    +toString()
+    +getDefault()}
+
+enum EventStatus {
+    OPEN_FOR_APPLICATIONS
+    CLOSED_FOR_APPLICATIONS
+    +fromString()
+    +toString()
+    +getDefault()
 }
-class Tag {
-    -id: Serial
+
+enum Badge {
+    NEWCOMER
+    MENTOR
+    SUPER_MENTOR
+    GURU
+    +fromString()
+    +toString()
+    +getDefault()
+}
+
+enum MessageStatus {
+    READ
+    UNREAD
+    DELETED
+    +fromString()
+    +toString()
+    +getDefault()
+}
+
+enum Role {
+    ADMIN
+    USER
+    +fromString()
+    +toString()
+    +getDefault()
+}
+class Event {
+    -id: Long
     -name: String
-    -color: String
-
-    +addTag()
-    +deleteTag()
+    -description: String
+    -organizer: Member
+    -date: LocalDateTime
+    -repeatingType: RepeatingType
+    -recurringEvevnts: Set<RecurringEvent>
+    -status: EventStatus
+    -photo: String
+    -eventTags: Set<Tag>
+    -participants: Set<Member>
+    -address: String
+    -geolocation: GeoLocation
 }
 
-abstract class Location {
+class EventFeedback {
+    -id: Long
+    -date: LocalDateTime
+    -rating: int
+    -event: Event
+    -giver: Member
+    -receiver: Member
+}
+
+class Member {
+    -id: Long
+    -email: String
+    -password: String
+    -passwordConfird: String
+    -username: String
+    -description: String
+    -role: Role
+    -credit: int
+    -blockedCredits: int
+    -lifetimeCredits: int
+    -reputationPoints: int
+    -numOfRefusals: int
+    -badge: Badge
+    -photo: String
+    -interests: Set<Tag>
+    -talents: Set<Tag>
+    -offers: Set<Offer>
+    -events: Set<Event>
+    -registeredEvents: Set<Event>
+    -appliedOffers: Set<Offer>
+    -participatingOffers: Set<Offer>
+    -messages: Set<Message>
+    -eventFeedbacks: Set<EventFeedback>
+    -offerFeedbacks: Set<OfferFeedback>
+    -address: String
+    -geolocation: GeoLocation
+}
+
+class Message {
+    -id: Long
+    -receiver: Member
+    -date: LocalDateTime
+    -text: String
+    -status: MessageStatus
+}
+
+class Tag {
+    -id: Long
+    -name: String
+}
+
+class GeoLocation {
+    -id: Long
     - latitude: double
     - longitude: double
     }
 
-class MemberLocation {
-    -memberId: Serial
+class Offer {
+    -id: Long
+    -name: String
+    -description: String
+    -offerer: Member
+    -date: LocalDateTime
+    -duration: int
+    -repeatingType: RepeatingType
+    -recurringOffers: Set<RecurringOffer>
+    -status: OfferStatus
+    -endOfferRequests: int
+    -photo: String
+    -offerTags: Set<Tag>
+    -applicants: List<Member>
+    -participants: List<Member>
+    -address: String
+    -geolocation: GeoLocation
 }
 
-MemberLocation --|> Location
-
-class ServiceLocation {
-    -serviceId: Serial
-}
-ServiceLocation --|> Location
-
-class EventLocation {
-    -eventId: Serial
+class OfferFeedback {
+    -id: Long
+    -date: LocalDateTime
+    -rating: int
+    -offer: Offer
+    -giver: Member
+    -receiver: Member
 }
 
-
-class Feedback {
-    -stars: int
-    -comment: String
+class RecurringEvent {
+    -parentEvent: Event
 }
-EventLocation --|> Location
+
+class RecurringOffer {
+    -parentOffer: Offer
+}
+
+class ScheduleItem {
+    -status: String
+    -offer: Offer
+    -event: Event
+}
+
+
+RecurringEvent --|> Event
+RecurringOffer --|> Offer
 @enduml
