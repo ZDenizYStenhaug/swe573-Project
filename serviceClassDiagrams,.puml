@@ -1,0 +1,116 @@
+@startuml
+
+interface MemberService {
+    + Member findByUsername(String email)
+    + Member register(Member member)
+}
+
+class MemberServiceImp {
+    + Member findMemberById(Long id)
+    + String getCurrentUserLogin()
+    + List<String> getInterestNames(Member member)
+    + List<String> getTalentsNames(Member member)
+    + OngoingActivityResponse getOngoingActivity (List<ScheduleItem> scheduledOffers, List<ScheduleItem> scheduleEvents)
+    + List<ScheduleItem> getScheduledOffers(Member member)
+    + List<ScheduleItem> getScheduledEvents(Member member)
+    + Member updateMember(Member member)
+}
+
+class MemberDetailsServiceImpl {
+    + UserDetails loadUserByUsername(String username)
+}
+
+interface SecurityService {
+    + boolean isAuthenticated();
+    + void autoLogin(String username, String password);
+}
+
+class SecurityServiceImp {
+}
+
+MemberServiceImp --|> MemberService
+SecurityServiceImp --|> SecurityService
+
+class MessageService {
+    + int checkForUnreadMessage(Member member)
+    + List<Message> getAllReadMessages(Member member)
+    + List<Message> getAllUnreadMessages(Member member)
+    + void markAsRead(Long messageId)
+    + void markAsUnread(Long messageId)
+    + void delete(Long messageId)
+    + void sendMessage(Member member, String text)
+}
+
+class EventService {
+    + Event addEvent(Event event)
+    + List<Event> allEvents(SearchResponse searchResponse)
+    + List<Event> allClosebyEvents(Member member)
+    + boolean checkForUniqueTimestamp(Member member, Event event)
+    + void deleteOfferApplication(Event event, Member member)
+    + void endEvent(Event event)
+    + void addRecurringEvent(Event parent)
+    + LocalDateTime getLatestDate(List<LocalDateTime> dates)
+    + List<Event> findAllEventsByMember(Member member)
+    + List<LocalDateTime> getDatesOfRecurringEvents(Event event)
+    + RecurringEvent getRecurringEventByDate(LocalDateTime date, Event event)
+    + Event register(Event event, Member member)
+    + Event updateEvent(Event event)
+    + void saveRecurringEvent(RecurringEvent recurringEvent, Event event)
+    + LocalDateTime getNextEventDate(RepeatingType type, LocalDateTime date)
+    + void sendRegistrationDeletedMessage(Event event, Member member)
+}
+
+class OfferService {
+    + Offer acceptApplication(Offer offer, Long memberId)
+    + Offer declineApplication(Offer offer, Long memberId)
+    + void declineRemainingApplications(Offer offer)
+    + Offer addOffer (Offer offer)
+    + List<Offer> allOffers(SearchResponse searchResponse)
+    + List<Offer> allClosebyOffers(Member member)
+    + Offer apply(Offer offer, Member member)
+    + void creditExchange(Offer offer)
+    +  boolean checkForUniqueTimestamp(Member member, Offer offer)
+    + Member deleteOfferApplication(Offer offer, Member member)
+    + List<Offer> findAllOffersByMember(Member member)
+    + Offer findOfferById(Long id)
+    + List<LocalDateTime> getDatesOfRecurringOffers(Offer offer)
+    + List<LocalDateTime> getDatesForOpenToApplicationOffers(Offer parent)
+    + List<LocalDateTime> getDatesForUpcomingOffers(Offer parent)
+    + RecurringOffer getRecurringOfferByDate(LocalDateTime date, Offer offer)
+    + Offer getTheFollowingOffer(List<LocalDateTime> dates, Offer parent)
+    + void reportNoShow(Long offerId, Long memberId)
+    +  void saveRecurringOffer(RecurringOffer ro, Offer offer)
+    + void sendAcceptanceMessage(Member applicant, Offer offer)
+    + void sendApplicationDeletedMessage(Offer offer, Member member)
+    + void sendQuotaMessage(Member member, Offer offer)
+    + void sendRefusalMessage(Member receiver, Offer offer)
+    + Offer updateEndOfferRequest(Offer offer)
+    + Offer endOffer(Offer offer)
+    + void addRecurringOffer(Offer parent)
+    + LocalDateTime getLatestDate(List<LocalDateTime> dates)
+    + Offer updateOffer(Offer offer)
+    + void updateStatusOfRecurringOffers (Offer parent)
+    + LocalDateTime getNextOfferDate(RepeatingType type, LocalDateTime date)
+}
+
+class FeedbackService {
+    +  void saveOfferFeedback(OfferFeedback feedback)
+    +  void saveEventFeedback(EventFeedback feedback)
+}
+
+class GeoLocationService {
+    -URL: String
+    -API_KEY: String
+
+    + String getJSONByGoogle(String address)
+    + double[] getGeoLocation(String address)
+    + GeoLocation save(GeoLocation geoLocation)
+    + GeoLocation saveGeoLocation(String address)
+}
+
+class TagService {
+    + Tag saveTag(Tag tag)
+    + List<Tag> getAllTags()
+    + Tag findByName(String name)
+}
+@enduml
