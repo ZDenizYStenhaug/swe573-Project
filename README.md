@@ -41,4 +41,7 @@ services:
 ```
 
 2. Open a command prompt (or terminal) window and move into the folder where you saved the docker-compose.yml file.
-3.	Run docker compose up -d. This will pull the image from docker hub and start the containers.
+3. To pull the image and start the containers, run: 
+```docker compose up -d```
+
+### Installation (from project repo)
