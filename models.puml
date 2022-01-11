@@ -15,7 +15,8 @@ enum OfferStatus {
     PAST_OFFER
     +fromString()
     +toString()
-    +getDefault()}
+    +getDefault()
+}
 
 enum EventStatus {
     OPEN_FOR_APPLICATIONS
