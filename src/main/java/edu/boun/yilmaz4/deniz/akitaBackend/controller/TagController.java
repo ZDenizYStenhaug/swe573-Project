@@ -17,9 +17,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping(Routing.ROOT_TAG)
@@ -70,5 +72,20 @@ public class TagController implements WebMvcConfigurer {
             model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
         }
         return "tags";
+    }
+
+    @PostMapping(Routing.URI_VIEW)
+    public String viewMoreInfoAboutTag(Model model,
+                                       @RequestParam("tagName") String name) throws IOException {
+        Tag tag = tagService.findByName(name);
+        String extract = tagService.getMoreInformationAboutTag(tag);
+        model.addAttribute("tag", tag);
+        model.addAttribute("extract", extract);
+        String username = memberService.getCurrentUserLogin();
+        if(!username.equals("anonymousUser")) {
+            Member member = memberService.findByUsername(username);
+            model.addAttribute("messageCount", String.valueOf(messageService.checkForUnreadMessage(member)));
+        }
+        return "view-tag-info";
     }
 }
