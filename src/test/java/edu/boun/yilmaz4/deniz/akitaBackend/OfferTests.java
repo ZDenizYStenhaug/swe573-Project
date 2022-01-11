@@ -94,7 +94,6 @@ public class OfferTests {
         deleteMember(member);
     }
 
-
     Member createMember() throws IOException, JSONException {
         Member member = new Member();
         member.setUsername("lemon");
