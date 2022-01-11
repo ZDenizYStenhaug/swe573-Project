@@ -48,7 +48,7 @@ public class TagService {
         return output.toString();
     }
 
-    public String getMoreInformationAboutTag(Tag tag) throws IOException {
+    public String getMoreInfo(Tag tag) throws IOException {
         String wikiOutput = getJSONFromWikipedia(tag);
         JSONObject json = new JSONObject(wikiOutput);
         JSONObject pages = json.getJSONObject("query").getJSONObject("pages");

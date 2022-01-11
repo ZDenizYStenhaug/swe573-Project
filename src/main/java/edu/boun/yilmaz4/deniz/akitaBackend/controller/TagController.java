@@ -78,7 +78,7 @@ public class TagController implements WebMvcConfigurer {
     public String viewMoreInfoAboutTag(Model model,
                                        @RequestParam("tagName") String name) throws IOException {
         Tag tag = tagService.findByName(name);
-        String extract = tagService.getMoreInformationAboutTag(tag);
+        String extract = tagService.getMoreInfo(tag);
         model.addAttribute("tag", tag);
         model.addAttribute("extract", extract);
         String username = memberService.getCurrentUserLogin();
