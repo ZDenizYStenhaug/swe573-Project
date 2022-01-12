@@ -41,7 +41,22 @@ services:
 ```
 
 2. Open a command prompt (or terminal) window and move into the folder where you saved the docker-compose.yml file.
-3. To pull the image and start the containers, run: 
+3. To pull the image and start the containers, run:
+
 ```docker compose up -d```
 
 ### Installation (from project repo)
+
+1. Clone project repository main branch.
+2. Insert the API Key into the necessary locations. *
+3. To build the project, create the images and start the containers, at the root of the project, run:
+```docker compose up -d. ```
+4. The application can be reached here: localhost:8080
+
+*PLEASE REFER TO THE API KEY GIVEN IN THE INSTALLATION MANUAL.
+
+The locations are: 
+- edu/boun/yilmaz4/deniz/akitaBackend/service/GeoLocationService.java, line 24.
+- src/main/resources/templates/profile-page.html, line 83.
+- src/main/resources/templates/view-event.html, line 91.
+- src/main/resources/templates/view-offer.html, line 106.
